@@ -1,0 +1,14 @@
+venv
+*.pyc
+*~
+.env
+.src
+.log
+activate_venv
+cleardb
+gunicorn_local.py
+gunicorn_prod.py
+launch_gunicorn.sh
+load_local_env
+load_prod_env
+local
