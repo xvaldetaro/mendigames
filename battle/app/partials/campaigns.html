@@ -1,0 +1,11 @@
+<h1>campaigns:</h1>
+<ul>
+    <li ng-repeat="campaign in campaigns">
+        {{campaign.name}}
+        <ul>
+            <li ng-repeat="participant in campaign.participants">
+                {{participant}}
+            </li>
+        </ul>
+    </li>
+</ul>

@@ -1,11 +1,13 @@
 'use strict';
 
-/* Controllers */
+var CampaignsCt = function($scope) {
+    $scope.campaigns = [
+        {"name": "Nervath",
+        "participants": ["Digajigg", "Isildur", "Theokoles"]}
+    ];
+};
+CampaignsCt.$inject = ['$scope'];
 
 angular.module('battle.controllers', []).
-    controller('MyCtrl1', [function() {
-
-    }])
-    .controller('MyCtrl2', [function() {
-
-    }]);
+    controller('CampaignsCt', CampaignsCt);
+    
