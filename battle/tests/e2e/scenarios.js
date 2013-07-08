@@ -15,16 +15,16 @@ describe('battle', function() {
     });
 
 
-    describe('campaigns', function() {
+    describe('campaign_list', function() {
 
       beforeEach(function() {
-        browser().navigateTo('#/campaigns');
+        browser().navigateTo('#/campaign_list');
       });
 
 
-      it('should render campaigns when user navigates to /campaigns', function() {
+      it('should render campaign_list when user navigates to /campaign_list', function() {
         expect(element('[ng-view] h1:first').text()).
-          toMatch(/campaigns:/);
+          toMatch(/campaign_list:/);
       });
 
     });

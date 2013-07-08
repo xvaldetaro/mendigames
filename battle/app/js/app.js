@@ -1,19 +1,33 @@
 "use strict";
 
-var makeRoute = function(static_url, route) {
+var makeRoute = function(static_url, route, ctrl_name) {
     return {templateUrl: static_url+'battle/partials/'+route+'.html',
-            controller: route.charAt(0).toUpperCase()+route.slice(1)+'Ct'};
+            controller: ctrl_name};
 };
 
 function battleConfigFn($routeProvider, DjangoProperties) {
     var static_url = DjangoProperties.STATIC_URL;
 
-    $routeProvider.when('/campaigns', makeRoute(static_url, 'campaigns') );
-    $routeProvider.when('/characters', makeRoute(static_url, 'characters') );
-    $routeProvider.when('/powers', makeRoute(static_url, 'powers') );
-    $routeProvider.when('/items', makeRoute(static_url, 'items') );
-    $routeProvider.when('/home', makeRoute(static_url, 'home') );
+    $routeProvider.when('/campaign_list', makeRoute(static_url, 'campaign_list',
+        'CampaignListCtrl') );
+
+    $routeProvider.when('/character_list', makeRoute(static_url,
+        'character_list', 'CharacterListCtrl') );
+
+    $routeProvider.when('/power_list', makeRoute(static_url, 'power_list',
+        'PowerListCtrl') );
+
+    $routeProvider.when('/item_list', makeRoute(static_url, 'item_list',
+        'ItemListCtrl') );
+
+    $routeProvider.when('/home', makeRoute(static_url, 'home',
+        'HomeCtrl') );
+
     $routeProvider.otherwise({redirectTo: '/home'});
+
+    // Detail routes
+    $routeProvider.when('/campaign_detail/:campaignId', makeRoute(static_url,
+        'campaign_detail', 'CampaignDetailCtrl') );
 }
 
 // Declare app level module which depends on filters, and services

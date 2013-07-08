@@ -1,9 +1,9 @@
 from tastypie.resources import ModelResource
-from mendigames.models import (Character, CharacterStatus, Power, HasPower,
-                               UsedPower, Item, HasItem)
+from battle.models import (Character, CharacterStatus, Power, HasPower,
+                               Campaign, UsedPower, Item, HasItem)
 
 
-class CharacterResource(ModelResource):
+class CampaignResource(ModelResource):
     class Meta:
-        queryset = Character.objects.all()
-        resource_name = 'character'
+        queryset = Campaign.objects.all()
+        resource_name = 'campaign'

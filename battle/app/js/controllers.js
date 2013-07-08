@@ -1,13 +1,20 @@
 'use strict';
 
-var CampaignsCt = function($scope) {
-    $scope.campaigns = [
-        {"name": "Nervath",
-        "participants": ["Digajigg", "Isildur", "Theokoles"]}
-    ];
+var CampaignListCtrl = function($scope, $http) {
+    $http.get('/battle/api/campaign/?format=json').success(function(data) {
+        $scope.campaign_list = data.objects;
+    });
 };
-CampaignsCt.$inject = ['$scope'];
+CampaignListCtrl.$inject = ['$scope','$http'];
+
+var CampaignDetailCtrl = function($scope, $http, $routeParams) {
+    var url = '/battle/api/campaign/'+$routeParams.campaignId+'/?format=json';
+
+    $http.get(url).success(function(data) {
+        $scope.campaign_detail = data;
+    });
+};
+CampaignListCtrl.$inject = ['$scope','$http', '$routeParams'];
 
 angular.module('battle.controllers', []).
-    controller('CampaignsCt', CampaignsCt);
-    
+    controller('CampaignListCtrl', CampaignListCtrl);

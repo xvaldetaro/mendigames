@@ -13,3 +13,4 @@ load_local_env
 load_prod_env
 local
 libpeerconnection.log
+mendigames/tmp_karma*
