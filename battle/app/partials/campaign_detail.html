@@ -1,2 +1,9 @@
-<h1>{{campaign_detail.name}}</h1>
-<p>{{campaign_detail.text}}</p>
+<h1>{{campaign.name}}</h1>
+<p>{{campaign.text}}</p>
+
+<h1>Characters:</h1>
+<ul>
+    <li ng-repeat="character in character_list">
+        <a href="#/character/{{character.id}}/">{{character.name}}</a>
+    </li>
+</ul>

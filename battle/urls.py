@@ -1,11 +1,25 @@
 from django.conf.urls import patterns, url, include
-from battle.views import IndexView
-from battle.api import CampaignResource
+from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
 
-campaign_resource = CampaignResource()
+from battle import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = patterns(
     '',
-    url(r'^battle/$', IndexView.as_view(), name='index'),
-    url(r'^api/', include(campaign_resource.urls)),
+
+    url(r'^$', views.IndexView.as_view(), name='index'),
+
+    url(r'^campaign/$', views.CampaignList.as_view()),
+
+    url(r'^campaign/(?P<pk>[0-9]+)/$', views.CampaignDetail.as_view()),
+
+    url(r'^character/$', views.CharacterList.as_view()),
+
+    url(r'^character/(?P<pk>[0-9]+)/$', views.CharacterDetail.as_view()),
 )
+
+urlpatterns = format_suffix_patterns(urlpatterns)

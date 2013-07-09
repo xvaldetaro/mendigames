@@ -1,8 +1,13 @@
 'use strict';
 var _campaign1 = {"id": 1, "name": "campaign1", "resource_uri": "/battle/api/campaign/1/", "text": "campaign1_text"};
 var _campaign2 = {"id": 2, "name": "campaign2", "resource_uri": "/battle/api/campaign/2/", "text": "campaign2_text"};
-var _objects = [_campaign1, _campaign2];
-var _json_get = {"objects": _objects};
+var _results = [_campaign1, _campaign2];
+var _campaign_list_data = {"results": _results};
+
+var _character1 = {"id": 1, "campaign": 1};
+var _character2 = {"id": 2, "campaign": 1};
+var _characters = [_character1, _character2];
+var _characters_from_campaign_data = {"results": _characters };
 
 /* jasmine specs for controllers go here */
 describe('Battle controllers', function(){
@@ -12,8 +17,8 @@ describe('Battle controllers', function(){
 
         beforeEach(inject(function(_$httpBackend_, $rootScope, $controller){
             $httpBackend = _$httpBackend_;
-            $httpBackend.expectGET('/battle/api/campaign/?format=json').
-                respond(_json_get);
+            $httpBackend.expectGET('/battle/campaign/.json').
+                respond(_campaign_list_data);
 
             scope = $rootScope.$new();
             ctrl = $controller('CampaignListCtrl', {$scope:scope});
@@ -24,7 +29,7 @@ describe('Battle controllers', function(){
             expect(scope.campaign_list).toBeUndefined();
             $httpBackend.flush();
 
-            expect(scope.campaign_list).toEqual(_objects);
+            expect(scope.campaign_list).toEqual(_results);
         });
 
     });
@@ -36,16 +41,20 @@ describe('Battle controllers', function(){
 
             var ctrl, scope = {}, routeParams = {"campaignId": '1'};
 
-            $httpBackend.expectGET('/battle/api/campaign/1/?format=json').
+            $httpBackend.expectGET('/battle/campaign/1/.json').
                 respond(_campaign1);
+
+            $httpBackend.expectGET('/battle/character/?format=json&campaign=1').
+                respond(_characters_from_campaign_data);
 
             ctrl = $controller('CampaignDetailCtrl',
                 {$scope:scope, $routeParams:routeParams });
 
-            expect(scope.campaign_detail).toBeUndefined();
+            expect(scope.campaign).toBeUndefined();
             $httpBackend.flush();
 
-            expect(scope.campaign_detail).toEqual(_campaign1);
+            expect(scope.campaign).toEqual(_campaign1);
+            expect(scope.character_list).toEqual(_characters);
         }));
 
     });

@@ -15,7 +15,7 @@ describe('battle', function() {
     });
 
 
-    describe('campaign_list', function() {
+    describe('campaign list', function() {
 
       beforeEach(function() {
         browser().navigateTo('#/campaign_list');
@@ -24,7 +24,21 @@ describe('battle', function() {
 
       it('should render campaign_list when user navigates to /campaign_list', function() {
         expect(element('[ng-view] h1:first').text()).
-          toMatch(/campaign_list:/);
+          toMatch(/Campaigns:/);
+      });
+
+    });
+
+    describe('campaign detail ', function() {
+
+      beforeEach(function() {
+        browser().navigateTo('#/campaign_detail/1');
+      });
+
+
+      it('should render campaign detail when user navigates to /campaign_detail/id', function() {
+        expect(element('[ng-view] h1:first').text()).
+          toMatch(/campaign1/);
       });
 
     });

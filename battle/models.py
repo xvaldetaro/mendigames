@@ -1,20 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-class Character(models.Model):
-    name = models.CharField(max_length=20, default='Unnamed')
-    action_points = models.IntegerField(default=1)
-    healing_surges = models.IntegerField(default=6)
-    hit_points = models.IntegerField(default=30)
-
-    experience_points = models.IntegerField(default=0)
-    gold = models.IntegerField(default=0)
-
-    def __unicode__(self):
-        return self.name
-
-
 class Campaign(models.Model):
     name = models.CharField(max_length=20, default='Unnamed')
     text = models.TextField(blank=True)
@@ -23,15 +9,25 @@ class Campaign(models.Model):
         return self.name
 
 
-class CharacterStatus(models.Model):
-    character = models.ForeignKey(Character)
+# Create your models here.
+class Character(models.Model):
     campaign = models.ForeignKey(Campaign)
+
+    name = models.CharField(max_length=20, default='Unnamed')
+    action_points = models.IntegerField(default=1)
+    healing_surges = models.IntegerField(default=6)
+    hit_points = models.IntegerField(default=30)
+
+    experience_points = models.IntegerField(default=0)
+    gold = models.IntegerField(default=0)
+
     used_action_points = models.IntegerField(default=0)
     used_healing_surges = models.IntegerField(default=0)
     lost_hit_points = models.IntegerField(default=0)
+    init = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return "%s - in Campaign %s" % (self.character, self.campaign)
+        return "%s - in Campaign %s" % (self.name, self.campaign)
 
 
 class Power(models.Model):
@@ -54,7 +50,7 @@ class HasPower(models.Model):
 
 
 class UsedPower(models.Model):
-    character_status = models.ForeignKey(CharacterStatus)
+    character = models.ForeignKey(Character)
     power = models.ForeignKey(Power)
 
     def __unicode__(self):

@@ -133,16 +133,29 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'djangular',
+    'rest_framework',
     'south',
-    'tastypie',
     'battle',
     'dilla',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGINATE_BY': 10
+}
 
 DICTIONARY = "/usr/share/dict/words"
 DILLA_USE_LOREM_IPSUM = False  # set to True ignores dictionary
 DILLA_APPS = ['battle']
 DILLA_SPAMLIBS = ['battle.spamlib']
+DILLA_EXCLUDE_MODELS = [
+    'battle.CharacterStatus',
+    'battle.Campaign',
+    'battle.Character',
+    'battle.HasPower',
+    'battle.HasItem',
+    'battle.UsedPower',
+]
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

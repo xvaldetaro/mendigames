@@ -1,5 +1,5 @@
 from django.contrib import admin
-from battle.models import (Character, CharacterStatus, Power, HasPower,
+from battle.models import (Character, Power, HasPower,
                                Campaign, UsedPower, Item, HasItem)
 
 
@@ -11,34 +11,31 @@ class HasItemInline(admin.TabularInline):
     model = HasItem
 
 
-class CharacterAdmin(admin.ModelAdmin):
-    inlines = [HasPowerInline, HasItemInline]
-
-
 class UsedPowerInline(admin.TabularInline):
     model = UsedPower
 
 
-class CharacterStatusInline(admin.TabularInline):
-    model = CharacterStatus
+class CharacterAdmin(admin.ModelAdmin):
+    inlines = [HasPowerInline, HasItemInline, UsedPowerInline]
+
+
+class CharacterInline(admin.TabularInline):
+    model = Character
 
 
 class CampaignAdmin(admin.ModelAdmin):
-    inlines = [CharacterStatusInline]
-
-
-class CharacterStatusAdmin(admin.ModelAdmin):
-    inlines = [UsedPowerInline]
+    inlines = [CharacterInline]
 
 
 class PowerAdmin(admin.ModelAdmin):
     pass
 
+
 class ItemAdmin(admin.ModelAdmin):
     pass
 
+
 admin.site.register(Character, CharacterAdmin)
-admin.site.register(CharacterStatus, CharacterStatusAdmin)
 admin.site.register(Campaign, CampaignAdmin)
 admin.site.register(Power, PowerAdmin)
 admin.site.register(Item, ItemAdmin)

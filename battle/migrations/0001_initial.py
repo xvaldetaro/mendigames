@@ -8,18 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Character'
-        db.create_table(u'battle_character', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(default='Unnamed', max_length=20)),
-            ('action_points', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('healing_surges', self.gf('django.db.models.fields.IntegerField')(default=6)),
-            ('hit_points', self.gf('django.db.models.fields.IntegerField')(default=30)),
-            ('experience_points', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('gold', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal(u'battle', ['Character'])
-
         # Adding model 'Campaign'
         db.create_table(u'battle_campaign', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -28,15 +16,22 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'battle', ['Campaign'])
 
-        # Adding model 'CharacterStatus'
-        db.create_table(u'battle_characterstatus', (
+        # Adding model 'Character'
+        db.create_table(u'battle_character', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('character', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Character'])),
+            ('campaign', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Campaign'])),
+            ('name', self.gf('django.db.models.fields.CharField')(default='Unnamed', max_length=20)),
+            ('action_points', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            ('healing_surges', self.gf('django.db.models.fields.IntegerField')(default=6)),
+            ('hit_points', self.gf('django.db.models.fields.IntegerField')(default=30)),
+            ('experience_points', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('gold', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('used_action_points', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('used_healing_surges', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('lost_hit_points', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('init', self.gf('django.db.models.fields.IntegerField')(default=0)),
         ))
-        db.send_create_signal(u'battle', ['CharacterStatus'])
+        db.send_create_signal(u'battle', ['Character'])
 
         # Adding model 'Power'
         db.create_table(u'battle_power', (
@@ -59,7 +54,7 @@ class Migration(SchemaMigration):
         # Adding model 'UsedPower'
         db.create_table(u'battle_usedpower', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('character_instance', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.CharacterStatus'])),
+            ('character', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Character'])),
             ('power', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Power'])),
         ))
         db.send_create_signal(u'battle', ['UsedPower'])
@@ -84,14 +79,11 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting model 'Character'
-        db.delete_table(u'battle_character')
-
         # Deleting model 'Campaign'
         db.delete_table(u'battle_campaign')
 
-        # Deleting model 'CharacterStatus'
-        db.delete_table(u'battle_characterstatus')
+        # Deleting model 'Character'
+        db.delete_table(u'battle_character')
 
         # Deleting model 'Power'
         db.delete_table(u'battle_power')
@@ -119,18 +111,15 @@ class Migration(SchemaMigration):
         u'battle.character': {
             'Meta': {'object_name': 'Character'},
             'action_points': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
+            'campaign': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Campaign']"}),
             'experience_points': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'gold': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'healing_surges': ('django.db.models.fields.IntegerField', [], {'default': '6'}),
             'hit_points': ('django.db.models.fields.IntegerField', [], {'default': '30'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'default': "'Unnamed'", 'max_length': '20'})
-        },
-        u'battle.characterstatus': {
-            'Meta': {'object_name': 'CharacterStatus'},
-            'character': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Character']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'init': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'lost_hit_points': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "'Unnamed'", 'max_length': '20'}),
             'used_action_points': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'used_healing_surges': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
@@ -164,7 +153,7 @@ class Migration(SchemaMigration):
         },
         u'battle.usedpower': {
             'Meta': {'object_name': 'UsedPower'},
-            'character_instance': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.CharacterStatus']"}),
+            'character': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Character']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'power': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Power']"})
         }
