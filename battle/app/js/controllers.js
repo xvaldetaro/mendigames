@@ -7,26 +7,47 @@ var CampaignListCtrl = function($scope, Restangular) {
 };
 CampaignListCtrl.$inject = ['$scope','Restangular'];
 
-var CampaignCtrl = function($scope, Restangular, $routeParams) {
+var CampaignCtrl = function($scope, $timeout, Restangular, $routeParams) {
     var campaignId = $routeParams.campaignId;
-    Restangular.one('campaign', campaignId).get().then(function(campaign){
-        $scope.campaign = campaign;
-    });
 
+    // ----------- Create the polling
+    // Polls campagin details every 10sec
+    function campaign_poll(){
+        Restangular.one('campaign', campaignId).get().then(function(campaign){
+            $scope.campaign = campaign;
+            $timeout(campaign_poll,10000);
+        });
+    }
+    $timeout(campaign_poll,10000);
+
+    // Polls character list every 2sec
     var params = {campaignId: campaignId};
+    function character_poll(){
+        Restangular.all('character').getList(params).then(function(character_list){
+            $scope.character_list = character_list;
+            $timeout(character_poll,2000);
+        });
+    }
+    $timeout(character_poll,2000);
+
+    // --------------- Register the watchers
+    var watcher = function(newValue,oldValue){
+                if(newValue == oldValue)
+                    return;
+
+                newValue.put(); };
+
     Restangular.all('character').getList(params).then(function(character_list){
         $scope.character_list = character_list;
 
         // Listeners for every character in the list
         for (var i=0;i<character_list.length;i++) {
-            $scope.$watch('character_list['+i+']',
-            function(newValue,oldValue){
-                if(newValue == oldValue)
-                    return;
-
-                newValue.put(); }, true
-            );
-        };
+            $scope.$watch('character_list['+i+']', watcher, true);
+        }
+    });
+    Restangular.one('campaign', campaignId).get().then(function(campaign){
+        $scope.campaign = campaign;
+        $scope.$watch('campaign', watcher, true);
     });
 
     // ----------- EVENT HANDLERS:
@@ -71,7 +92,7 @@ var CampaignCtrl = function($scope, Restangular, $routeParams) {
         character.milestones = character.milestones+1;
     };
 };
-CampaignCtrl.$inject = ['$scope','Restangular', '$routeParams'];
+CampaignCtrl.$inject = ['$scope','$timeout','Restangular', '$routeParams'];
 
 var CharacterCtrl = function($scope, Restangular, $routeParams) {
     var characterId = $routeParams.characterId;

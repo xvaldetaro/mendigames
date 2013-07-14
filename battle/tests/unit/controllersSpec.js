@@ -42,11 +42,11 @@ describe('Battle controllers', function(){
 
             var ctrl, scope = $rootScope.$new(), routeParams = {"campaignId": '1'};
 
-            $httpBackend.expectGET('/battle/campaign/1?format=json').
-                respond(_campaign1);
-
             $httpBackend.expectGET('/battle/character?campaignId=1&format=json').
                 respond(_characters_from_campaign_data);
+
+            $httpBackend.expectGET('/battle/campaign/1?format=json').
+                respond(_campaign1);
 
             ctrl = $controller('CampaignCtrl',
                 {$scope:scope, $routeParams:routeParams });
