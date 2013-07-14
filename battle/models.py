@@ -14,7 +14,6 @@ class Character(models.Model):
     campaign = models.ForeignKey(Campaign)
 
     name = models.CharField(max_length=20, default='Unnamed')
-    action_points = models.IntegerField(default=1)
     healing_surges = models.IntegerField(default=6)
     hit_points = models.IntegerField(default=30)
 
@@ -22,8 +21,9 @@ class Character(models.Model):
     gold = models.IntegerField(default=0)
 
     used_action_points = models.IntegerField(default=0)
+    milestones = models.IntegerField(default=0)
     used_healing_surges = models.IntegerField(default=0)
-    lost_hit_points = models.IntegerField(default=0)
+    used_hit_points = models.IntegerField(default=0)
     init = models.IntegerField(default=0)
 
     def __unicode__(self):

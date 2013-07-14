@@ -26,8 +26,11 @@ function battleConfigFn($routeProvider, DjangoProperties) {
     $routeProvider.otherwise({redirectTo: '/home'});
 
     // Detail routes
-    $routeProvider.when('/campaign_detail/:campaignId', makeRoute(static_url,
-        'campaign_detail', 'CampaignDetailCtrl') );
+    $routeProvider.when('/campaign/:campaignId', makeRoute(static_url,
+        'campaign', 'CampaignCtrl') );
+
+    $routeProvider.when('/character/:characterId', makeRoute(static_url,
+        'character', 'CharacterCtrl') );
 }
 
 // Declare app level module which depends on filters, and services

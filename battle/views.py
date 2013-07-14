@@ -33,7 +33,7 @@ class CharacterList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Character.objects.all()
-        campaign = self.request.QUERY_PARAMS.get('campaign', None)
+        campaign = self.request.QUERY_PARAMS.get('campaignId', None)
         if campaign is not None:
             queryset = Character.objects.filter(campaign=campaign)
         return queryset

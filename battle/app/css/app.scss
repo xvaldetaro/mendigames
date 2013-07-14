@@ -1,0 +1,67 @@
+/* app css stylesheet */
+@import 'bourbon/bourbon';
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.3em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+div.character-block {
+  //@include background-image(linear-gradient(to bottom, #000, #666));
+  @include background-image(radial-gradient(#ddd, #fff));
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+table.stats {
+  th{
+    @include background-image(linear-gradient(to bottom, #666, #000));
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  th.hs{
+    @include background-image(linear-gradient(to bottom, #5bc0de, #2f96b4));
+  }
+  th.hp{
+    @include background-image(linear-gradient(to bottom, #ee5f5b, #bd362f));
+  }
+  th.xp{
+    @include background-image(linear-gradient(to bottom, #62c462, #51a351));
+  }
+  th.gold{
+    @include background-image(linear-gradient(to bottom, #fbb450, #f89406));
+  }
+  th.ap{
+    @include background-image(linear-gradient(to bottom, #0088cc, #0044cc));
+  }
+  td{
+    text-align: center;
+    font-weight: bold;
+  }
+}

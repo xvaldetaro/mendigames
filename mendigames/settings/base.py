@@ -73,6 +73,8 @@ STATIC_ROOT = '%s/static/' % APP_DIR
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
+APPEND_SLASH = False
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',

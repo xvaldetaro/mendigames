@@ -13,13 +13,13 @@ urlpatterns = patterns(
 
     url(r'^$', views.IndexView.as_view(), name='index'),
 
-    url(r'^campaign/$', views.CampaignList.as_view()),
+    url(r'^campaign/?$', views.CampaignList.as_view()),
 
-    url(r'^campaign/(?P<pk>[0-9]+)/$', views.CampaignDetail.as_view()),
+    url(r'^campaign/(?P<pk>[0-9]+)/?$', views.CampaignDetail.as_view()),
 
-    url(r'^character/$', views.CharacterList.as_view()),
+    url(r'^character/?$', views.CharacterList.as_view()),
 
-    url(r'^character/(?P<pk>[0-9]+)/$', views.CharacterDetail.as_view()),
+    url(r'^character/(?P<pk>[0-9]+)/?$', views.CharacterDetail.as_view()),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,45 +1,34 @@
 'use strict';
 
-/* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
+var _campaign1 = {"id": 1, "name": "campaign1", "resource_uri": "/battle/api/campaign/1/", "text": "campaign1_text"};
+var _campaign2 = {"id": 2, "name": "campaign2", "resource_uri": "/battle/api/campaign/2/", "text": "campaign2_text"};
+var _results = [_campaign1, _campaign2];
+var _campaign_list_data = {"results": _results};
+
+var _character1 = {"id": 1, "campaign": 1};
+var _character2 = {"id": 2, "campaign": 1};
+var _characters = [_character1, _character2];
+var _characters_from_campaign_data = {"results": _characters };
 
 describe('battle', function() {
 
-    beforeEach(function() {
-        browser().navigateTo('/battle/battle/');
-    });
-
-
     it('should automatically redirect to /home when location hash/fragment is empty', 
         function() {
+            browser().navigateTo('/battle/battle/');
             expect(browser().location().url()).toBe("/home");
     });
 
 
     describe('campaign list', function() {
 
-      beforeEach(function() {
+      beforeEach(function($httpBackend){
         browser().navigateTo('#/campaign_list');
       });
 
-
       it('should render campaign_list when user navigates to /campaign_list', function() {
-        expect(element('[ng-view] h1:first').text()).
-          toMatch(/Campaigns:/);
+        expect(repeater('ul li').count()).toEqual(2);
       });
 
     });
 
-    describe('campaign detail ', function() {
-
-      beforeEach(function() {
-        browser().navigateTo('#/campaign_detail/1');
-      });
-
-
-      it('should render campaign detail when user navigates to /campaign_detail/id', function() {
-        expect(element('[ng-view] h1:first').text()).
-          toMatch(/campaign1/);
-      });
-
-    });
 });

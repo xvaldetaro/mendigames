@@ -20,16 +20,16 @@
   <!--[if lt IE 7]>
   <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
   <![endif]-->
+<div class="container">
+  <ul class="menu">
+      <li><a href="#/campaign_list">campaign_list</a></li>
+      <li><a href="#/character_list">character-list</a></li>
+      <li><a href="#/power_list">power-list</a></li>
+      <li><a href="#/item_list">item-list</a></li>
+    </ul>
 
-<ul class="menu">
-    <li><a href="#/campaign_list">campaign_list</a></li>
-    <li><a href="#/character_list">character-list</a></li>
-    <li><a href="#/power_list">power-list</a></li>
-    <li><a href="#/item_list">item-list</a></li>
-  </ul>
-
-  <div class="container" ng-view></div>
-
+    <div ng-view></div>
+</div>
 
 <!-- Le javascript
 ================================================== -->
@@ -37,9 +37,10 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
   <script src="{% static 'lib/angular/angular.js' %}"></script>
-  <script src="{% static 'lib/angular/angular-resource.js' %}"></script>
   <script src="{% static 'lib/angular/angular-cookies.js' %}"></script>
   <script src="{% url 'angular-module' %}"></script>
+  <script src="{% static 'lib/angular/underscore.js' %}"></script>
+  <script src="{% static 'lib/angular/restangular.js' %}"></script>
   <script src="{% static 'battle/js/app.js' %}"></script>
   <script src="{% static 'battle/js/services.js' %}"></script>
   <script src="{% static 'battle/js/controllers.js' %}"></script>

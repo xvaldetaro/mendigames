@@ -1,12 +1,24 @@
 'use strict';
 
-/* Services */
+angular.module('battle.services', ['restangular']).config(function(RestangularProvider) {
+    RestangularProvider.setBaseUrl("/battle");
 
+    RestangularProvider.setDefaultRequestParams({format: 'json'});
 
-// Demonstrate how to register services
-// In this case it is a simple value service.
-angular.module('battle.services', ['ngResource']).
-    factory('Character', function($resource) {
-        return $resource('/battle/character/:characterId',
-            {format:'json', characterId:'@id'});
-    });
+    // Now let's configure the response extractor for each request
+    RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
+        // This is a get for a list
+        var newResponse;
+        if (operation === "getList") {
+            // Here we're returning an Array which has one special property metadata with our extra information
+            newResponse = response.results;
+            newResponse.metadata = {"count": response.count,
+                                    "next": response.next,
+                                    "previous": response.previous };
+        } else {
+            // This is an element
+            newResponse = response;
+        }
+        return newResponse;
+   });
+});
