@@ -20,6 +20,6 @@ angular.module('battle.filters', []).
   }).
   filter('total_ap', function(){
     return function(character){
-        return 1-character.used_action_points+(2*character.milestones);
+        return 1-character.used_action_points+Math.floor(character.milestones/2);
     };
   });

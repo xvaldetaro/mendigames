@@ -36,8 +36,8 @@
                         <td>{{character.used_healing_surges}}</td>
                         <td>{{character.used_action_points}}</td>
                         <td>{{character|total_hp}}</td>
-                        <td>{{character.used_healing_surges}}</td>
-                        <td>{{character.used_action_points}}</td>
+                        <td>{{character|total_hs}}</td>
+                        <td>{{character|total_ap}}</td>
                     </tr>
                 </table>
             </div>
@@ -45,53 +45,54 @@
         <div class="row-fluid">
             <div class="span3">
                 <div class="btn-group">
-                    <button class="btn btn-inverse">ShortRest</button>
-                    <button class="btn btn-inverse">ExtRest</button>
+                    <button ng-click="shortRest(character)" class="btn btn-inverse">ShortRest</button>
+                    <button ng-click="extRest(character)" class="btn btn-inverse">ExtRest</button>
                 </div>
             </div>
-            <div class="span3">
+            <div class="span4">
                 <div class="btn-group">
-                    <button class="btn btn-primary">SpendAP</button>
-                    <button class="btn btn-primary">Milestone</button>
-                </div>
-            </div>
-            <div class="span3">
-                <div class="input-prepend input-append">
-                    <button ng-click="damage(character)" class="btn btn-danger">Damage</button>
-                    <input class="span2" ng-model="change_hp[character.id]" type="text">
-                    <button class="btn btn-info">Heal</button>
+                    <button ng-click="spendAp(character)" class="btn btn-primary">AP</button>
+                    <button ng-click="awardMilestone(character)" class="btn btn-primary">Milestone</button>
+                    <button ng-click="spendHs(character)" class="btn btn-info">HS</button>
                 </div>
             </div>
             <div class="span3">
                 <div class="input-prepend">
-                    <button class="btn">SetInit</button>
-                    <input class="span2" id="set_init" type="text">
+                    <button ng-click="changeHp(character)" class="btn btn-danger">Damage/Heal</button>
+                    <input class="span2" ng-model="change_hp[character.id]" type="text">
+                </div>
+            </div>
+            <div class="span2">
+                <div class="input-prepend">
+                    <button ng-click="setInit(character)" class="btn">SetInit</button>
+                    <input class="span2" ng-model="set_init[character.id]" type="text">
                 </div>
             </div>
         </div> 
         <div class="row-fluid">
             <div class="span3">
                 <div class="input-prepend">
-                    <button class="btn btn-success">AwardXP</button>
-                    <input class="span3" id="change_xp" type="text">
+                    <button ng-click="changeXp(character)" class="btn btn-success">AwardXP</button>
+                    <input class="span3" ng-model="change_xp[character.id]" type="text">
                 </div>
             </div>
             <div class="span3">
                 <div class="input-prepend">
-                    <button class="btn btn-warning">GiveGold</button>
-                    <input class="span3" id="change_gold" type="text">
+                    <button ng-click="changeGold(character)" class="btn btn-warning">GiveGold</button>
+                    <input class="span3" ng-model="change_gold[character.id]" type="text">
                 </div>
             </div>
             <div class="span6">
                 <div class="btn-group">
-                    <button class="btn btn-danger">1</button>
-                    <button class="btn btn-danger">5</button>
-                    <button class="btn btn-danger">10</button>
-                    <button class="btn btn-danger">20</button>
-                    <button class="btn btn-info">20</button>
-                    <button class="btn btn-info">10</button>
-                    <button class="btn btn-info">5</button>
-                    <button class="btn btn-info">1</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]-20" class="btn btn-info">20</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]-10" class="btn btn-info">10</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]-5" class="btn btn-info">5</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]-1" class="btn btn-info">1</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]+1"
+                     class="btn btn-danger">1</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]+5" class="btn btn-danger">5</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]+10" class="btn btn-danger">10</button>
+                    <button ng-click="change_hp[character.id] = change_hp[character.id]+20" class="btn btn-danger">20</button>
                 </div>
             </div>
         </div>

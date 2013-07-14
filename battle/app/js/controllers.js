@@ -16,12 +16,59 @@ var CampaignCtrl = function($scope, Restangular, $routeParams) {
     var params = {campaignId: campaignId};
     Restangular.all('character').getList(params).then(function(character_list){
         $scope.character_list = character_list;
+
+        // Listeners for every character in the list
+        for (var i=0;i<character_list.length;i++) {
+            $scope.$watch('character_list['+i+']',
+            function(newValue,oldValue){
+                if(newValue == oldValue)
+                    return;
+
+                newValue.put(); }, true
+            );
+        };
     });
 
+    // ----------- EVENT HANDLERS:
+    // Character specific editable fields models
     $scope.change_hp = {};
+    $scope.change_xp = {};
+    $scope.change_gold = {};
+    $scope.set_init = {};
 
-    $scope.damage = function(character){
-        character.used_hit_points += parseInt($scope.change_hp[character.id]);
+    $scope.changeHp = function(character){
+        character.used_hit_points =
+            character.used_hit_points+parseInt($scope.change_hp[character.id]);
+
+        character.put();
+    };
+    $scope.setInit = function(character){
+        character.init = parseInt($scope.set_init[character.id]);
+    };
+    $scope.changeXp = function(character){
+        character.experience_points =
+            character.experience_points+parseInt($scope.change_xp[character.id]);
+    };
+    $scope.changeGold = function(character){
+        character.gold = character.gold+parseInt($scope.change_gold[character.id]);
+    };
+    $scope.shortRest = function(character){
+        character.milestones = character.milestones-character.milestones%2;
+    };
+    $scope.extRest = function(character){
+        $scope.shortRest(character);
+        character.milestones = 0;
+        character.used_action_points = 0;
+        character.used_healing_surges = 0;
+    };
+    $scope.spendAp = function(character){
+        character.used_action_points = character.used_action_points+1;
+    };
+    $scope.spendHs = function(character){
+        character.used_healing_surges = character.used_healing_surges+1;
+    };
+    $scope.awardMilestone = function(character){
+        character.milestones = character.milestones+1;
     };
 };
 CampaignCtrl.$inject = ['$scope','Restangular', '$routeParams'];

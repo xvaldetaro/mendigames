@@ -14,7 +14,7 @@ describe('Battle controllers', function(){
     beforeEach(module('battle.controllers'));
 
     describe('Campaign List Controller', function(){
-        var ctrl, scope = {}, $httpBackend;
+        var ctrl, scope, $httpBackend;
 
         beforeEach(inject(function(_$httpBackend_, $rootScope, $controller){
             $httpBackend = _$httpBackend_;
@@ -40,7 +40,7 @@ describe('Battle controllers', function(){
         it('should return a campaign detail model', inject(function($httpBackend,
             $rootScope, $controller){
 
-            var ctrl, scope = {}, routeParams = {"campaignId": '1'};
+            var ctrl, scope = $rootScope.$new(), routeParams = {"campaignId": '1'};
 
             $httpBackend.expectGET('/battle/campaign/1?format=json').
                 respond(_campaign1);
