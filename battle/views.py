@@ -3,9 +3,9 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
 from rest_framework import generics
 from rest_framework import viewsets
-from battle.models import Campaign, Character
+from battle.models import Campaign, Character, Power, HasPower
 from battle.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
-                                CampaignSerializer)
+                                CampaignSerializer, PowerSerializer, HasPowerSerializer)
 
 
 class IndexView(TemplateView):
@@ -52,3 +52,23 @@ class CampaignList(generics.ListCreateAPIView):
 class CampaignDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
+
+
+class PowerList(generics.ListCreateAPIView):
+    queryset = Power.objects.all()
+    serializer_class = PowerSerializer
+
+
+class PowerDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Power.objects.all()
+    serializer_class = PowerSerializer
+
+
+class HasPowerList(generics.ListCreateAPIView):
+    queryset = HasPower.objects.all()
+    serializer_class = HasPowerSerializer
+
+
+class HasPowerDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = HasPower.objects.all()
+    serializer_class = HasPowerSerializer

@@ -1,4 +1,21 @@
 /* app css stylesheet */
+[class^="icon-custom-"],
+[class*=" icon-custom-"] {
+  background-image: url("https://app.10000ft.com/images/compSpritesButtonsIcons.png?8"); }
+
+.icon-custom-logo {
+  background-position: -530px -700px;
+  width: 142px;
+  height: 158px; }
+
+.icon-custom-intheoffice {
+  background-position: -395px -60px;
+  width: 24px;
+  height: 24px; }
+
+.nav {
+  margin-bottom: 0px; }
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -22,34 +39,200 @@
   content: "";
   padding: 0; }
 
+.hidden {
+  display: none; }
+
+.nav li {
+  cursor: pointer; }
+  .nav li:hover {
+    background-color: #dddddd;
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #dddddd), color-stop(100%, #eeeeee));
+    background-image: -webkit-radial-gradient(#dddddd, #eeeeee);
+    background-image: radial-gradient(  #dddddd, #eeeeee); }
+
+.block-icon {
+  display: block;
+  white-space: nowrap; }
+
+div.power-detail-modal {
+  padding: 0px;
+  width: 590px; }
+
 div.character-block {
   background-image: -webkit-radial-gradient( #dddddd, white);
   background-image: radial-gradient(   #dddddd, white);
   border: 1px solid lightgray;
-  padding: 5px; }
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px;
+  border-top: 0px;
+  padding-top: 0px;
+  margin-bottom: 10px; }
+  div.character-block div {
+    vertical-align: middle; }
 
-table.stats th {
-  background-image: -webkit-linear-gradient(top, #666666, black);
-  background-image: linear-gradient(to bottom, #666666, black);
+div.stat-div {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 0px;
+  border-width: 0px; }
+
+table.stat-table {
+  width: 1px;
+  height: 1px;
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px; }
+  table.stat-table .stat-edit {
+    height: 1em;
+    width: 1.3em;
+    margin: 0px; }
+  table.stat-table td {
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle; }
+    table.stat-table td .inline {
+      height: 1em;
+      width: 2em; }
+  table.stat-table td.black-table-label {
+    background-image: -webkit-linear-gradient( #fafafa, #eaeaea);
+    background-image: linear-gradient( #fafafa, #eaeaea);
+    color: #333333;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: Helvetica, arial, freesans, clean, sans-serif; }
+  table.stat-table td.editable-cell {
+    padding: 1px; }
+  table.stat-table td.bar {
+    font-weight: bold;
+    font-size: 16px; }
+  table.stat-table td.red-bar {
+    color: white;
+    background-color: #bd362f; }
+  table.stat-table td.white-bar {
+    color: #333333;
+    background-color: #fff; }
+  table.stat-table td.button-cell {
+    background-image: -webkit-linear-gradient(top, white, #e6e6e6);
+    background-image: linear-gradient(to bottom, white, #e6e6e6);
+    cursor: pointer; }
+    table.stat-table td.button-cell:hover {
+      background-color: #dddddd;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #dddddd), color-stop(100%, #eeeeee));
+      background-image: -webkit-radial-gradient(#dddddd, #eeeeee);
+      background-image: radial-gradient(  #dddddd, #eeeeee); }
+
+div.power-button {
+  display: inline-block;
+  padding: 1px;
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px;
   color: white;
-  font-size: 16px;
-  text-align: center;
-  vertical-align: middle; }
-table.stats th.hs {
-  background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
-  background-image: linear-gradient(to bottom, #5bc0de, #2f96b4); }
-table.stats th.hp {
-  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
-  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f); }
-table.stats th.xp {
-  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
-  background-image: linear-gradient(to bottom, #62c462, #51a351); }
-table.stats th.gold {
-  background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
-  background-image: linear-gradient(to bottom, #fbb450, #f89406); }
-table.stats th.ap {
-  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc); }
-table.stats td {
-  text-align: center;
-  font-weight: bold; }
+  width: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  white-space: nowrap; }
+
+div.power-block {
+  display: inline-block;
+  padding: 4px;
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px;
+  color: white;
+  width: 282px;
+  font-size: 1em;
+  font-weight: bold;
+  white-space: nowrap; }
+  div.power-block .level {
+    font-size: 1.2em; }
+  div.power-block .spend.encounter-available, div.power-block .info.encounter-available {
+    background-image: -webkit-linear-gradient(bottom, #961334, #da1c4c);
+    background-image: linear-gradient(to top, #961334, #da1c4c);
+    cursor: pointer; }
+    div.power-block .spend.encounter-available:hover, div.power-block .info.encounter-available:hover {
+      background-color: #961334;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(100%, #f5b3c3));
+      background-image: -webkit-radial-gradient(#961334, #f5b3c3);
+      background-image: radial-gradient(  #961334, #f5b3c3); }
+  div.power-block .recharge.encounter-available {
+    display: none; }
+  div.power-block .recharge.encounter-used, div.power-block .info.encounter-used {
+    background-image: -webkit-linear-gradient(bottom, #961334, #da1c4c);
+    background-image: linear-gradient(to top, #961334, #da1c4c);
+    cursor: pointer; }
+    div.power-block .recharge.encounter-used:hover, div.power-block .info.encounter-used:hover {
+      background-color: #961334;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(100%, #f5b3c3));
+      background-image: -webkit-radial-gradient(#961334, #f5b3c3);
+      background-image: radial-gradient(  #961334, #f5b3c3); }
+  div.power-block .spend.encounter-used {
+    display: none; }
+  div.power-block .spend.daily-available, div.power-block .info.daily-available {
+    background-image: -webkit-linear-gradient(bottom, #4d4d4f, #737376);
+    background-image: linear-gradient(to top, #4d4d4f, #737376);
+    cursor: pointer; }
+    div.power-block .spend.daily-available:hover, div.power-block .info.daily-available:hover {
+      background-color: #4d4d4f;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(100%, #cdcdce));
+      background-image: -webkit-radial-gradient(#4d4d4f, #cdcdce);
+      background-image: radial-gradient(  #4d4d4f, #cdcdce); }
+  div.power-block .recharge.daily-available {
+    display: none; }
+  div.power-block .recharge.daily-used, div.power-block .info.daily-used {
+    background-image: -webkit-linear-gradient(bottom, #4d4d4f, #737376);
+    background-image: linear-gradient(to top, #4d4d4f, #737376);
+    cursor: pointer; }
+    div.power-block .recharge.daily-used:hover, div.power-block .info.daily-used:hover {
+      background-color: #4d4d4f;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(100%, #cdcdce));
+      background-image: -webkit-radial-gradient(#4d4d4f, #cdcdce);
+      background-image: radial-gradient(  #4d4d4f, #cdcdce); }
+  div.power-block .spend.daily-used {
+    display: none; }
+  div.power-block .info.at-will-available {
+    background-image: -webkit-linear-gradient(bottom, #436949, #619869);
+    background-image: linear-gradient(to top, #436949, #619869);
+    cursor: pointer; }
+    div.power-block .info.at-will-available:hover {
+      background-color: #436949;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(100%, #cddfcf));
+      background-image: -webkit-radial-gradient(#436949, #cddfcf);
+      background-image: radial-gradient(  #436949, #cddfcf); }
+  div.power-block .spend.at-will-available, div.power-block .recharge.at-will-available {
+    display: none; }
+  div.power-block .info.at-will-used {
+    background-image: -webkit-linear-gradient(bottom, #436949, #619869);
+    background-image: linear-gradient(to top, #436949, #619869);
+    cursor: pointer; }
+    div.power-block .info.at-will-used:hover {
+      background-color: #436949;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(100%, #cddfcf));
+      background-image: -webkit-radial-gradient(#436949, #cddfcf);
+      background-image: radial-gradient(  #436949, #cddfcf); }
+  div.power-block .recharge.at-will-used, div.power-block .spend.at-will-used {
+    display: none; }
+
+.encounter-available {
+  background-color: #961334; }
+
+.at-will-available {
+  background-color: #436949; }
+
+.daily-available {
+  background-color: #4d4d4f; }
+
+.encounter-used {
+  background-color: #fbe0e7; }
+
+.at-will-used {
+  background-color: white; }
+
+.daily-used {
+  background-color: #cdcdce; }

@@ -46,4 +46,19 @@ describe('Battle Services', function(){
             $httpBackend.flush();
         }));
     });
+
+    describe('Roll service', function(){
+        it('should return a character_list model', inject(function(roll) {
+            for (var i = 0;i<1000;i++) {
+                var result = roll(i);
+                expect(result).toBeLessThan(i+21);
+                expect(result).toBeGreaterThan(i-1);
+            }
+            for (var i = 0;i<1000;i++) {
+                var result = roll();
+                expect(result).toBeLessThan(21);
+                expect(result).toBeGreaterThan(0);
+            }
+        }));
+    });
 });

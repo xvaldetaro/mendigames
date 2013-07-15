@@ -20,6 +20,14 @@ urlpatterns = patterns(
     url(r'^character/?$', views.CharacterList.as_view()),
 
     url(r'^character/(?P<pk>[0-9]+)/?$', views.CharacterDetail.as_view()),
+
+    url(r'^power/?$', views.PowerList.as_view()),
+
+    url(r'^power/(?P<pk>[0-9]+)/?$', views.PowerDetail.as_view()),
+
+    url(r'^has_power/?$', views.HasPowerList.as_view()),
+
+    url(r'^has_power/(?P<pk>[0-9]+)/?$', views.HasPowerDetail.as_view()),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

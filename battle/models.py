@@ -37,21 +37,21 @@ class Power(models.Model):
     name = models.CharField(max_length=30)
     text = models.TextField(blank=True)
 
+    class Meta:
+        ordering = ['-usage','level','name']
+
     def __unicode__(self):
         return self.name
 
 
 class HasPower(models.Model):
-    character = models.ForeignKey(Character)
+    character = models.ForeignKey(Character, related_name="has_powers")
     power = models.ForeignKey(Power)
+    used = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return self.power
-
-
-class UsedPower(models.Model):
-    character = models.ForeignKey(Character)
-    power = models.ForeignKey(Power)
+    class Meta:
+        unique_together = (("character", "power"),)
+        ordering = ['-power__usage','power__level','power__name']
 
     def __unicode__(self):
         return self.power

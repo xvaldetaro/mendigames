@@ -1,8 +1,14 @@
 'use strict';
 
-angular.module('battle.services', ['restangular']).config(function(RestangularProvider) {
+angular.module('battle.services', ['restangular']).
+    factory('roll', function(){ return function(mod){
+        if(isNaN(mod))
+            return _.random(1,20);
+        return parseInt(mod)+_.random(1,20)
+        ;};}
+    ).
+    config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
-
     RestangularProvider.setDefaultRequestParams({format: 'json'});
 
     // Now let's configure the response extractor for each request

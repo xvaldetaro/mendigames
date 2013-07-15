@@ -1,6 +1,17 @@
 /* app css stylesheet */
 @import 'bourbon/bourbon';
 
+[class^="icon-custom-"],
+[class*=" icon-custom-"] {
+  background-image: url("https://app.10000ft.com/images/compSpritesButtonsIcons.png?8");
+}
+
+.icon-custom-logo { background-position : -530px -700px; width : 142px; height : 158px;  }
+.icon-custom-intheoffice { background-position: -395px -60px; width: 24px; height: 24px  }
+
+.nav {
+  margin-bottom: 0px;
+}
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -30,38 +41,202 @@
   padding: 0;
 }
 
+.hidden {
+  display: none;
+}
+
+.nav {
+
+  li{
+    &:hover{
+        @include radial-gradient(#ddd, #eee);
+      }
+      cursor: pointer;
+  }
+}
+
+.block-icon{
+  display: block;
+  white-space:nowrap;
+}
+
+div.power-detail-modal{
+  padding:0px;
+  width: 590px;
+}
 div.character-block {
   //@include background-image(linear-gradient(to bottom, #000, #666));
   @include background-image(radial-gradient(#ddd, #fff));
   border: 1px solid lightgray;
-  padding: 5px;
-}
-
-table.stats {
-  th{
-    @include background-image(linear-gradient(to bottom, #666, #000));
-    color: white;
-    font-size: 16px;
-    text-align: center;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px;
+  border-top: 0px;
+  padding-top: 0px;
+  margin-bottom: 10px;
+  div {
     vertical-align: middle;
   }
-  th.hs{
-    @include background-image(linear-gradient(to bottom, #5bc0de, #2f96b4));
-  }
-  th.hp{
-    @include background-image(linear-gradient(to bottom, #ee5f5b, #bd362f));
-  }
-  th.xp{
-    @include background-image(linear-gradient(to bottom, #62c462, #51a351));
-  }
-  th.gold{
-    @include background-image(linear-gradient(to bottom, #fbb450, #f89406));
-  }
-  th.ap{
-    @include background-image(linear-gradient(to bottom, #0088cc, #0044cc));
+}
+
+div.stat-div {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 0px;
+  border-width: 0px;
+}
+table.stat-table {
+  width: 1px;
+  height: 1px;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px;
+
+  .stat-edit{
+    height: 1em;
+    width: 1.3em;
+    margin: 0px;
   }
   td{
     text-align: center;
     font-weight: bold;
+    vertical-align: middle;
+    .inline{
+      height: 1em;
+      width:2em;
+    }
   }
+  td.black-table-label{
+    @include background-image(linear-gradient(rgb(250, 250, 250), rgb(234, 234, 234)));
+    color: rgb(51, 51, 51);
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: Helvetica, arial, freesans, clean, sans-serif;
+  }
+  td.editable-cell{
+    padding: 1px;
+  }
+  td.bar{
+    font-weight: bold;
+    font-size: 16px;
+  }
+  td.red-bar{
+    color: white;
+    background-color: #bd362f;
+  }
+  td.white-bar{
+    color: rgb(51, 51, 51);
+    background-color: #fff;
+  }
+  td.button-cell{
+    &:hover{
+      @include radial-gradient(#ddd, #eee);
+    }
+    @include background-image(linear-gradient(to bottom, #fff,#e6e6e6));
+    cursor: pointer;
+  }
+}
+
+@mixin power-available($color) {
+  @include background-image(linear-gradient(to top, $color,lighten($color,15%)));
+  cursor: pointer;
+  &:hover{
+      @include radial-gradient($color, lighten($color,50%));
+  }
+}
+@mixin power-used($color) {
+  background-color: lighten($color, 50%);
+}
+
+div.power-button {
+  display: inline-block;
+  padding: 1px;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  color: white;
+  width: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  white-space:nowrap;
+}
+
+$encounter_red: #961334;
+$at_will_green: darken(#619869,15%);
+$daily_gray: #4d4d4f;
+
+div.power-block {
+  display: inline-block;
+  padding: 4px;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  border-image-outset: 0px;
+  color: white;
+  width: 282px;
+  font-size: 1em;
+  font-weight: bold;
+  white-space:nowrap;
+
+  .level {
+    font-size: 1.2em;
+  }
+  .spend.encounter-available,.info.encounter-available {
+    @include power-available($encounter_red);
+  }
+  .recharge.encounter-available{
+    display: none;
+  }
+  .recharge.encounter-used,.info.encounter-used {
+    @include power-available($encounter_red);
+  }
+  .spend.encounter-used{
+    display: none;
+  }
+  .spend.daily-available,.info.daily-available {
+    @include power-available($daily_gray);
+  }
+  .recharge.daily-available{
+    display: none;
+  }
+  .recharge.daily-used,.info.daily-used {
+    @include power-available($daily_gray);
+  }
+  .spend.daily-used{
+    display: none;
+  }
+  .info.at-will-available {
+    @include power-available($at_will_green);
+  }
+  .spend.at-will-available,.recharge.at-will-available{
+    display: none;
+  }
+  .info.at-will-used {
+    @include power-available($at_will_green);
+  }
+  .recharge.at-will-used,.spend.at-will-used{
+    display: none;
+  }
+}
+.encounter-available {
+  background-color: $encounter_red;
+}
+.at-will-available {
+  background-color: $at_will_green;
+}
+.daily-available {
+  background-color: $daily_gray;
+}
+.encounter-used {
+  background-color: lighten($encounter_red, 60%);
+}
+.at-will-used {
+  background-color: lighten($at_will_green, 70%);
+}
+.daily-used {
+  background-color: lighten($daily_gray, 50%);
 }

@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap-responsive.min.css' %}">
   <link rel="stylesheet" href="{% static 'battle/css/app.css' %}"/>
+  <link rel="stylesheet" href="{% static 'battle/css/wizards.css' %}"/>
   <script src="{% static 'boilerplate/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
 </head>
 <body>
@@ -36,6 +37,9 @@
 <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{% static 'boilerplate/js/vendor/jquery-1.9.1.min.js' %}"><\/script>')</script>
+
   <script src="{% static 'lib/angular/angular.js' %}"></script>
   <script src="{% static 'lib/angular/angular-cookies.js' %}"></script>
   <script src="{% url 'angular-module' %}"></script>
@@ -46,6 +50,7 @@
   <script src="{% static 'battle/js/controllers.js' %}"></script>
   <script src="{% static 'battle/js/filters.js' %}"></script>
   <script src="{% static 'battle/js/directives.js' %}"></script>
+  <script src="{% static 'boilerplate/js/vendor/bootstrap.min.js' %}"></script>
 <!--<script>
 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
