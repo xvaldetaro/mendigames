@@ -30,15 +30,60 @@ class Character(models.Model):
         return "%s - in Campaign %s" % (self.name, self.campaign)
 
 
-class Power(models.Model):
+class Book(models.Model):
+    name = models.CharField(max_length=60, primary_key=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class BookEntry(models.Model):
+    name = models.CharField(max_length=60, primary_key=True)
+    wizards_id = models.IntegerField(default=1)
+    books = models.ManyToManyField(Book)
+    class Meta:
+        abstract = True
+
+
+class TraitSource(BookEntry):
+    SOURCE_TYPE = (('BA', 'Background'),
+                  ('TH', 'Theme'),
+                  ('CL', 'Class'),
+                  ('ED', 'Epic Destiny'),
+                  ('PP', 'Paragon Path'),
+                  ('RA', 'Race'))
+
+    source_type = models.CharField(max_length=2, choices=SOURCE_TYPE, default='CL')
+
+    def __unicode__(self):
+        return "%s: %s" % (self.source_type, self.name)
+
+    class Meta:
+        ordering = ['source_type', 'name']
+
+
+class Power(BookEntry):
     USAGE = (('W', 'At-Will'), ('E', 'Encounter'), ('D', 'Daily'))
-    usage = models.CharField(max_length=1, choices=USAGE, default='W')
+    ACTION = (('FR', "Free"),
+             ('II', "Immediate Interrupt"),
+             ('IR', 'Immediate Reaction'),
+             ('MI', 'Minor'),
+             ('MO', 'Move'),
+             ('NA', 'No Action'),
+             ('OP', 'Opportunity'),
+             ('ST', 'Standard'))
+
     level = models.IntegerField(default=1, blank=True)
-    name = models.CharField(max_length=30)
+    usage = models.CharField(max_length=1, choices=USAGE, default='W')
+    action = models.CharField(max_length=2, choices=ACTION, default='ST')
+    source = models.ForeignKey(TraitSource)
     text = models.TextField(blank=True)
 
     class Meta:
-        ordering = ['-usage','level','name']
+        ordering = ['-usage', 'level', 'name']
 
     def __unicode__(self):
         return self.name
@@ -51,20 +96,52 @@ class HasPower(models.Model):
 
     class Meta:
         unique_together = (("character", "power"),)
-        ordering = ['-power__usage','power__level','power__name']
+        ordering = ['-power__usage', 'power__level', 'power__name']
 
     def __unicode__(self):
         return self.power
 
 
-class Item(models.Model):
-    name = models.CharField(max_length=30)
+class Item(BookEntry):
+    RARITY = (('A', 'Mundane'), ('C', 'Common'), ('U', 'Uncommon'), ('R', 'Rare'))
+    CATEGORY = (
+        ('ARMO', 'Armor'),
+        ('ARMS', 'Arms'),
+        ('ITEM', 'Item Set'),
+        ('WOND', 'Wondrous'),
+        ('AMMU', 'Ammunition'),
+        ('WAIS', 'Waist'),
+        ('ALTE', 'Alternative Reward'),
+        ('HEAD', 'Head'),
+        ('FAMI', 'Familiar'),
+        ('ARTI', 'Artifact'),
+        ('COMP', 'Companion'),
+        ('HAND', 'Hands'),
+        ('CONS', 'Consumable'),
+        ('MOUN', 'Mount'),
+        ('NECK', 'Neck'),
+        ('WEAP', 'Weapon'),
+        ('IMPL', 'Implement'),
+        ('EQUI', 'Equipment'),
+        ('ALCH', 'Alchemical Item'),
+        ('FEET', 'Feet'),
+        ('HEAD', 'Head and Neck'),
+        ('RING', 'Ring'),
+    )
+
+    category = models.CharField(max_length=4, choices=CATEGORY, default='ARMO')
+    level = models.IntegerField(default=1, blank=True)
+    level_cost_plus = models.BooleanField(default=False)
+    rarity = models.CharField(max_length=1, choices=RARITY, default='A')
     weight = models.IntegerField(default=0, blank=True)
-    value = models.IntegerField(default=0, blank=True)
+    cost = models.IntegerField(default=0, blank=True)
     text = models.TextField(blank=True)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['level', 'rarity', 'name']
 
 
 class HasItem(models.Model):
@@ -73,3 +150,43 @@ class HasItem(models.Model):
 
     def __unicode__(self):
         return self.item
+
+
+class Condition(BookEntry):
+    pass
+
+
+class HasCondition(models.Model):
+    ENDS = (("T", 'Turn'), ('S', 'Save'))
+    character = models.ForeignKey(Character)
+    condition = models.ForeignKey(Condition)
+    ends = models.CharField(max_length=1, choices=ENDS, default='T')
+    started_round = models.IntegerField()
+    started_init = models.IntegerField()
+
+    def __unicode__(self):
+        return self.item
+
+
+class Monster(BookEntry):
+    GROUP_ROLE = (
+        ('MI', 'Minion'),
+        ('SO', 'Solo'),
+        ('CO', 'Conjured'),
+        ('EL', 'Elite'),
+        ('ST', 'Standard'),
+    )
+    COMBAT_ROLE = (
+        ('LU', 'Lurker'),
+        ('SK', 'Skirmisher'),
+        ('AR', 'Artillery'),
+        ('NO', 'No Role'),
+        ('BR', 'Brute'),
+        ('SO', 'Soldier'),
+        ('CO', 'Controller'),
+        ('LE', 'Leader'),
+    )
+    level = models.IntegerField(default=1, blank=True)
+    group_role = models.CharField(max_length=2, choices=GROUP_ROLE, default='SO')
+    combat_role = models.CharField(max_length=2, choices=COMBAT_ROLE, default='NO')
+    combat_role2 = models.CharField(max_length=2, blank=True, choices=COMBAT_ROLE, default='NO')

@@ -30,4 +30,4 @@ urlpatterns = patterns(
     url(r'^has_power/(?P<pk>[0-9]+)/?$', views.HasPowerDetail.as_view()),
 )
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+#urlpatterns = format_suffix_patterns(urlpatterns)

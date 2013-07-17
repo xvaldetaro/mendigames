@@ -25,7 +25,6 @@ class HasPowerListingField(serializers.RelatedField):
         return power
 
 
-
 class CharacterSerializer(serializers.ModelSerializer):
     has_powers = HasPowerListingField(many=True)
 

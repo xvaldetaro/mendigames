@@ -114,15 +114,16 @@ var CampaignCtrl = function($scope, $timeout, Restangular, $routeParams, roll, $
     };
     $scope.fetch_from_compendium = function(power){
         $http({
-            url: '/dndinsider/compendium/power.aspx?id='+power.id,
+            url: '/dndinsider/compendium/power.aspx?id='+power.wizards_id,
             method: 'GET',
             dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         }).
         success(function(data){
             var fakedom = $('<div></div>');
             fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>','<i class="icon-star"></i>'));
-            $('span[id|="detailPlaceholder"]').append($('div[id|="detail"]', fakedom));
+            $('div[id|="detail"]').replaceWith($('div[id|="detail"]', fakedom));
         });
+        $('div[id|="detail"]').empty()
     };
 };
 CampaignCtrl.$inject = ['$scope','$timeout','Restangular', '$routeParams', 'roll', '$http'];
