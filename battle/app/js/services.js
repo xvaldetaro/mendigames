@@ -39,6 +39,23 @@ angular.module('battle.services', ['restangular']).
         }
         return nd;
     };}).
+    factory('WizardsService', ['$rootScope', '$http', function($rootScope, $http){
+        return {
+            fetch: function(id, model) {
+                $rootScope.$broadcast('WizardsService.fetching');
+                $http({
+                    url: '/dndinsider/compendium/'+model+'.aspx?id='+id,
+                    method: 'GET',
+                    dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                }).
+                success(function(data){
+                    var fakedom = $('<div></div>');
+                    fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>','<i class="icon-star"></i>'));
+                    $rootScope.$broadcast('WizardsService.fetch', $('div[id|="detail"]', fakedom));
+                });
+            }
+        };
+    }]).
     config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
     RestangularProvider.setDefaultRequestParams({format: 'json'});

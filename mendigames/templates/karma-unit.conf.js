@@ -10,6 +10,7 @@ files = [
 // NOTE: Place other Javascript dependencies here.
   '{{ djangular_root }}/static/lib/angular/underscore.js',
   '{{ djangular_root }}/static/lib/angular/ui-bootstrap-tpls-0.4.0.min.js',
+  '{{ djangular_root }}/static/lib/angular/jquery-1.9.1.min.js',
   '{{ djangular_root }}/static/lib/angular/angular-dragdrop.min.js',
   '{{ djangular_root }}/static/lib/angular/restangular.js',
 // JS Files to be tested: {% for app_path in app_paths %}

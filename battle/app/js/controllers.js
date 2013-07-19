@@ -16,12 +16,13 @@ var CharacterCtrl = function($scope, Restangular, $routeParams) {
 CharacterCtrl.$inject = ['$scope', 'Restangular', '$routeParams'];
 
 angular.module('battle.controllers', ['restangular','battle.services', 'ui.bootstrap',
-    'ngDragDrop']).
+    'ngDragDrop', 'ngSanitize']).
 controller('CampaignListCtrl', CampaignListCtrl).
 
 controller('CampaignCtrl', ['$scope','$timeout','Restangular', '$routeParams', 'roll', 
-    '$http', 'NameDict',
-    function($scope, $timeout, Restangular, $routeParams, roll, $http, NameDict) {
+    '$http', 'NameDict', 'WizardsService',
+    function($scope, $timeout, Restangular, $routeParams, roll, $http, NameDict, 
+        WizardsService) {
         var campaignId = $routeParams.campaignId;
 
         // Character specific editable fields models
@@ -142,18 +143,8 @@ controller('CampaignCtrl', ['$scope','$timeout','Restangular', '$routeParams', '
             remoteHc.remove().then(null, function() {window.alert("No sync")});
             character.has_conditions.splice(hci, 1);
         };
-        $scope.fetch_from_compendium = function(power){
-            $http({
-                url: '/dndinsider/compendium/power.aspx?id='+power.wizards_id,
-                method: 'GET',
-                dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            }).
-            success(function(data){
-                var fakedom = $('<div></div>');
-                fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>','<i class="icon-star"></i>'));
-                $('div[id|="detail"]').replaceWith($('div[id|="detail"]', fakedom));
-            });
-            $('div[id|="detail"]').empty();
+        $scope.fetch_from_compendium = function(id, model){
+            WizardsService.fetch(id, model);
         };
         $scope.condition_drag = function(e,o,index) {
             $scope.dragged_condition = index;
@@ -163,7 +154,7 @@ controller('CampaignCtrl', ['$scope','$timeout','Restangular', '$routeParams', '
             var condition = ch.has_conditions.pop();
             $scope.conditionList.splice($scope.dragged_condition,0,condition);
             var has_condition = {character: ch.id, condition: condition.name, ends: 'T',
-                            started_round: 1, started_init: 1, name: condition.name, 
+                            started_round: 1, started_init: 1, name: condition.name,
                             wizards_id: condition.wizards_id};
 
             ch.has_conditions.push(has_condition)
@@ -179,4 +170,15 @@ controller('CampaignCtrl', ['$scope','$timeout','Restangular', '$routeParams', '
             });
         };
     }]).
-controller('CharacterCtrl', CharacterCtrl);
+controller('CharacterCtrl', CharacterCtrl).
+controller('ModalController', ['$scope', 'WizardsService',
+    function($scope, WizardsService) {
+        $scope.wizardsModal = false;
+        $scope.close = function() { $scope.wizardsModal = false; }
+        $scope.$on('WizardsService.fetching', function(event, detailTag) {
+            $scope.wizardsModal = true;
+        });
+        $scope.$on('WizardsService.fetch', function(event, detailTag) {
+            $scope.detailTag = detailTag.html();
+        });
+    }]);

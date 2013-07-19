@@ -49,10 +49,9 @@ body {
   display: none;
 }
 
-
-div.wizards-detail-modal{
+div.wizards-modal{
   padding:0px;
-  width: 590px;
+  width: 700px;
 }
 
 .block-icon{
@@ -103,7 +102,13 @@ div.inline {
   display: inline-block;
 }
 div.power-container {
-  @include background-image(radial-gradient(#ddd, #fff));
+  border: 1px solid lightgray;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  padding-top: 0px;
+}
+div.power-container {
   border: 1px solid lightgray;
   border-color: rgb(213, 213, 213);
   border-style: solid;
@@ -111,12 +116,13 @@ div.power-container {
   padding-top: 0px;
 }
 div.has-conditions-box {
-  @include background-image(radial-gradient(#ddd, #fff));
+  @include background-image(radial-gradient(#fff, rgb(200,200,200)));
   border: 1px solid lightgray;
   border-color: rgb(213, 213, 213);
   border-style: solid;
   border-width: 1px;
   padding-top: 0px;
+  min-height: 60px;
 }
 div.power-use-button {
   display: inline-block;
@@ -151,6 +157,7 @@ table.stat-table {
   width: 1px;
   height: 1px;
   margin: 0px;
+  margin-top: 3px;
   padding: 0px;
   border-color: rgb(213, 213, 213);
   border-style: solid;
@@ -205,6 +212,8 @@ table.stat-table {
   }
 
   td.button-cell{
+    color: $IFRONT;
+    font-weight: bold;
     @include buttonify($BGRAY);
     &.hp {
       @include buttonify($HP);

@@ -61,4 +61,14 @@ describe('Battle Services', function(){
             }
         }));
     });
+
+    describe('Wizards service', function(){
+        it('Get the proper detail detailTag', inject(function($rootScope, WizardsService, $httpBackend) {
+            var id = 10, model = 'power', detailTag = '<html><div id="detail">A</div></html>';
+            $httpBackend.expectGET('/dndinsider/compendium/'+model+'.aspx?id='+id).
+                respond("");
+
+            WizardsService.fetch(id, model);
+        }));
+    });
 });
