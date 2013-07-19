@@ -35,13 +35,14 @@ body {
   color: darken($color, 15%);
 }
 
+// ----------- Docked Menu Config
+div.docked-menu {
+  position: fixed;
+  left: 35%;
+  top: 20%;
+}
+
 div.conditions-box {
-  @include background-image(radial-gradient(#ddd, #fff));
-  border: 1px solid lightgray;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px;
 }
 
 div.condition-box {
@@ -66,16 +67,24 @@ div.character-block {
   border-color: rgb(213, 213, 213);
   border-style: solid;
   border-width: 1px;
-  border-image-outset: 0px;
+  border-radius: 5px;
   padding-top: 0px;
   padding: 2px;
   margin-bottom: 5px;
 }
   
-span.name-container {
+div.name-container {
+  display: inline-block;
   font-family: 'Rum Raisin', cursive;
   font-size: 1.5em;
   color: $IFRONT;
+}
+div.dropdown-container {
+  display: inline-block;
+  li{
+    line-height: 0;
+    cursor: pointer;
+  }
 }
 div.inline {
   display: inline-block;

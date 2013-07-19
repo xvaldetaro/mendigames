@@ -4,14 +4,10 @@
 body {
   font-family: 'Expletus Sans', sans-serif; }
 
-div.conditions-box {
-  background-image: -webkit-radial-gradient( #dddddd, white);
-  background-image: radial-gradient(   #dddddd, white);
-  border: 1px solid lightgray;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px; }
+div.docked-menu {
+  position: fixed;
+  left: 35%;
+  top: 20%; }
 
 div.condition-box {
   display: inline-block;
@@ -41,15 +37,22 @@ div.character-block {
   border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px;
-  border-image-outset: 0px;
+  border-radius: 5px;
   padding-top: 0px;
   padding: 2px;
   margin-bottom: 5px; }
 
-span.name-container {
+div.name-container {
+  display: inline-block;
   font-family: 'Rum Raisin', cursive;
   font-size: 1.5em;
   color: white; }
+
+div.dropdown-container {
+  display: inline-block; }
+  div.dropdown-container li {
+    line-height: 0;
+    cursor: pointer; }
 
 div.inline {
   display: inline-block; }
