@@ -2,28 +2,7 @@
 @import url(http://fonts.googleapis.com/css?family=Expletus+Sans);
 /* app css stylesheet */
 body {
-  font-family: Expletus Sans, sans-serif; }
-
-.nav {
-  margin-bottom: 0px; }
-  .nav li {
-    cursor: pointer; }
-    .nav li:hover {
-      background-color: #dddddd;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #dddddd), color-stop(100%, #eeeeee));
-      background-image: -webkit-radial-gradient(#dddddd, #eeeeee);
-      background-image: radial-gradient(  #dddddd, #eeeeee); }
-
-.hidden {
-  display: none; }
-
-div.wizards-modal {
-  padding: 0px;
-  width: 700px; }
-
-.block-icon {
-  display: block;
-  white-space: nowrap; }
+  font-family: 'Expletus Sans', sans-serif; }
 
 div.conditions-box {
   background-image: -webkit-radial-gradient( #dddddd, white);
@@ -42,6 +21,7 @@ div.condition-box {
   border-width: 1px;
   border-top: 0px;
   border-left: 0px;
+  border-radius: 3px;
   color: white;
   font-weight: bold;
   width: 1.3em;
@@ -55,92 +35,82 @@ div.condition-box {
     background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
 
 div.character-block {
-  background-image: -webkit-radial-gradient( #dddddd, white);
-  background-image: radial-gradient(   #dddddd, white);
+  background-image: -webkit-radial-gradient( #141414, #323232);
+  background-image: radial-gradient(   #141414, #323232);
   border: 1px solid lightgray;
   border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px;
   border-image-outset: 0px;
   padding-top: 0px;
+  padding: 2px;
   margin-bottom: 5px; }
 
-div.character-name {
+span.name-container {
   font-family: 'Rum Raisin', cursive;
-  font-size: 1.3em; }
+  font-size: 1.5em;
+  color: white; }
 
 div.inline {
   display: inline-block; }
 
-div.power-container {
-  border: 1px solid lightgray;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px; }
-
-div.power-container {
-  border: 1px solid lightgray;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px; }
-
 div.has-conditions-box {
-  background-image: -webkit-radial-gradient( white, #c8c8c8);
-  background-image: radial-gradient(   white, #c8c8c8);
+  background-image: -webkit-radial-gradient( #141414, #323232);
+  background-image: radial-gradient(   #141414, #323232);
   border: 1px solid lightgray;
   border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px;
+  border-radius: 5px;
   padding-top: 0px;
-  min-height: 60px; }
+  min-height: 58px; }
 
-div.power-use-button {
-  display: inline-block;
-  text-align: center;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  border-top: 0px;
-  border-left: 0px;
-  color: white;
-  font-weight: bold;
-  width: 1.3em; }
-  div.power-use-button.at-will {
-    display: none; }
-  div.power-use-button.encounter {
-    background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
-    background-image: linear-gradient(to top, #6d0e26, #bf1842);
-    cursor: pointer; }
-    div.power-use-button.encounter:hover {
-      background-color: #961334;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-      background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-      background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
-    div.power-use-button.encounter.used {
-      background-image: none;
-      background-color: #f5b3c3;
-      color: #f193ab; }
-  div.power-use-button.daily {
-    background-image: -webkit-linear-gradient(bottom, #363638, #646466);
-    background-image: linear-gradient(to top, #363638, #646466);
-    cursor: pointer; }
-    div.power-use-button.daily:hover {
-      background-color: #4d4d4f;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-      background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-      background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
-    div.power-use-button.daily.used {
-      background-image: none;
-      background-color: #cdcdce;
-      color: #bbbbbd; }
+div.power-container {
+  padding-top: 0px;
+  padding-bottom: 2px; }
+  div.power-container div.power-use-button {
+    display: inline-block;
+    text-align: center;
+    border-color: #d5d5d5;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    width: 1.3em; }
+    div.power-container div.power-use-button.at-will {
+      display: none; }
+    div.power-container div.power-use-button.encounter {
+      background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
+      background-image: linear-gradient(to top, #6d0e26, #bf1842);
+      cursor: pointer; }
+      div.power-container div.power-use-button.encounter:hover {
+        background-color: #961334;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
+        background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
+        background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
+      div.power-container div.power-use-button.encounter.used {
+        background-image: none;
+        background-color: #3b0815;
+        color: #520a1c; }
+    div.power-container div.power-use-button.daily {
+      background-image: -webkit-linear-gradient(bottom, #363638, #646466);
+      background-image: linear-gradient(to top, #363638, #646466);
+      cursor: pointer; }
+      div.power-container div.power-use-button.daily:hover {
+        background-color: #4d4d4f;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
+        background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
+        background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+      div.power-container div.power-use-button.daily.used {
+        background-image: none;
+        background-color: #1b1b1b;
+        color: #272728; }
 
 table.stat-table {
   width: 1px;
   height: 1px;
   margin: 0px;
-  margin-top: 3px;
   padding: 0px;
   border-color: #d5d5d5;
   border-style: solid;
@@ -224,114 +194,3 @@ table.stat-table {
         background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #003b6f), color-stop(50%, #002341), color-stop(100%, #00539d));
         background-image: -webkit-radial-gradient(#003b6f, #002341, #00539d);
         background-image: radial-gradient(  #003b6f, #002341, #00539d); }
-
-div.power-button {
-  display: inline-block;
-  padding: 1px;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  color: white;
-  width: 1em;
-  font-size: 1em;
-  font-weight: bold;
-  white-space: nowrap; }
-
-div.power-block {
-  display: inline-block;
-  padding: 4px;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  border-image-outset: 0px;
-  color: white;
-  width: 282px;
-  font-size: 1em;
-  font-weight: bold;
-  white-space: nowrap; }
-  div.power-block .level {
-    font-size: 1.2em; }
-  div.power-block .spend.encounter-available, div.power-block .info.encounter-available {
-    background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
-    background-image: linear-gradient(to top, #6d0e26, #bf1842);
-    cursor: pointer; }
-    div.power-block .spend.encounter-available:hover, div.power-block .info.encounter-available:hover {
-      background-color: #961334;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-      background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-      background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
-  div.power-block .recharge.encounter-available {
-    display: none; }
-  div.power-block .recharge.encounter-used, div.power-block .info.encounter-used {
-    background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
-    background-image: linear-gradient(to top, #6d0e26, #bf1842);
-    cursor: pointer; }
-    div.power-block .recharge.encounter-used:hover, div.power-block .info.encounter-used:hover {
-      background-color: #961334;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-      background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-      background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
-  div.power-block .spend.encounter-used {
-    display: none; }
-  div.power-block .spend.daily-available, div.power-block .info.daily-available {
-    background-image: -webkit-linear-gradient(bottom, #363638, #646466);
-    background-image: linear-gradient(to top, #363638, #646466);
-    cursor: pointer; }
-    div.power-block .spend.daily-available:hover, div.power-block .info.daily-available:hover {
-      background-color: #4d4d4f;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-      background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-      background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
-  div.power-block .recharge.daily-available {
-    display: none; }
-  div.power-block .recharge.daily-used, div.power-block .info.daily-used {
-    background-image: -webkit-linear-gradient(bottom, #363638, #646466);
-    background-image: linear-gradient(to top, #363638, #646466);
-    cursor: pointer; }
-    div.power-block .recharge.daily-used:hover, div.power-block .info.daily-used:hover {
-      background-color: #4d4d4f;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-      background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-      background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
-  div.power-block .spend.daily-used {
-    display: none; }
-  div.power-block .info.at-will-available {
-    background-image: -webkit-linear-gradient(bottom, #314d35, #55855c);
-    background-image: linear-gradient(to top, #314d35, #55855c);
-    cursor: pointer; }
-    div.power-block .info.at-will-available:hover {
-      background-color: #436949;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
-      background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
-      background-image: radial-gradient(  #436949, #314d35, #55855c); }
-  div.power-block .spend.at-will-available, div.power-block .recharge.at-will-available {
-    display: none; }
-  div.power-block .info.at-will-used {
-    background-image: -webkit-linear-gradient(bottom, #314d35, #55855c);
-    background-image: linear-gradient(to top, #314d35, #55855c);
-    cursor: pointer; }
-    div.power-block .info.at-will-used:hover {
-      background-color: #436949;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
-      background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
-      background-image: radial-gradient(  #436949, #314d35, #55855c); }
-  div.power-block .recharge.at-will-used, div.power-block .spend.at-will-used {
-    display: none; }
-
-.encounter-available {
-  background-color: #961334; }
-
-.at-will-available {
-  background-color: #436949; }
-
-.daily-available {
-  background-color: #4d4d4f; }
-
-.encounter-used {
-  background-color: #fbe0e7; }
-
-.at-will-used {
-  background-color: white; }
-
-.daily-used {
-  background-color: #cdcdce; }

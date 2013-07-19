@@ -15,7 +15,7 @@ $FRONT: rgb(51,51,51);
 $IFRONT: white;
 
 body {
-  font-family: Expletus Sans, sans-serif;
+  font-family: 'Expletus Sans', sans-serif;
 }
 
 @mixin buttonify($color) {
@@ -31,32 +31,8 @@ body {
 }
 @mixin mutify($color) {
   background-image: none;
-  background-color: lighten($color, 50%);
-  color: lighten($color, 43%);
-}
-// -------------- General Config
-.nav {
-  margin-bottom: 0px;
-  li{
-    &:hover{
-        @include radial-gradient(#ddd, #eee);
-      }
-      cursor: pointer;
-  }
-}
-
-.hidden {
-  display: none;
-}
-
-div.wizards-modal{
-  padding:0px;
-  width: 700px;
-}
-
-.block-icon{
-  display: block;
-  white-space:nowrap;
+  background-color: darken($color, 20%);
+  color: darken($color, 15%);
 }
 
 div.conditions-box {
@@ -76,6 +52,7 @@ div.condition-box {
   border-width: 1px;
   border-top: 0px;
   border-left: 0px;
+  border-radius: 3px;
   color: $IFRONT;
   font-weight: bold;
   width: 1.3em;
@@ -84,71 +61,65 @@ div.condition-box {
 
 // ------------- Combat List Config
 div.character-block {
-  @include background-image(radial-gradient(#ddd, #fff));
+  @include background-image(radial-gradient(rgb(20,20,20),rgb(50,50,50)));
   border: 1px solid lightgray;
   border-color: rgb(213, 213, 213);
   border-style: solid;
   border-width: 1px;
   border-image-outset: 0px;
   padding-top: 0px;
+  padding: 2px;
   margin-bottom: 5px;
 }
   
-div.character-name {
+span.name-container {
   font-family: 'Rum Raisin', cursive;
-  font-size: 1.3em;
+  font-size: 1.5em;
+  color: $IFRONT;
 }
 div.inline {
   display: inline-block;
 }
-div.power-container {
-  border: 1px solid lightgray;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px;
-}
-div.power-container {
-  border: 1px solid lightgray;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  padding-top: 0px;
-}
+
 div.has-conditions-box {
-  @include background-image(radial-gradient(#fff, rgb(200,200,200)));
+  @include background-image(radial-gradient(rgb(20,20,20),rgb(50,50,50)));
   border: 1px solid lightgray;
   border-color: rgb(213, 213, 213);
   border-style: solid;
   border-width: 1px;
+  border-radius: 5px;
   padding-top: 0px;
-  min-height: 60px;
+  min-height: 58px;
 }
-div.power-use-button {
-  display: inline-block;
-  text-align: center;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  border-top: 0px;
-  border-left: 0px;
-  color: $IFRONT;
-  font-weight: bold;
-  width: 1.3em;
-  &.at-will {
-    display: none;
-  }
-  &.encounter {
-    @include buttonify($ENCOUNTER);
-    
-    &.used {
-      @include mutify($ENCOUNTER);
+
+div.power-container {
+  padding-top: 0px;
+  padding-bottom: 2px;
+  div.power-use-button {
+    display: inline-block;
+    text-align: center;
+    border-color: rgb(213,213,213);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    color: $IFRONT;
+    font-weight: bold;
+    width: 1.3em;
+    &.at-will {
+      display: none;
     }
-  }
-  &.daily {
-    @include buttonify($DAILY);
-    &.used {
-      @include mutify($DAILY);
+    &.encounter {
+      @include buttonify($ENCOUNTER);
+      
+      &.used {
+        @include mutify($ENCOUNTER);
+      }
+    }
+    &.daily {
+      @include buttonify($DAILY);
+      &.used {
+        @include mutify($DAILY);
+      }
     }
   }
 }
@@ -157,7 +128,6 @@ table.stat-table {
   width: 1px;
   height: 1px;
   margin: 0px;
-  margin-top: 3px;
   padding: 0px;
   border-color: rgb(213, 213, 213);
   border-style: solid;
@@ -225,89 +195,4 @@ table.stat-table {
       @include buttonify($AP);
     }
   }
-}
-
-div.power-button {
-  display: inline-block;
-  padding: 1px;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  color: white;
-  width: 1em;
-  font-size: 1em;
-  font-weight: bold;
-  white-space:nowrap;
-}
-
-div.power-block {
-  display: inline-block;
-  padding: 4px;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  border-image-outset: 0px;
-  color: white;
-  width: 282px;
-  font-size: 1em;
-  font-weight: bold;
-  white-space:nowrap;
-
-  .level {
-    font-size: 1.2em;
-  }
-  .spend.encounter-available,.info.encounter-available {
-    @include buttonify($ENCOUNTER);
-  }
-  .recharge.encounter-available{
-    display: none;
-  }
-  .recharge.encounter-used,.info.encounter-used {
-    @include buttonify($ENCOUNTER);
-  }
-  .spend.encounter-used{
-    display: none;
-  }
-  .spend.daily-available,.info.daily-available {
-    @include buttonify($DAILY);
-  }
-  .recharge.daily-available{
-    display: none;
-  }
-  .recharge.daily-used,.info.daily-used {
-    @include buttonify($DAILY);
-  }
-  .spend.daily-used{
-    display: none;
-  }
-  .info.at-will-available {
-    @include buttonify($ATWILL);
-  }
-  .spend.at-will-available,.recharge.at-will-available{
-    display: none;
-  }
-  .info.at-will-used {
-    @include buttonify($ATWILL);
-  }
-  .recharge.at-will-used,.spend.at-will-used{
-    display: none;
-  }
-}
-.encounter-available {
-  background-color: $ENCOUNTER;
-}
-.at-will-available {
-  background-color: $ATWILL;
-}
-.daily-available {
-  background-color: $DAILY;
-}
-.encounter-used {
-  background-color: lighten($ENCOUNTER, 60%);
-}
-.at-will-used {
-  background-color: lighten($ATWILL, 70%);
-}
-.daily-used {
-  background-color: lighten($DAILY, 50%);
 }

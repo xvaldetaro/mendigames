@@ -518,40 +518,6 @@
     text-align: left;
     padding: 0 0 0 5px; 
 }
-/*
-#detail h1.thHead {
-    background: #45133C;
-    font-size:12pt;
-    font-weight:bold;
-    height: 17pt;
-    margin-top: 2;
-    line-height: 1.5em;
-}
-#detail h1.thHead .thLevel {
-    padding-right: 15px;
-    margin-top: 0px;
-    text-align: right;
-    float: right;
-    position:relative;
-    top: -1.5em;
-}
-
-#detail p.thSubHead  {
-    background: #45133C;
-    color: white;
-    font-weight: normal;
-    font-size: 8.75pt;
-    line-height: 1.2em;
-}
-#detail p.thSubHead .thXP {
-    padding-right: 15px;
-    margin-top: 0px;
-    text-align: right;
-    float: right;
-    position:relative;
-    top: -1.2em;
-}
-*/
 #detail h1.thHead {
     background: #45133C;
     height:38px;

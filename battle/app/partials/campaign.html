@@ -13,7 +13,7 @@
             <div class="character-block">
                 <div class="row-fluid">
                     <div class="inline power-container">
-                        {{character.name}}
+                        <span class="name-container">{{character.name}}</span>
                         <div ng-repeat="power in character.has_powers" ng-click="use_power(power)" class="power-use-button {{power|power_type}} {{power|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">{{power.level}}
                         </div>
                     </div>
@@ -35,8 +35,8 @@
                         <table class="stat-table table table-bordered table-condensed hp">
                             <tr>
                                 <td class="big-stat-bar hp">{{character|total_hp}}</td>
-                                <td class="big-stat-bar hp icon {{bloodied(character)|hidden_on:false}}"><i class="icon-tint icon-white"></i></td>
-                                <td class="big-stat-bar hp icon {{bloodied(character)|hidden_on:true}}"><i class="icon-heart icon-white"></i></td>
+                                <td class="big-stat-bar hp icon" ng-show="bloodied(character)"><i class="icon-tint icon-white"></i></td>
+                                <td class="big-stat-bar hp icon" ng-show="!bloodied(character)"><i class="icon-heart icon-white"></i></td>
                                 <td ng-click="changeHp(character, -1*changeHp[character.id]); changeHp[character.id] = 0" class="{{}} button-cell hp"><i class="icon-minus icon-white"></i></td>
                                 <td ng-click="changeHp(character, changeHp[character.id]); changeHp[character.id] = 0" class="button-cell hp"><i class="icon-plus icon-white"></i></td>
                             </tr>

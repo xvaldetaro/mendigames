@@ -1,34 +1,10 @@
 'use strict';
 
-var condition_icons = {
-    'Blinded': 'icon-eye-close',
-    'Dazed': 'icon-camera',
-    'Deafened': 'icon-volume-off',
-    'Dominated': 'icon-user',
-    'Dying': 'icon-arrow-down',
-    'grabbed': 'icon-magnet',
-    'Helpless': 'icon-flag',
-    'hidden': 'icon-search',
-    'Immobilized': 'icon-lock',
-    'Petrified': 'icon-stop',
-    'Prone': 'icon-chevron-down',
-    'removed from play': 'icon-share-alt',
-    'Restrained': 'icon-shopping-cart',
-    'Slowed': 'icon-fast-backward',
-    'Stunned': 'icon-warning-sign',
-    'Surprised': 'icon-warning-sign',
-    'Unconscious': 'icon-bell',
-    'Weakened': 'icon-plus'
-};
-
 angular.module('battle.services', ['restangular']).
     factory('roll', function(){ return function(mod){
         if(isNaN(mod))
             return _.random(1,20);
         return parseInt(mod)+_.random(1,20);
-    };}).
-    factory('ConditionIcon', function(){ return function(condition) {
-        return condition_icons[condition.name];
     };}).
     factory('NameDict', function(){ return function(list, key) {
         var nd = {};
