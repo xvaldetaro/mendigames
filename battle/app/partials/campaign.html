@@ -2,7 +2,7 @@
 <p class="lead">{{campaign.text}}</p>
 
 <h3>Characters:</h3>
-<div class="docked-menu well">
+<div class="docked-menu well hidden-phone">
     <div class="row-fluid">
         <div class="span12">
             <h4>Conditions</h4>
@@ -11,6 +11,9 @@
                     <i class="{{condition|condition_icon}} icon-white"></i>
                 </div>
             </div>
+            <h4>Dices</h4>
+            <h4>Turn Manager</h4>
+            <h4>Campaign Manager</h4>
         </div>
     </div>
     <div class="row-fluid">
@@ -20,74 +23,61 @@
     </div>
 </div>
 <div class="row-fluid">
-    <div class="span4">
-        <div ng-repeat="(ci, character) in characterList">
-            <div class="character-block">
-                <div class="row-fluid">
-                    <div class="inline power-container">
-                        <div class="dropdown-container">
-                            <li class="inline dropdown">
-                            <a class="dropdown-toggle"><i class="icon-cog icon-white"></i>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a>Short Rest</a>
-                                        <a>Extended Rest</a>
-                                        <a>Milestone</a>
-                                    </li>
-                                </ul>
-                            </a>
-                            </li>
-                        </div>
-                        <div class="name-container">{{character.name}}</div>
-                        <div ng-repeat="power in character.has_powers" ng-click="use_power(power)" class="power-use-button {{power|power_type}} {{power|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">{{power.level}}
+    <div class="span6">
+        <div ng-repeat="(ci, character) in characterList" class="row-fluid character-block">
+            <div class="row-fluid">
+                <div class="span2">
+                    <div class="row-fluid name-container">
+                        {{character.name}}
+                    </div>
+                </div>
+                <div class="span9">
+                    <div class="row-fluid has-conditions-box" data-drop="true" ng-model='character.has_conditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
+                        <div ng-repeat="(hci, has_condition) in character.has_conditions" class="condition-box" ng-click="remove_condition(character, hci)" tooltip-popup-delay='400' tooltip="{{has_condition.name}}">
+                            <i class="{{has_condition|condition_icon}} icon-white"></i>
                         </div>
                     </div>
                 </div>
-                <div class="row-fluid stats-container">
-                    <div class="span2">
-                        <table class="stat-table table table-bordered table-condensed">
-                            <tr>
-                                <td colspan="2" class="big-stat-bar init"><div>{{character.init}}</div></td>
-                                <td ng-click="roll_init(character, setInit[character.id])" class="button-cell init"><img src="/static/boilerplate/img/png/dices-white.png" alt=""></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="editable-cell"><input class="stat-edit" maxlength="2" ng-model="setInit[character.id]" type="text" ng-init="setInit[character.id] = 0"></td>
-                                <td ng-click="setInit(character, setInit[character.id])" class="button-cell init"><i class="icon-ok  icon-white"></i></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="span4">
-                        <table class="stat-table table table-bordered table-condensed hp">
-                            <tr>
-                                <td class="big-stat-bar hp">{{character|total_hp}}</td>
-                                <td class="big-stat-bar hp icon" ng-show="bloodied(character)"><i class="icon-tint icon-white"></i></td>
-                                <td class="big-stat-bar hp icon" ng-show="!bloodied(character)"><i class="icon-heart icon-white"></i></td>
-                                <td ng-click="changeHp(character, -1*changeHp[character.id]); changeHp[character.id] = 0" class="{{}} button-cell hp"><i class="icon-minus icon-white"></i></td>
-                                <td ng-click="changeHp(character, changeHp[character.id]); changeHp[character.id] = 0" class="button-cell hp"><i class="icon-plus icon-white"></i></td>
-                            </tr>
-                            <tr>
-                                <td class="editable-cell"><input class="stat-edit" ng-model="changeHp[character.id]" type="text" ng-init="changeHp[character.id] = 0"></td>
-                                <td ng-click="changeHp[character.id] = changeHp[character.id]+1" class="button-cell hp">1</td>
-                                <td ng-click="changeHp[character.id] = changeHp[character.id]+10" class="button-cell hp">10</td>
-                                <td ng-click="changeHp[character.id] = 0" class="button-cell hp"><i class="icon-trash icon-white"></i></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="span1">
-                        <table class="stat-table table table-bordered table-condensed">
-                            <tr>
-                                <td class="big-stat-bar ap">{{character|total_ap}}</td>
-                            </tr>
-                            <tr>
-                                <td ng-click="spendAp(character)" class="button-cell ap"><i class="icon-fire icon-white"></i></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="span5">
-                        <div class="row-fluid has-conditions-box" data-drop="true" ng-model='character.has_conditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
-                            <div ng-repeat="(hci, has_condition) in character.has_conditions" class="condition-box" ng-click="remove_condition(character, hci)" tooltip-popup-delay='400' tooltip="{{has_condition.name}}">
-                                <i class="{{has_condition|condition_icon}} icon-white"></i>
+                <div class="span1">
+                    <div class="button-cell"><i class="icon-cog icon-white"></i></div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <div class="row-fluid">
+                                <div class="span10">
+                                    <div class="stat-number hp">
+                                        <p>{{character|total_hp}}</p>
+                                    </div>
+                                </div>
+                                <div class="span2">
+                                    &nbsp;<i ng-show="bloodied(character)" class="icon-tint"></i>
+                                </div>
                             </div>
+                        </div>
+                        <div class="span3">
+                            <div class="stat-number init">
+                                <p>{{character.init}}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="span3">
+                            <div class="stat-number hs">
+                                <p>{{character|total_hs}}</p>
+                            </div>
+                        </div>
+                        <div class="span2">
+                            <div class="stat-number ap">
+                                <p>{{character|total_ap}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="power-container">
+                        <div ng-repeat="power in character.has_powers" ng-click="use_power(power)" class="power-use-button {{power|power_type}} {{power|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">{{power.level}}
                         </div>
                     </div>
                 </div>

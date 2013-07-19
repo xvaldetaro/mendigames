@@ -29,6 +29,8 @@ class Character(models.Model):
     def __unicode__(self):
         return "%s - in Campaign %s" % (self.name, self.campaign)
 
+    class Meta:
+        ordering = ['-init']
 
 class Book(models.Model):
     name = models.CharField(max_length=60, primary_key=True)
