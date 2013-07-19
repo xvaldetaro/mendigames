@@ -1,6 +1,6 @@
 from django.contrib import admin
 from battle.models import (Character, Power, HasPower, TraitSource,
-                               Campaign, Item, HasItem, Book)
+                               Condition, HasCondition, Campaign, Item, HasItem, Book)
 
 
 class HasPowerInline(admin.TabularInline):
@@ -16,8 +16,12 @@ class HasItemInline(admin.TabularInline):
     model = HasItem
 
 
+class HasConditionInline(admin.TabularInline):
+    model = HasCondition
+
+
 class CharacterAdmin(admin.ModelAdmin):
-    inlines = [HasPowerInline, HasItemInline]
+    inlines = [HasConditionInline, HasPowerInline, HasItemInline]
 
 
 class CharacterInline(admin.TabularInline):
@@ -29,6 +33,10 @@ class CampaignAdmin(admin.ModelAdmin):
 
 
 class PowerAdmin(admin.ModelAdmin):
+    pass
+
+
+class ConditionAdmin(admin.ModelAdmin):
     pass
 
 
@@ -50,4 +58,5 @@ admin.site.register(Campaign, CampaignAdmin)
 admin.site.register(Power, PowerAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Book, BookAdmin)
+admin.site.register(Condition, ConditionAdmin)
 admin.site.register(TraitSource, TraitSourceAdmin)

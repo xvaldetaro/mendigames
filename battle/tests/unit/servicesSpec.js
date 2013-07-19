@@ -2,8 +2,8 @@
 
 var _character1 = {"id":"1","name":"Character1"};
 var _character2 = {"id":"2","name":"Character2"};
-var _character_list = [_character1, _character2];
-var _character_list_data = {"results": _character_list};
+var _characterList = [_character1, _character2];
+var _characterList_data = _characterList;
 
 
 describe('Battle Services', function(){
@@ -17,13 +17,13 @@ describe('Battle Services', function(){
         }));
 
 
-        it('should return a character_list model', inject(function(Restangular) {
+        it('should return a characterList model', inject(function(Restangular) {
             $httpBackend.expectGET('/battle/character?format=json').
-                respond(_character_list_data);
+                respond(_characterList_data);
 
-            var character_list = Restangular.all('character');
-            character_list.getList().then(function(character_list) {
-                var character1 = character_list[0];
+            var characterList = Restangular.all('character');
+            characterList.getList().then(function(characterList) {
+                var character1 = characterList[0];
                 expect(character1).toEqual(_character1);
             });
 
@@ -48,7 +48,7 @@ describe('Battle Services', function(){
     });
 
     describe('Roll service', function(){
-        it('should return a character_list model', inject(function(roll) {
+        it('should return a characterList model', inject(function(roll) {
             for (var i = 0;i<1000;i++) {
                 var result = roll(i);
                 expect(result).toBeLessThan(i+21);

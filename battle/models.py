@@ -153,19 +153,23 @@ class HasItem(models.Model):
 
 
 class Condition(BookEntry):
-    pass
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
 
 
 class HasCondition(models.Model):
     ENDS = (("T", 'Turn'), ('S', 'Save'))
-    character = models.ForeignKey(Character)
+    character = models.ForeignKey(Character, related_name="has_conditions")
     condition = models.ForeignKey(Condition)
     ends = models.CharField(max_length=1, choices=ENDS, default='T')
-    started_round = models.IntegerField()
-    started_init = models.IntegerField()
+    started_round = models.IntegerField(blank=True)
+    started_init = models.IntegerField(blank=True)
 
     def __unicode__(self):
-        return self.item
+        return self.condition
 
 
 class Monster(BookEntry):

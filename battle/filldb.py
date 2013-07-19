@@ -1,5 +1,5 @@
 import xmltodict
-from battle.models import Power, Item, TraitSource, Book, Monster
+from battle.models import Power, Item, TraitSource, Book, Monster, Condition
 from string import capwords
 
 action_types = {
@@ -261,6 +261,25 @@ class wizards():
             except:
                 self.create_monster(m_entry)
 
+    def create_condition(self, entry):
+        m = Condition(
+            name=entry['Name'][0:60],
+            wizards_id=entry['ID'],
+        )
+        m.save()
+        print "Created Condition %s" % m.name
+        self.add_books(entry, m)
+
+    def persist_conditions(self):
+        m_list = self.get_list_from_xml('glossary', 'glossary')
+
+        for m_entry in m_list:
+            if m_entry['Type'] == "Rules Condition":
+                try:
+                    Condition.objects.get(name=m_entry['Name'])
+                except:
+                    self.create_condition(m_entry)
+
     def print_dict_choices(self, xmlfile, tag, subtag, defaults_to):
         il = self.get_list_from_xml(tag, xmlfile)
         item_types = {}
@@ -304,4 +323,5 @@ w = wizards("/home/xande/Documents")
 # w.persist_items()
 #w.persist_monsters()
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')
-w.check_value('power', 'power', 'Name')
+#w.check_value('power', 'power', 'Name')
+w.persist_conditions()

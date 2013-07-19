@@ -3,9 +3,10 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
 from rest_framework import generics
 from rest_framework import viewsets
-from battle.models import Campaign, Character, Power, HasPower
+from battle.models import Campaign, Character, Condition, HasPower, Power, HasCondition
 from battle.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
-                                CampaignSerializer, PowerSerializer, HasPowerSerializer)
+                                CampaignSerializer, PowerSerializer, HasPowerSerializer,
+                                ConditionSerializer, HasConditionSerializer)
 
 
 class IndexView(TemplateView):
@@ -64,6 +65,11 @@ class PowerDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PowerSerializer
 
 
+class ConditionList(generics.ListCreateAPIView):
+    queryset = Condition.objects.all()
+    serializer_class = ConditionSerializer
+
+
 class HasPowerList(generics.ListCreateAPIView):
     queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
@@ -72,3 +78,18 @@ class HasPowerList(generics.ListCreateAPIView):
 class HasPowerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
+
+
+class ConditionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Condition.objects.all()
+    serializer_class = ConditionSerializer
+
+
+class HasConditionList(generics.ListCreateAPIView):
+    queryset = HasCondition.objects.all()
+    serializer_class = HasConditionSerializer
+
+
+class HasConditionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = HasCondition.objects.all()
+    serializer_class = HasConditionSerializer

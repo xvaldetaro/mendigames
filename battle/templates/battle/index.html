@@ -12,6 +12,7 @@
   <meta name="viewport" content="width=device-width">
 
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap.icon-large.min.css' %}">
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap-responsive.min.css' %}">
   <link rel="stylesheet" href="{% static 'battle/css/app.css' %}"/>
   <link rel="stylesheet" href="{% static 'battle/css/wizards.css' %}"/>
@@ -39,10 +40,13 @@
   -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="{% static 'boilerplate/js/vendor/jquery-1.9.1.min.js' %}"><\/script>')</script>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script>window.droppable || document.write('<script src="{% static 'boilerplate/js/vendor/jquery-ui.js' %}"><\/script>')</script>
   <script src="{% static 'lib/angular/angular.js' %}"></script>
   <script src="{% static 'lib/angular/angular-cookies.js' %}"></script>
+  <script src="{% static 'lib/angular/angular-dragdrop.js' %}"></script>
   <script src="{% url 'angular-module' %}"></script>
+  <script src="{% static 'lib/angular/ui-bootstrap-tpls-0.4.0.min.js' %}"></script>
   <script src="{% static 'lib/angular/underscore.js' %}"></script>
   <script src="{% static 'lib/angular/restangular.js' %}"></script>
   <script src="{% static 'battle/js/app.js' %}"></script>
@@ -50,7 +54,6 @@
   <script src="{% static 'battle/js/controllers.js' %}"></script>
   <script src="{% static 'battle/js/filters.js' %}"></script>
   <script src="{% static 'battle/js/directives.js' %}"></script>
-  <script src="{% static 'boilerplate/js/vendor/bootstrap.min.js' %}"></script>
 <!--<script>
 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

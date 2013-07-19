@@ -1,155 +1,79 @@
 <h3>Campaign: {{campaign.name}}</h3>
 <p class="lead">{{campaign.text}}</p>
 
+                        <progress percent="50">Some text
+                        </progress>
 <h3>Characters:</h3>
-
-<div ng-repeat="character in character_list">
-    <ul class="nav nav-tabs">
-            <li class="{{active_tab[character.id]|active_string:'status'}}">
-                <a ng-click="active_tab[character.id] = 'status'">
-                    <i class="icon-user"></i>&nbsp;{{character.name}}
-                </a>
-            </li>
-            <li class="{{active_tab[character.id]|active_string:'powers'}}">
-                <a ng-click="active_tab[character.id] = 'powers'">
-                    <i class="icon-star"></i>&nbsp;Powers
-                </a>
-            </li>
-            <li class="{{active_tab[character.id]|active_string:'campaign'}}">
-                <a ng-click="active_tab[character.id] = 'campaign'">
-                    <i class="icon-cog"></i>&nbsp;Campaign
-                </a>
-            </li>
-            <li class="{{active_tab[character.id]|active_string:'items'}}">
-                <a ng-click="active_tab[character.id] = 'items'">
-                    <i class="icon-briefcase"></i>&nbsp;Items
-                </a>
-            </li>
-    </ul>
-    <!-- Status Tab -->
-    <div class="character-block {{active_tab[character.id]|hidden_string:'status'}}">
-        <!-- HP TABLE -->
-        <div class="stat-div">
-            <table class="stat-table table table-bordered table-condensed">
-                <tr>
-                    <td colspan="6" class="black-table-label">HitPoints</td></tr>
-                <tr>
-                    <td colspan="4" class="bar red-bar">{{character|total_hp}}</td>
-                    <td ng-click="change_hp[character.id] = 0" class="button-cell"><i class="icon-trash"></i></td>
-                    <td class="editable-cell"><input class="stat-edit" ng-model="change_hp[character.id]" type="text" ng-init="change_hp[character.id] = 0"></td>
-                </tr>
-                <tr>
-                    <td ng-click="change_hp[character.id] = change_hp[character.id]+1" class="button-cell">1</td>
-                    <td ng-click="change_hp[character.id] = change_hp[character.id]+5" class="button-cell">5</td>
-                    <td ng-click="change_hp[character.id] = change_hp[character.id]+10" class="button-cell">10</td>
-                    <td ng-click="change_hp[character.id] = change_hp[character.id]+20" class="button-cell">20</td>
-                    <td ng-click="changeHp(character, -1*change_hp[character.id])" class="button-cell"><i class="icon-minus"></i></td>
-                    <td ng-click="changeHp(character, change_hp[character.id])" class="button-cell"><i class="icon-plus"></i></td>
-                </tr>
-            </table>
-        </div>
-        <!-- Init TABLE -->
-        <div class="stat-div">
-            <table class="stat-table table table-bordered table-condensed">
-                <tr>
-                    <td colspan="3" class="black-table-label">Initiative</td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="bar white-bar">{{character.init}}</td>
-                </tr>
-                <tr>
-                    <td ng-click="roll_init(character, set_init[character.id])" class="button-cell"><i class="icon-refresh"></i></td>
-                    <td ng-click="set_init(character, set_init[character.id])" class="button-cell"><i class="icon-arrow-up"></i></td>
-                    <td class="editable-cell"><input class="stat-edit" maxlength="2" ng-model="set_init[character.id]" type="text" ng-init="set_init[character.id] = 0"></td>
-                </tr>
-            </table>
-        </div>
-        <!-- AP TABLE -->
-        <div class="stat-div">
-            <table class="stat-table table table-bordered table-condensed">
-                <tr>
-                    <td class="black-table-label">Action</td></tr>
-                <tr>
-                    <td class="bar white-bar">{{character|total_ap}}</td>
-                </tr>
-                <tr>
-                    <td ng-click="spendAp(character)" class="button-cell"><i class="icon-fire"></i></td>
-                </tr>
-            </table>
-        </div>
-    </div> 
-    <!-- Power Tab -->
-    <div class="character-block {{active_tab[character.id]|hidden_string:'powers'}}">
-        <div ng-repeat="power in character.has_powers" class="power-block {{power|power_style}}">
-            <span class="text-right">
-                <a ng-click="fetch_from_compendium(power)" href="#powerModal" role="button" data-toggle="modal">
-                    <div class="power-button info {{power|power_style}}">
-                        <i class="icon-info-sign icon-white"></i>
-                    </div>
-                </a>
-                <div ng-click="recharge_power(power)" class="power-button recharge {{power|power_style}}"><i class="icon-retweet icon-white"></i></div>
-                <div ng-click="use_power(power)" class="power-button spend {{power|power_style}}"><i class="icon-play icon-white"></i></div>
-            </span>&nbsp;
-            <span class="level">{{power.level}}</span> -  
-            &nbsp;{{power.name.substr(0,25)}} 
-        </div>
+<div class="row-fluid conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true}">
+    <div ng-repeat="(ci, condition) in conditionList" class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-show="condition.name" data-drag="true" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" ng-model="conditionList" jqyoui-draggable="{index: {{$index}}, animate: true,onStop:'condition_drag({{ci}})'}">
+        <i class="{{condition|condition_icon}} icon-white"></i>
     </div>
-    <!-- Campaign Tab -->
-    <div class="character-block {{active_tab[character.id]|hidden_string:'campaign'}}">
-        <div class="row-fluid">
-            <div class="span3">
-                <div class="btn-group">
-                    <button ng-click="shortRest(character)" class="btn btn-inverse">ShortRest</button>
-                    <button ng-click="extRest(character)" class="btn btn-inverse">ExtRest</button>
+</div>
+<div class="row-fluid">
+    <div class="span4">
+        <div ng-repeat="(ci, character) in characterList">
+            <div class="character-block">
+                <div class="row-fluid">
+                    <div class="inline power-container">
+                        {{character.name}}
+                        <div ng-repeat="power in character.has_powers" ng-click="use_power(power)" class="power-use-button {{power|power_type}} {{power|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">{{power.level}}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="span4">
-                <div class="btn-group">
-                    <button ng-click="spendAp(character)" class="btn btn-primary">AP</button>
-                    <button ng-click="award_milestone(character)" class="btn btn-primary">Milestone</button>
-                    <button ng-click="spend_hs(character)" class="btn btn-info">HS</button>
-                </div>
-            </div>
-            <div class="span3">
-                <div class="input-prepend">
-                    <button ng-click="changeHp(character)" class="btn btn-danger">Damage/Heal</button>
-                    <input class="span2" ng-model="change_hp[character.id]" type="text">
-                </div>
-            </div>
-            <div class="span2">
-                <div class="input-prepend">
-                    <button ng-click="setInit(character)" class="btn">SetInit</button>
-                    <input class="span2" ng-model="set_init[character.id]" type="text">
-                </div>
-            </div>
-        </div> 
-        <div class="row-fluid">
-            <div class="span3">
-                <div class="input-prepend">
-                    <button ng-click="changeXp(character)" class="btn btn-success">AwardXP</button>
-                    <input class="span3" ng-model="change_xp[character.id]" type="text">
-                </div>
-            </div>
-            <div class="span3">
-                <div class="input-prepend">
-                    <button ng-click="changeGold(character)" class="btn btn-warning">GiveGold</button>
-                    <input class="span3" ng-model="change_gold[character.id]" type="text">
-                </div>
-            </div>
-            <div class="span6">
-                <div class="btn-group">
-                    <button ng-click="change_hp[character.id] = change_hp[character.id]-20" class="btn btn-info">20</button>
-                    <button ng-click="change_hp[character.id] = change_hp[character.id]-10" class="btn btn-info">10</button>
-                    <button ng-click="change_hp[character.id] = change_hp[character.id]-5" class="btn btn-info">5</button>
-                    <button ng-click="change_hp[character.id] = change_hp[character.id]-1" class="btn btn-info">1</button>
-                    
+                <div class="row-fluid">
+                    <div class="span2">
+                        <table class="stat-table table table-bordered table-condensed">
+                            <tr>
+                                <td colspan="2" class="big-stat-bar init"><div>{{character.init}}</div></td>
+                                <td ng-click="roll_init(character, setInit[character.id])" class="button-cell init"><img src="/static/boilerplate/img/png/dices-white.png" alt=""></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="editable-cell"><input class="stat-edit" maxlength="2" ng-model="setInit[character.id]" type="text" ng-init="setInit[character.id] = 0"></td>
+                                <td ng-click="setInit(character, setInit[character.id])" class="button-cell init"><i class="icon-ok  icon-white"></i></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="span4">
+                        <table class="stat-table table table-bordered table-condensed hp">
+                            <tr>
+                                <td class="big-stat-bar hp">{{character|total_hp}}</td>
+                                <td class="big-stat-bar hp icon {{bloodied(character)|hidden_on:false}}"><i class="icon-tint icon-white"></i></td>
+                                <td class="big-stat-bar hp icon {{bloodied(character)|hidden_on:true}}"><i class="icon-heart icon-white"></i></td>
+                                <td ng-click="changeHp(character, -1*changeHp[character.id]); changeHp[character.id] = 0" class="{{}} button-cell hp"><i class="icon-minus icon-white"></i></td>
+                                <td ng-click="changeHp(character, changeHp[character.id]); changeHp[character.id] = 0" class="button-cell hp"><i class="icon-plus icon-white"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="editable-cell"><input class="stat-edit" ng-model="changeHp[character.id]" type="text" ng-init="changeHp[character.id] = 0"></td>
+                                <td ng-click="changeHp[character.id] = changeHp[character.id]+1" class="button-cell">1</td>
+                                <td ng-click="changeHp[character.id] = changeHp[character.id]+10" class="button-cell">10</td>
+                                <td ng-click="changeHp[character.id] = 0" class="button-cell"><i class="icon-trash"></i></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="span1">
+                        <table class="stat-table table table-bordered table-condensed">
+                            <tr>
+                                <td class="big-stat-bar ap">{{character|total_ap}}</td>
+                            </tr>
+                            <tr>
+                                <td ng-click="spendAp(character)" class="button-cell ap"><i class="icon-fire icon-white"></i></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="span5">
+                        <div class="row-fluid has-conditions-box" data-drop="true" ng-model='character.has_conditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
+                            <div ng-repeat="(hci, has_condition) in character.has_conditions" class="condition-box" ng-click="remove_condition(character, hci)" tooltip-popup-delay='400' tooltip="{{has_condition.name}}">
+                                <i class="{{has_condition|condition_icon}} icon-white"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Modal -->
-<div id="powerModal" class="power-detail-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="powerModalLabel" aria-hidden="true">
+<div id="wizardsModal" class="wizards-detail-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="wizardsModalLabel" aria-hidden="true">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
   <div id="detail">
     </span>

@@ -28,6 +28,14 @@ urlpatterns = patterns(
     url(r'^has_power/?$', views.HasPowerList.as_view()),
 
     url(r'^has_power/(?P<pk>[0-9]+)/?$', views.HasPowerDetail.as_view()),
+
+    url(r'^condition/?$', views.ConditionList.as_view()),
+
+    url(r'^condition/(?P<pk>[0-9]+)/?$', views.ConditionDetail.as_view()),
+
+    url(r'^has_condition/?$', views.HasConditionList.as_view()),
+
+    url(r'^has_condition/(?P<pk>[0-9]+)/?$', views.HasConditionDetail.as_view()),
 )
 
-#urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns)
