@@ -33,8 +33,8 @@
                 </div>
                 <div class="span9">
                     <div ng-controller="HasConditionListController" class="row-fluid has-conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
-                        <div ng-repeat="(hci, hasCondition) in conditionList" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hasCondition.condition.name}}">
-                            <i class="{{hasCondition.condition|condition_icon}} icon-white"></i>
+                        <div ng-repeat="(hci, hasCondition) in conditionList" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hasCondition._condition.name}}">
+                            <i class="{{hasCondition._condition|condition_icon}} icon-white"></i>
                         </div>
                     </div>
                 </div>
@@ -64,39 +64,21 @@
                         </div>
                         
                         <div class="span3">
-                            <div class="stat-number hs">
+                            <div ng-click="test()" class="stat-number hs">
                                 <p>{{character|total_hs}}</p>
                             </div>
                         </div>
                         <div class="span2">
-                            <div class="stat-number ap">
+                            <div ng-click="character_poll_timeout()" class="stat-number ap">
                                 <p>{{character|total_ap}}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="span6">
-                    <div ng-show="powerCatalogReady" class="power-container">
-                        <div ng-controller="HasPowerController" ng-repeat="hasPower in character.has_powers" ng-click="use_power()" class="power-use-button {{power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">
-                            {{power.level}}
-                        </div>
-                    </div>
-                    <div ng-show="!powerCatalogReady" id="floatingCirclesG">
-                        <div class="f_circleG" id="frotateG_01">
-                        </div>
-                        <div class="f_circleG" id="frotateG_02">
-                        </div>
-                        <div class="f_circleG" id="frotateG_03">
-                        </div>
-                        <div class="f_circleG" id="frotateG_04">
-                        </div>
-                        <div class="f_circleG" id="frotateG_05">
-                        </div>
-                        <div class="f_circleG" id="frotateG_06">
-                        </div>
-                        <div class="f_circleG" id="frotateG_07">
-                        </div>
-                        <div class="f_circleG" id="frotateG_08">
+                    <div class="power-container">
+                        <div ng-controller="HasPowerController" ng-repeat="hasPower in character.has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower.power}} - {{hasPower._power.action}}">
+                            {{hasPower._power.level}}
                         </div>
                     </div>
                 </div>

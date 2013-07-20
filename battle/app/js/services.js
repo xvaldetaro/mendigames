@@ -37,6 +37,8 @@ angular.module('battle.services', ['restangular']).
             {
                 cbs[i]();
             }
+            cbs = null;
+            ready = true;
         });
         return {
             onReady: function(cb) {
@@ -44,6 +46,7 @@ angular.module('battle.services', ['restangular']).
                     return cb();
                 cbs.push(cb);
             },
+            ready: function() { return ready; },
             listSlice: function(){ return list.slice(); },
             getItem: function(key){ return dict[key]; }
         };
@@ -60,6 +63,8 @@ angular.module('battle.services', ['restangular']).
             }
             for(var i=0, len=cbs.length; i<len; i++)
                 cbs[i]();
+            cbs = null;
+            ready = true;
         });
         return {
             onReady: function(cb) {

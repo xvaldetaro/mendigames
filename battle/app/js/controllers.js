@@ -10,11 +10,10 @@ function($scope, Restangular) {
     });
 }]).
 
-controller('CampaignCtrl', ['$scope','$timeout','Restangular', '$routeParams', 'roll', 
-'$http', 'WizardsService','PowerCatalog', 'ConditionCatalog',
-function($scope, $timeout, Restangular, $routeParams, roll, $http,
-    WizardsService, PowerCatalog, ConditionCatalog) {
-
+controller('CampaignCtrl', ['$scope', '$rootScope','$timeout','Restangular', '$routeParams',
+'PowerCatalog', 'ConditionCatalog',
+function($scope, $rootScope, $timeout, Restangular, $routeParams, PowerCatalog,
+ConditionCatalog) {
     PowerCatalog.onReady(function() { $scope.powerCatalogReady = true;});
     var campaignId = $routeParams.campaignId;
 
@@ -30,13 +29,16 @@ function($scope, $timeout, Restangular, $routeParams, roll, $http,
 
     // Polls character list every 2sec
     var params = {campaignId: campaignId};
-    function character_poll_timeout(){
+    $scope.character_poll_timeout = function() {
         Restangular.all('character').getList(params).then(function(characterList){
             $scope.characterList = characterList;
-            $timeout(character_poll_timeout,200000);
+            //$timeout($scope.character_poll_timeout,2000);
         });
+    };
+    $scope.character_poll_timeout();
+    $scope.test = function() {
+        $rootScope.$broadcast('Character.poll');
     }
-    character_poll_timeout();
 
     // --------------- Register the watchers
     var watcher = function(newValue,oldValue){
@@ -119,12 +121,9 @@ function($scope, ConditionCatalog) {
 .controller('HasPowerController', ['$scope', 'Restangular', 'PowerCatalog',
 'HasPowerCatalog',
 function($scope, Restangular, PowerCatalog, HasPowerCatalog) {
-    function initialize()
-    {
-        $scope.power = PowerCatalog.getItem($scope.hasPower.power);
-    }
-    PowerCatalog.onReady(initialize);
-    $scope.$watch('character', initialize);
+    PowerCatalog.onReady(function(){
+        $scope.hasPower._power = PowerCatalog.getItem($scope.hasPower.power);
+    });
 
     $scope.use_power = function(){
         $scope.hasPower.used = !$scope.hasPower.used;
@@ -139,49 +138,47 @@ function($scope, Restangular, PowerCatalog, HasPowerCatalog) {
 .controller('HasConditionListController', ['$rootScope','$scope',
 'Restangular', 'ConditionCatalog',
 function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog) {
-    function initialize() {
-        var hcs = $scope.character.has_conditions;
-        $scope.conditionList = [];
-        for(var i=0, len=hcs.length; i<len; i++)
+    // gets executed always
+    ConditionCatalog.onReady(function() {
+        $scope.conditionList = $scope.character.has_conditions;
+        for(var i=0, len=$scope.conditionList.length; i<len; i++)
         {
-            $scope.conditionList.push({
-                hasCondition: hcs[i],
-                condition: ConditionCatalog.getItem(hcs[i].condition)
-            });
+            // The data comes wuth only the pk reference, so we fill it whole
+            var name = $scope.conditionList[i].condition;
+            $scope.conditionList[i]._condition = ConditionCatalog.getItem(name);
         }
-    }
-    ConditionCatalog.onReady(initialize);
-    $scope.$watch('character', initialize);
+    });
 
     $scope.remove_condition = function(hci){
-        var hc = $scope.conditionList[hci];
-        var remoteHc = Restangular.one('has_condition', hc.hasCondition.id);
-        remoteHc.remove().then(null, function() {window.alert("No sync")});
-        $scope.character.has_conditions.splice(hci, 1);
+        Restangular.one('has_condition', $scope.conditionList[hci].id)
+            .remove().then(null, function() {window.alert("No sync");});
+
         $scope.conditionList.splice(hci, 1);
     };
     $scope.condition_drop = function(e,o,characterIndex) {
-        var list = $scope.conditionList, ch = $scope.character;
         // The condition dropped is the raw Restangular condition object
-        var condition = list.pop();
+        var condition = $scope.conditionList.pop();
         // Create a has_condition from it
-        var hasCondition = {character: ch.id, condition: condition.name, ends: 'T',
-                        started_round: 1, started_init: 1, name: condition.name,
-                        wizards_id: condition.wizards_id};
-
-        // Push into the viewable lists
-        $scope.character.has_conditions.push(hasCondition);
-        list.push({hasCondition: hasCondition, condition: condition})
-        $rootScope.$broadcast('Condition.dropped');
+        var hasCondition = {
+            character: $scope.character.id,
+            condition: condition.name,
+            ends: 'T',
+            started_round: 1,
+            started_init: 1,
+            _condition: condition
+        };
 
         Restangular.all('has_condition').post(hasCondition).then(function(hc) {
             for(var i=0, len=$scope.conditionList.length; i<len; i++)
             {
                 var entry = $scope.conditionList[i];
-                if(!entry.hasCondition.id && entry.condition.name == hc.condition)
-                    entry.hasCondition.id = hc.id;
+                if(!entry.id && entry.condition == hc.condition)
+                    entry.id = hc.id;
             }
         });
+
+        $scope.conditionList.push(hasCondition);
+        $rootScope.$broadcast('Condition.dropped');
     };
 }])
 
