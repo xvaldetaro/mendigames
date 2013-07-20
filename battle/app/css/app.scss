@@ -23,6 +23,10 @@ body {
   font-family: 'Expletus Sans', sans-serif;
 }
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+
 @media (max-width: 767px) {
   body {
     font-size: 10px;

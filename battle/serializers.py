@@ -17,27 +17,19 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
-class HasPowerListingField(serializers.RelatedField):
-    def to_native(self, value):
-        power = model_to_dict(value.power)
-        power['used'] = value.used
-        power['has_power_id'] = value.id
-        return power
+class HasPowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HasPower
 
 
-class HasConditionListingField(serializers.RelatedField):
-    def to_native(self, value):
-        condition = model_to_dict(value.condition)
-        condition['started_round'] = value.started_round
-        condition['started_init'] = value.started_init
-        condition['ends'] = value.ends
-        condition['has_condition_id'] = value.id
-        return condition
+class HasConditionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HasCondition
 
 
 class CharacterSerializer(serializers.ModelSerializer):
-    has_powers = HasPowerListingField(many=True)
-    has_conditions = HasConditionListingField(many=True)
+    has_powers = HasPowerSerializer(many=True)
+    has_conditions = HasConditionSerializer(many=True)
     class Meta:
         model = Character
 
@@ -55,13 +47,3 @@ class PowerSerializer(serializers.ModelSerializer):
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
-
-
-class HasPowerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HasPower
-
-
-class HasConditionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HasCondition

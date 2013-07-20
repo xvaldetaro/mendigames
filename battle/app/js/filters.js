@@ -40,23 +40,29 @@ angular.module('battle.filters', ['battle.services']).
   }).
   filter('condition_icon',function(){
     return function(condition){
+        if(!condition)
+          return;
         return condition_icons[condition.name];
     };
   }).
   filter('power_type', function(){
     return function(power){
-        if(power['usage']=='E')
-            return "encounter";
-        if(power['usage']=='D')
-            return "daily";
-        return 'at-will';
+      if(!power)
+        return;
+      if(power['usage']=='E')
+          return "encounter";
+      if(power['usage']=='D')
+          return "daily";
+      return 'at-will';
     };
   }).
   filter('power_style', function(){
     return function(power){
-        if(power['used']===true)
-            return "used";
-        return "available";
+      if(!power)
+        return;
+      if(power['used']===true)
+          return "used";
+      return "available";
     };
   });
 

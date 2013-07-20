@@ -36,7 +36,7 @@ class CharacterList(generics.ListCreateAPIView):
         queryset = Character.objects.all()
         campaign = self.request.QUERY_PARAMS.get('campaignId', None)
         if campaign is not None:
-            queryset = Character.objects.filter(campaign=campaign)
+            queryset = queryset.filter(campaign=campaign)
         return queryset
 
 
@@ -56,8 +56,14 @@ class CampaignDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class PowerList(generics.ListCreateAPIView):
-    queryset = Power.objects.all()
     serializer_class = PowerSerializer
+
+    def get_queryset(self):
+        queryset = Power.objects.all()
+        if self.request.QUERY_PARAMS.get('owned', False):
+            queryset = queryset.filter(haspower__isnull=False)
+
+        return queryset
 
 
 class PowerDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -71,8 +77,14 @@ class ConditionList(generics.ListCreateAPIView):
 
 
 class HasPowerList(generics.ListCreateAPIView):
-    queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
+
+    def get_queryset(self):
+        queryset = HasPower.objects.all()
+        characterId = self.request.QUERY_PARAMS.get('characterId', None)
+        if characterId is not None:
+            queryset = queryset.filter(character=characterId)
+        return queryset
 
 
 class HasPowerDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -86,8 +98,14 @@ class ConditionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class HasConditionList(generics.ListCreateAPIView):
-    queryset = HasCondition.objects.all()
     serializer_class = HasConditionSerializer
+
+    def get_queryset(self):
+        queryset = HasCondition.objects.all()
+        characterId = self.request.QUERY_PARAMS.get('characterId', None)
+        if characterId is not None:
+            queryset = queryset.filter(character=characterId)
+        return queryset
 
 
 class HasConditionDetail(generics.RetrieveUpdateDestroyAPIView):

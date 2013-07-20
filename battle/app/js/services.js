@@ -6,15 +6,6 @@ angular.module('battle.services', ['restangular']).
             return _.random(1,20);
         return parseInt(mod)+_.random(1,20);
     };}).
-    factory('NameDict', function(){ return function(list, key) {
-        var nd = {};
-        for(var i=0, len=list.length; i < len; i++)
-        {
-            var item = list[i];
-            nd[item[key]] = item;
-        }
-        return nd;
-    };}).
     factory('WizardsService', ['$rootScope', '$http', function($rootScope, $http){
         return {
             fetch: function(id, model) {
@@ -30,6 +21,78 @@ angular.module('battle.services', ['restangular']).
                     $rootScope.$broadcast('WizardsService.fetch', $('div[id|="detail"]', fakedom));
                 });
             }
+        };
+    }]).
+    factory('ConditionCatalog', ['$rootScope','Restangular',
+    function($rootScope, Restangular) {
+        var dict = {}, list, ready = false, cbs = [];
+        Restangular.all('condition').getList().then(function(data){
+            list = data;
+            for(var i=0, len=list.length; i<len; i++)
+            {
+                var item = list[i];
+                dict[item.name] = item;
+            }
+            for(var i=0, len=cbs.length; i<len; i++)
+            {
+                cbs[i]();
+            }
+        });
+        return {
+            onReady: function(cb) {
+                if(ready)
+                    return cb();
+                cbs.push(cb);
+            },
+            listSlice: function(){ return list.slice(); },
+            getItem: function(key){ return dict[key]; }
+        };
+    }]).
+    factory('PowerCatalog', ['$rootScope','Restangular',
+    function($rootScope, Restangular) {
+        var dict = {}, list, ready = false, cbs = [];
+        Restangular.all('power').getList({owned: 'True'}).then(function(data){
+            list = data;
+            for(var i=0, len=list.length; i<len; i++)
+            {
+                var item = list[i];
+                dict[item.name] = item;
+            }
+            for(var i=0, len=cbs.length; i<len; i++)
+                cbs[i]();
+        });
+        return {
+            onReady: function(cb) {
+                if(ready)
+                    return cb();
+                cbs.push(cb);
+            },
+            ready: function() { return ready; },
+            listSlice: function(){ return list.slice(); },
+            getItem: function(key){ return dict[key]; }
+        };
+    }]).
+    factory('HasPowerCatalog', ['$rootScope','Restangular',
+    function($rootScope, Restangular) {
+        var dict = {}, list, ready = false, cbs = [];
+        Restangular.all('has_power').getList().then(function(data){
+            list = data;
+            for(var i=0, len=list.length; i<len; i++)
+            {
+                var item = list[i];
+                dict[item.id] = item;
+            }
+            for(var i=0, len=cbs.length; i<len; i++)
+                cbs[i]();
+        });
+        return {
+            onReady: function(cb) {
+                if(ready)
+                    return cb();
+                cbs.push(cb);
+            },
+            listSlice: function(){ return list.slice(); },
+            getItem: function(key){ return dict[key]; }
         };
     }]).
     config(function(RestangularProvider) {

@@ -2,12 +2,12 @@
 <p class="lead">{{campaign.text}}</p>
 
 <h3>Characters:</h3>
-<div class="docked-menu well hidden-phone">
+<div ng-controller="MenuController" class="docked-menu well hidden-phone">
     <div class="row-fluid">
         <div class="span12">
             <h4>Conditions</h4>
-            <div class="row-fluid conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true}">
-                <div ng-repeat="(ci, condition) in conditionList" class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-show="condition.name" data-drag="true" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" ng-model="conditionList" jqyoui-draggable="{index: {{$index}},onStop:'condition_drag({{ci}})'}" ng-click="fetch_from_compendium(condition.wizards_id, 'glossary')">
+            <div class="row-fluid conditions-box" data-drop="true" ng-model="conditionList">
+                <div ng-repeat="(ci, condition) in conditionList" class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-show="condition.name" data-drag="true" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" ng-model="conditionList" jqyoui-draggable="{index: {{$index}}}" ng-click="fetch_from_compendium(condition.wizards_id, 'glossary')">
                     <i class="{{condition|condition_icon}} icon-white"></i>
                 </div>
             </div>
@@ -24,7 +24,7 @@
 </div>
 <div class="row-fluid">
     <div class="span6">
-        <div ng-repeat="(ci, character) in characterList" class="row-fluid character-block">
+        <div ng-controller="CharacterController" ng-repeat="(ci, character) in characterList" class="row-fluid character-block">
             <div class="row-fluid">
                 <div class="span2">
                     <div class="row-fluid name-container">
@@ -32,9 +32,9 @@
                     </div>
                 </div>
                 <div class="span9">
-                    <div class="row-fluid has-conditions-box" data-drop="true" ng-model='character.has_conditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
-                        <div ng-repeat="(hci, has_condition) in character.has_conditions" class="condition-box" ng-click="remove_condition(character, hci)" tooltip-popup-delay='400' tooltip="{{has_condition.name}}">
-                            <i class="{{has_condition|condition_icon}} icon-white"></i>
+                    <div ng-controller="HasConditionListController" class="row-fluid has-conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true,onDrop:'condition_drop({{ci}})'}">
+                        <div ng-repeat="(hci, hasCondition) in conditionList" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hasCondition.condition.name}}">
+                            <i class="{{hasCondition.condition|condition_icon}} icon-white"></i>
                         </div>
                     </div>
                 </div>
@@ -76,8 +76,27 @@
                     </div>
                 </div>
                 <div class="span6">
-                    <div class="power-container">
-                        <div ng-repeat="power in character.has_powers" ng-click="use_power(power)" class="power-use-button {{power|power_type}} {{power|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">{{power.level}}
+                    <div ng-show="powerCatalogReady" class="power-container">
+                        <div ng-controller="HasPowerController" ng-repeat="hasPower in character.has_powers" ng-click="use_power()" class="power-use-button {{power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{power.name}} - {{power.action}}">
+                            {{power.level}}
+                        </div>
+                    </div>
+                    <div ng-show="!powerCatalogReady" id="floatingCirclesG">
+                        <div class="f_circleG" id="frotateG_01">
+                        </div>
+                        <div class="f_circleG" id="frotateG_02">
+                        </div>
+                        <div class="f_circleG" id="frotateG_03">
+                        </div>
+                        <div class="f_circleG" id="frotateG_04">
+                        </div>
+                        <div class="f_circleG" id="frotateG_05">
+                        </div>
+                        <div class="f_circleG" id="frotateG_06">
+                        </div>
+                        <div class="f_circleG" id="frotateG_07">
+                        </div>
+                        <div class="f_circleG" id="frotateG_08">
                         </div>
                     </div>
                 </div>
