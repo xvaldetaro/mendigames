@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row-fluid">
+        <div class="span6 offset2">
+            <label class="checkbox"><input type="checkbox" ng-model="isHealing">healing</label>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="row-fluid">
+                <div class="span11 offset1">
+                    <h4>Damage:</h4>
+                    <div ng-repeat="number in numbers" ng-click="setClose(number)" class="button-cell">
+                        {{number}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="row-fluid">
+                <div class="span11">
+
+                        <h4>Roll Damage:</h4>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="4">d4</label>
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="6">d6</label>
+                            
+                        </div>
+                        <div class="span4">
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="8">d8</label>
+                            
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="10">d10</label>
+                        </div>
+                        <div class="span4">
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="12">d12</label>
+                            <label class="checkbox"><input type="radio" ng-model="dice" value="20">d20</label>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div ng-repeat="mod in mods" ng-click="rollClose(mod,dice)" class="button-cell">
+                        <p ng-show="mod > 0">+{{mod}}</p><p ng-show="mod <= 0">{{mod}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span5">
+            <hr>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="offset1 span2">
+            <h4>Set value manually:</h4>
+        </div>
+        <div class="span1">
+            <input class="stat-edit" maxlength="2" ng-model="input" type="text">
+        </div>
+        <div class="span1">
+            <button class="btn btn-primary" ng-click="setClose(input)" type="button">Set
+            </button> 
+        </div>
+    </div>
+</div>

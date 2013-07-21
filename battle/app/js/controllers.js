@@ -72,16 +72,10 @@ ConditionCatalog) {
 function($scope, $dialog, Och) {
     $scope.Och = Och;
     
-    $scope.initOpts = {
-        backdrop: true,
-        keyboard: true,
-        backdropClick: true,
-        
-    };
     $scope.initDialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/init.html',
-            controller: 'DialogController'
+            controller: 'InitDialogController'
         });
         d.open().then(function(result){
           if(result)
@@ -90,7 +84,23 @@ function($scope, $dialog, Och) {
             $scope.log.line($scope.ch.name+" init set to: "+result.log);
           }
         });
-  };
+    };
+    $scope.hpDialog = function(){
+        var d = $dialog.dialog({
+            templateUrl:  '/static/battle/partials/dialogs/hp.html',
+            controller: 'HpDialogController'
+        });
+        d.open().then(function(result){
+          if(result)
+          {
+            Och.change_hp($scope.ch, result.result);
+            if(result.result > 0)
+                $scope.log.line($scope.ch.name+" gained "+result.log+" hit points");
+            if(result.result < 0)
+                $scope.log.line($scope.ch.name+" lost "+result.log+" hit points");
+          }
+        });
+    };
 }])
 
 .controller('MenuController', ['$scope', 'ConditionCatalog',
@@ -145,7 +155,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         var condition = $scope.conditionList.pop();
         // Create a has_condition from it
         var hasCondition = {
-            character: $scope.character.id,
+            character: $scope.ch.id,
             condition: condition.name,
             ends: 'T',
             started_round: 1,
@@ -179,7 +189,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         });
 }])
 
-.controller('DialogController', ['$scope', 'dialog', 'roll',
+.controller('InitDialogController', ['$scope', 'dialog', 'roll',
     function($scope, dialog, roll) {
         $scope.setClose = function(result){
             dialog.close({
@@ -201,6 +211,40 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         {
             mods.push(j);
         }
+        $scope.numbers = numbers;
+        $scope.mods = mods;
+        $scope.input = "";
+}])
+
+.controller('HpDialogController', ['$scope', 'dialog', 'roll',
+    function($scope, dialog, roll) {
+        $scope.setClose = function(result){
+            dialog.close(
+            {
+                result: result,
+                log: " "+result+" ",
+                heal: $scope.isHealing
+            });
+        };
+        $scope.rollClose = function(mod, dice) {
+            var roll = $scope.roll(mod, dice);
+            roll.result = $scope.isHealing && -1*roll.result || roll.result;
+            dialog.close(roll);
+        };
+        var numbers = [];
+        for(var i=-4; i<52; i++)
+        {
+            numbers.push(i);
+        }
+        var mods = [];
+        for(var j=-5; j<43; j++)
+        {
+            mods.push(j);
+        }
+
+        $scope.roll = roll;
+        $scope.isHealing = -1;
+        $scope.dice = 8;
         $scope.numbers = numbers;
         $scope.mods = mods;
         $scope.input = "";

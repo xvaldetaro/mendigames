@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="span9">
-                    <div ng-controller="HasConditionListController" class="row-fluid has-conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true,onDrop:'condition_drop()'}">
+                    <div ng-controller="HasConditionListController" class="row-fluid has-conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
                         <div ng-repeat="(hci, hco) in conditionList" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}}">
                             <i class="{{hco._condition|condition_icon}} icon-white"></i>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="span4">
                             <div class="row-fluid">
                                 <div class="span10">
-                                    <div class="stat-number hp">
+                                    <div ng-click="hpDialog()" class="stat-number hp">
                                         <p>{{ch|total_hp}}</p>
                                     </div>
                                 </div>

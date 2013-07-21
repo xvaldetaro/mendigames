@@ -3,7 +3,7 @@
 angular.module('battle.services', ['restangular']).
     factory('roll', function(){ return function(mod, dice){
         var roll = _.random(1,dice);
-        var result = parseInt(mod)+_.random(1,dice);
+        var result = parseInt(mod)+roll;
         var log = " d"+dice+": "+roll+"+"+mod+"="+result+" ";
         return {
             result: result,
