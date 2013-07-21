@@ -16,6 +16,20 @@ function($scope, $rootScope, $timeout, Restangular, $routeParams, PowerCatalog,
 ConditionCatalog) {
     PowerCatalog.onReady(function() { $scope.powerCatalogReady = true;});
     var campaignId = $routeParams.campaignId;
+    $scope.log = {
+        line: function() {
+            var line = "";
+            for (var i = 0; i < arguments.length; i++) {
+                line = line + " " + arguments[i];
+            }
+            this.log.push(line);
+            var console = $("#console");
+            $timeout(function(){ console.animate(
+                { scrollTop: console.prop("scrollHeight") - console.height() }, 300
+                )},100);
+        },
+        log: [],
+    };
 
     // ----------- Create the polling
     // Polls campagin details every 10sec
@@ -54,58 +68,29 @@ ConditionCatalog) {
     });
 }])
 
-.controller('CharacterController', ['$rootScope','$scope','Restangular',
-function($rootScope, $scope, Restangular) {
-    $scope.$watch('character', function(newValue, oldValue) {
-        if(newValue == oldValue)
-            return;
-        newValue.put();
-    });
-
-    // ----------- EVENT HANDLERS:
-    $scope.change_hp = function(value){
-        $scope.character.used_hit_points =
-            $scope.character.used_hit_points-parseInt(value);
+.controller('CharacterController', ['$scope', '$dialog', 'Och',
+function($scope, $dialog, Och) {
+    $scope.Och = Och;
+    
+    $scope.initOpts = {
+        backdrop: true,
+        keyboard: true,
+        backdropClick: true,
+        
     };
-    $scope.set_init = function(init){
-        $scope.character.init = parseInt(init);
-    };
-    $scope.roll_init = function(character, init){
-        $scope.character.init = roll(init);
-    };
-    $scope.change_xp = function(character){
-        character.experience_points =
-            character.experience_points+parseInt($scope.changeXp[character.id]);
-    };
-    $scope.change_gold = function(character){
-        character.gold = character.gold+parseInt($scope.changeGold[character.id]);
-    };
-    $scope.short_rest = function(character){
-        character.milestones = character.milestones-character.milestones%2;
-    };
-    $scope.ext_rest = function(character){
-        $scope.shortRest(character);
-        character.milestones = 0;
-        character.used_action_points = 0;
-        character.used_healing_surges = 0;
-    };
-    $scope.spend_ap = function(character){
-        character.used_action_points = character.used_action_points+1;
-    };
-    $scope.spend_hs = function(character){
-        character.used_healing_surges = character.used_healing_surges+1;
-    };
-    $scope.award_milestone = function(character){
-        character.milestones = character.milestones+1;
-    };
-    $scope.bloodied = function(character){
-        if(character.used_hit_points*2 > character.hit_points)
-            return true;
-        return false;
-    };
-    $scope.fetch_from_compendium = function(id, model){
-        WizardsService.fetch(id, model);
-    };
+    $scope.initDialog = function(){
+        var d = $dialog.dialog({
+            templateUrl:  '/static/battle/partials/dialogs/init.html',
+            controller: 'DialogController'
+        });
+        d.open().then(function(result){
+          if(result)
+          {
+            Och.set_init($scope.ch, result.result);
+            $scope.log.line($scope.ch.name+" init set to: "+result.log);
+          }
+        });
+  };
 }])
 
 .controller('MenuController', ['$scope', 'ConditionCatalog',
@@ -140,7 +125,7 @@ function($scope, Restangular, PowerCatalog, HasPowerCatalog) {
 function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog) {
     // gets executed always
     ConditionCatalog.onReady(function() {
-        $scope.conditionList = $scope.character.has_conditions;
+        $scope.conditionList = $scope.ch.has_conditions;
         for(var i=0, len=$scope.conditionList.length; i<len; i++)
         {
             // The data comes wuth only the pk reference, so we fill it whole
@@ -155,7 +140,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
 
         $scope.conditionList.splice(hci, 1);
     };
-    $scope.condition_drop = function(e,o,characterIndex) {
+    $scope.condition_drop = function(e,o) {
         // The condition dropped is the raw Restangular condition object
         var condition = $scope.conditionList.pop();
         // Create a has_condition from it
@@ -192,4 +177,32 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         $scope.$on('WizardsService.fetch', function(event, detailTag) {
             $scope.detailTag = detailTag.html();
         });
-}]);
+}])
+
+.controller('DialogController', ['$scope', 'dialog', 'roll',
+    function($scope, dialog, roll) {
+        $scope.setClose = function(result){
+            dialog.close({
+                result: result,
+                log: " "+result+" "});
+        };
+        $scope.roll = roll;
+        $scope.rollClose = function(mod, dice) {
+            var roll = $scope.roll(mod, dice);
+            dialog.close(roll);
+        };
+        var numbers = [];
+        for(var i=-4; i<52; i++)
+        {
+            numbers.push(i);
+        }
+        var mods = [];
+        for(var j=-5; j<43; j++)
+        {
+            mods.push(j);
+        }
+        $scope.numbers = numbers;
+        $scope.mods = mods;
+        $scope.input = "";
+}])
+;

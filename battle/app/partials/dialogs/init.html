@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="row-fluid">
+                <div class="span11 offset1">
+                    <h4>Set Value:</h4>
+                    <div ng-repeat="number in numbers" ng-click="setClose(number)" class="button-cell">
+                        {{number}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="row-fluid">
+                <div class="span11">
+                    <h4>Random Value with Mod:</h4>
+                    <div ng-repeat="mod in mods" ng-click="rollClose(mod,20)" class="button-cell">
+                        <p ng-show="mod > 0">+{{mod}}</p><p ng-show="mod <= 0">{{mod}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span5">
+            <hr>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="offset1 span2">
+            <h4>Set value manually:</h4>
+        </div>
+        <div class="span1">
+            <input class="stat-edit" maxlength="2" ng-model="input" type="text">
+        </div>
+        <div class="span1">
+            <button class="btn btn-primary" ng-click="setClose(input)" type="button">Set
+            </button> 
+        </div>
+    </div>
+</div>

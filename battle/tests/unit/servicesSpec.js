@@ -47,21 +47,6 @@ describe('Battle Services', function(){
         }));
     });
 
-    describe('Roll service', function(){
-        it('should return a characterList model', inject(function(roll) {
-            for (var i = 0;i<1000;i++) {
-                var result = roll(i);
-                expect(result).toBeLessThan(i+21);
-                expect(result).toBeGreaterThan(i-1);
-            }
-            for (var i = 0;i<1000;i++) {
-                var result = roll();
-                expect(result).toBeLessThan(21);
-                expect(result).toBeGreaterThan(0);
-            }
-        }));
-    });
-
     describe('Wizards service', function(){
         it('Get the proper detail detailTag', inject(function($rootScope, WizardsService, $httpBackend) {
             var id = 10, model = 'power', detailTag = '<html><div id="detail">A</div></html>';

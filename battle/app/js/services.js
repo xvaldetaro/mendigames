@@ -1,10 +1,14 @@
 'use strict';
 
 angular.module('battle.services', ['restangular']).
-    factory('roll', function(){ return function(mod){
-        if(isNaN(mod))
-            return _.random(1,20);
-        return parseInt(mod)+_.random(1,20);
+    factory('roll', function(){ return function(mod, dice){
+        var roll = _.random(1,dice);
+        var result = parseInt(mod)+_.random(1,dice);
+        var log = " d"+dice+": "+roll+"+"+mod+"="+result+" ";
+        return {
+            result: result,
+            log: log
+        };
     };}).
     factory('WizardsService', ['$rootScope', '$http', function($rootScope, $http){
         return {
@@ -100,24 +104,68 @@ angular.module('battle.services', ['restangular']).
             getItem: function(key){ return dict[key]; }
         };
     }]).
-    config(function(RestangularProvider) {
+
+factory('Och', ['Restangular', 'WizardsService', 'roll',
+function(Restangular, WizardsService, roll) {
+    return {
+        save: function(c) {
+            c.put();
+        },
+        change_hp: function(c, value){
+            c.used_hit_points = c.used_hit_points-parseInt(value);
+            this.save(c);
+        },
+        set_init: function(c, value){
+            c.init = parseInt(value);
+            this.save(c);
+        },
+        roll_init: function(c, mod){
+            c.init = roll(mod, dice);
+            this.save(c);
+        },
+        change_xp: function(c, value){
+            c.experience_points = c.experience_points+parseInt(value);
+            this.save(c);
+        },
+        change_gold: function(c, value){
+            c.gold = c.gold+parseInt(value);
+            this.save(c);
+        },
+        short_rest: function(c){
+            c.milestones = c.milestones-c.milestones%2;
+            this.save(c);
+        },
+        ext_rest: function(c){
+            this.short_rest(c);
+            c.milestones = 0;
+            c.used_action_points = 0;
+            c.used_healing_surges = 0;
+            this.save(c);
+        },
+        spend_ap: function(c){
+            c.used_action_points = c.used_action_points+1;
+            this.save(c);
+        },
+        spend_hs: function(c){
+            c.used_healing_surges = c.used_healing_surges+1;
+            this.save(c);
+        },
+        award_milestone: function(c){
+            c.milestones = c.milestones+1;
+            this.save(c);
+        },
+        bloodied: function(c){
+            if(c.used_hit_points*2 > c.hit_points)
+                return true;
+            return false;
+        },
+        fetch_from_compendium: function(id, model){
+            WizardsService.fetch(id, model);
+        }
+    };
+}]).
+
+config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
     RestangularProvider.setDefaultRequestParams({format: 'json'});
-
-    // Now let's configure the response extractor for each request
-   //  RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
-   //      // This is a get for a list
-   //      var newResponse;
-   //      if (operation === "getList") {
-   //          // Here we're returning an Array which has one special property metadata with our extra information
-   //          newResponse = response.results;
-   //          newResponse.metadata = {"count": response.count,
-   //                                  "next": response.next,
-   //                                  "previous": response.previous };
-   //      } else {
-   //          // This is an element
-   //          newResponse = response;
-   //      }
-   //      return newResponse;
-   // });
 });

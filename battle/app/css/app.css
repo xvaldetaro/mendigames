@@ -28,6 +28,20 @@ div.docked-menu {
   top: 0%;
   width: 15%; }
 
+#console {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  position: fixed;
+  right: 0%;
+  bottom: 0%;
+  width: 35%;
+  height: 10%;
+  background-color: gainsboro;
+  overflow: auto;
+  overflow-x: hidden; }
+
 div.condition-box {
   display: inline-block;
   text-align: center;
@@ -184,14 +198,17 @@ div.has-conditions-box {
   border-color: #dddddd;
   border-style: solid;
   border-width: 1px;
-  border-top: 0px;
-  border-left: 0px;
   border-radius: 3px; }
 
+div.dialog-content {
+  margin: 1em; }
+
 div.button-cell {
-  color: white;
+  display: inline-block;
+  color: #333333;
   font-weight: bold;
-  width: 1.3em;
+  width: 2em;
+  height: 1.6em;
   text-align: center;
   background-image: -webkit-linear-gradient(bottom, #c6c6c6, #f4f4f4);
   background-image: linear-gradient(to top, #c6c6c6, #f4f4f4);
@@ -264,12 +281,18 @@ div.button-cell {
     border-width: 1px;
     border-style: solid;
     border-color: #dddddd;
-    border-radius: 3px; }
+    border-radius: 3px;
+    color: #333333; }
     div.button-cell.misc:hover {
       background-color: #383838;
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
       background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
       background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
+
+.stat-edit {
+  width: 2em;
+  height: 2em;
+  font-size: 2em; }
 
 div.power-container {
   padding-top: 0px;
