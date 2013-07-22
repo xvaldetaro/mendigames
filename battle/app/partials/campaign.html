@@ -35,8 +35,8 @@
                     </div>
                 </div>
                 <div class="span9">
-                    <div ng-controller="HasConditionListController" class="row-fluid has-conditions-box" data-drop="true" ng-model='conditionList' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
-                        <div ng-repeat="(hci, hco) in conditionList" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}}">
+                    <div class="row-fluid has-conditions-box" data-drop="true" ng-model='droppedConditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
+                        <div ng-repeat="(hci, hco) in ch._has_conditions" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}}">
                             <i class="{{hco._condition|condition_icon}} icon-white"></i>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="span6">
                     <div class="power-container">
-                        <div ng-controller="HasPowerController" ng-repeat="hasPower in ch.has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower.power}} - {{hasPower._power.action}}">
+                        <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower.power}} - {{hasPower._power.action}}">
                             {{hasPower._power.level}}
                         </div>
                     </div>

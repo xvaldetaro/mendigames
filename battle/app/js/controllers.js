@@ -10,11 +10,12 @@ function($scope, Restangular) {
     });
 }]).
 
-controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', '$routeParams',
-'PowerCatalog', 'ConditionCatalog',
-function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, PowerCatalog,
-ConditionCatalog) {
+controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', 
+'$routeParams', 'CharacterList',
+function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, CharacterList) {
     $scope.campaignId = $routeParams.campaignId;
+
+    // Scroll to bottom of console log window when a new msg arrives
     $scope.$watch('log', function() {
         var console = $("#console");
         $timeout(function(){
@@ -34,37 +35,23 @@ ConditionCatalog) {
         });
     }
     //$timeout(campaign_poll,10000);
+    $scope.characterList = CharacterList.list;
 
-    // Polls character list every 2sec
-    var params = {campaignId: $scope.campaignId};
-    $scope.character_poll_timeout = function() {
-        Restangular.all('character').getList(params).then(function(characterList){
-            $scope.characterList = characterList;
-            //$timeout($scope.character_poll_timeout,2000);
-        });
-    };
-    $scope.character_poll_timeout();
-    $scope.test = function() {
-        $rootScope.$broadcast('Character.poll');
-    }
-
-    // --------------- Register the watchers
-    var watcher = function(newValue,oldValue){
-                if(newValue == oldValue)
-                    return;
-
-                newValue.put(); };
-
-    
     Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
         $scope.campaign = campaign;
-        $scope.$watch('campaign', watcher);
+        $scope.$watch('campaign', function(newValue,oldValue){
+            if(newValue == oldValue)
+                return;
+            newValue.put();
+        });
     });
 }])
 
-.controller('CharacterController', ['$scope', '$dialog', 'Och', 'Log',
-function($scope, $dialog, Och, Log) {
+.controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
+function($scope, $rootScope, $dialog, Och, Log) {
     $scope.Och = Och;
+    $scope.droppedConditions = [];
+
     $scope.short_rest = function(c) {
         Och.short_rest(c);
         Log(c.name+' short rested');
@@ -124,6 +111,20 @@ function($scope, $dialog, Och, Log) {
           }
         });
     };
+    $scope.remove_condition = function(hci){
+        var name = $scope.ch._has_conditions[hci].condition;
+        Och.remove_condition($scope.ch, hci);
+
+        Log($scope.ch.name+' is not: '+name+' anymore');
+    };
+    $scope.condition_drop = function(e,o) {
+        // The condition dropped is the raw Restangular condition object
+        var condition = $scope.droppedConditions.pop();
+        Och.add_condition($scope.ch, condition);
+
+        Log($scope.ch.name+' is: '+condition.name);
+        $rootScope.$broadcast('Condition.dropped');
+    };
 }])
 
 .controller('HasPowerController', ['$scope', 'Restangular', 'Ohpo', 'Log',
@@ -136,55 +137,6 @@ function($scope, Restangular, Ohpo, Log) {
             Log($scope.ch.name+' used: '+$scope.hasPower.power);
         else
             Log($scope.ch.name+' recharged: '+$scope.hasPower.power);
-    };
-}])
-
-.controller('HasConditionListController', ['$rootScope','$scope',
-'Restangular', 'ConditionCatalog', 'Log',
-function($rootScope, $scope, Restangular, ConditionCatalog, Log) {
-    // gets executed always
-    ConditionCatalog.onReady(function() {
-        $scope.conditionList = $scope.ch.has_conditions;
-        for(var i=0, len=$scope.conditionList.length; i<len; i++)
-        {
-            // The data comes wuth only the pk reference, so we fill it whole
-            var name = $scope.conditionList[i].condition;
-            $scope.conditionList[i]._condition = ConditionCatalog.getItem(name);
-        }
-    });
-
-    $scope.remove_condition = function(hci){
-        Restangular.one('has_condition', $scope.conditionList[hci].id)
-            .remove().then(null, function() {window.alert("No sync");});
-
-        Log($scope.ch.name+' is not: '+$scope.conditionList[hci].condition+' anymore');
-        $scope.conditionList.splice(hci, 1);
-    };
-    $scope.condition_drop = function(e,o) {
-        // The condition dropped is the raw Restangular condition object
-        var condition = $scope.conditionList.pop();
-        // Create a has_condition from it
-        var hasCondition = {
-            character: $scope.ch.id,
-            condition: condition.name,
-            ends: 'T',
-            started_round: 1,
-            started_init: 1,
-            _condition: condition
-        };
-
-        Restangular.all('has_condition').post(hasCondition).then(function(hc) {
-            for(var i=0, len=$scope.conditionList.length; i<len; i++)
-            {
-                var entry = $scope.conditionList[i];
-                if(!entry.id && entry.condition == hc.condition)
-                    entry.id = hc.id;
-            }
-        });
-
-        $scope.conditionList.push(hasCondition);
-        Log($scope.ch.name+' is: '+hasCondition.condition);
-        $rootScope.$broadcast('Condition.dropped');
     };
 }])
 

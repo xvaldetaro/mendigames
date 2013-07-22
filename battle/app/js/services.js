@@ -38,29 +38,111 @@ angular.module('battle.services', ['restangular']).
             $rootScope.log.push(line);
         };
     }]).
-    factory('CharacterList', ['$rootScope','Restangular',
-    function($rootScope, Restangular) {
-        var dict = {}, list, ready = false;
-        return {
-            onReady: function(cb) {
-                if(ready)
-                    return cb();
-                cbs.push(cb);
-            },
-            ready: function() { return ready; },
-            listSlice: function(){ return list.slice(); },
-            getItem: function(key){ return dict[key]; }
-        };
-    }]).
-    factory('ConditionCatalog', ['$rootScope','Restangular',
-    function($rootScope, Restangular) {
-        var dict = {}, list, ready = false, cbs = [];
-        Restangular.all('condition').getList().then(function(data){
+
+factory('CharacterList', ['Restangular','HasPowerList', 'HasConditionList', '$routeParams',
+function(Restangular, HasPowerList, HasConditionList, $routeParams) {
+    var list = [], dict = {};
+    function poll() {
+        Restangular.all('character').getList({campaignId: $routeParams.campaignId})
+        .then(function(characterList){
+            list.length = 0;
+            for(var i=0, len=characterList.length; i<len; i++) {
+                var c = characterList[i];
+                list.push(c);
+                dict[c.id] = c;
+            }
+
+            HasPowerList.onReady(fill_power_relations);
+            HasConditionList.onReady(fill_condition_relations);
+        });
+    }
+    function fill_power_relations() {
+        for(var i=0, len=list.length; i<len; i++)
+        {
+            var ch = list[i];
+            var hpoList = ch.has_powers;
+            var _hpoList = [];
+            for(var j=0, lenj=hpoList.length; j<lenj; j++) {
+                _hpoList.push(HasPowerList.by_id(hpoList[j].id));
+            }
+            ch._has_powers = _hpoList;
+        }
+    }
+    function fill_condition_relations() {
+        for(var i=0, len=list.length; i<len; i++)
+        {
+            var ch = list[i];
+            var hcoList = ch.has_conditions;
+            var _hcoList = [];
+            for(var j=0, lenj=hcoList.length; j<lenj; j++) {
+                _hcoList.push(HasConditionList.by_id(hcoList[j].id));
+            }
+            ch._has_conditions = _hcoList;
+        }
+    }
+    poll();
+    return {
+        poll: poll,
+        list: list,
+        by_id: function(id){ return dict[id]; }
+    };
+}]).
+
+factory('HasPowerList', ['Restangular','PowerCatalog', '$routeParams',
+function(Restangular, PowerCatalog, $routeParams) {
+    var list, dict = {}, ready = false, cbs = [];
+    function poll() {
+        Restangular.all('has_power').getList({campaignId: $routeParams.campaignId})
+        .then(function(data){
             list = data;
-            for(var i=0, len=list.length; i<len; i++)
-            {
-                var item = list[i];
-                dict[item.name] = item;
+            fill_relations(list);
+            for(var i=0, len=list.length; i<len; i++) {
+                dict[list[i].id] = list[i];
+            }
+        });
+    }
+    function fill_relations(hpoList) {
+        PowerCatalog.onReady(function(){
+            for(var i=0, len=hpoList.length; i<len; i++) {
+                hpoList[i]._power = PowerCatalog.getItem(hpoList[i].power);
+            }
+            for(var i=0, len=cbs.length; i<len; i++) {
+                cbs[i]();
+            }
+            cbs = null;
+            ready = true;
+        });
+    }
+    poll();
+    return {
+        onReady: function(cb) {
+            if(ready)
+                return cb();
+            cbs.push(cb);
+        },
+        poll: poll,
+        list: list,
+        by_id: function(id){ return dict[id]; }
+    };
+}]).
+
+factory('HasConditionList', ['Restangular','ConditionCatalog', '$routeParams',
+function(Restangular, ConditionCatalog, $routeParams) {
+    var list, dict = {}, ready = false, cbs = [];
+    function poll() {
+        Restangular.all('has_condition').getList({campaignId: $routeParams.campaignId})
+        .then(function(data){
+            list = data;
+            fill_relations(list);
+            for(var i=0, len=list.length; i<len; i++) {
+                dict[list[i].id] = list[i];
+            }
+        });
+    }
+    function fill_relations(hcoList) {
+        ConditionCatalog.onReady(function(){
+            for(var i=0, len=hcoList.length; i<len; i++) {
+                hcoList[i]._condition = ConditionCatalog.getItem(hcoList[i].condition);
             }
             for(var i=0, len=cbs.length; i<len; i++)
             {
@@ -69,46 +151,104 @@ angular.module('battle.services', ['restangular']).
             cbs = null;
             ready = true;
         });
-        return {
-            onReady: function(cb) {
-                if(ready)
-                    return cb();
-                cbs.push(cb);
-            },
-            ready: function() { return ready; },
-            listSlice: function(){ return list.slice(); },
-            getItem: function(key){ return dict[key]; }
-        };
-    }]).
-    factory('PowerCatalog', ['$rootScope','Restangular',
-    function($rootScope, Restangular) {
-        var dict = {}, list, ready = false, cbs = [];
-        Restangular.all('power').getList({owned: 'True'}).then(function(data){
-            list = data;
-            for(var i=0, len=list.length; i<len; i++)
-            {
-                var item = list[i];
-                dict[item.name] = item;
-            }
-            for(var i=0, len=cbs.length; i<len; i++)
-                cbs[i]();
-            cbs = null;
-            ready = true;
-        });
-        return {
-            onReady: function(cb) {
-                if(ready)
-                    return cb();
-                cbs.push(cb);
-            },
-            ready: function() { return ready; },
-            listSlice: function(){ return list.slice(); },
-            getItem: function(key){ return dict[key]; }
-        };
-    }]).
+    }
+    poll();
+    return {
+        onReady: function(cb) {
+            if(ready)
+                return cb();
+            cbs.push(cb);
+        },
+        poll: poll,
+        list: list,
+        by_id: function(id){ return dict[id]; },
+        add: function(ch, co) {
+            // Create a has_condition from it
+            var hasCondition = {
+                character: ch.id,
+                condition: co.name,
+                ends: 'T',
+                started_round: 1,
+                started_init: 1,
+                _condition: co,
+                needSync: true
+            };
+
+            Restangular.all('has_condition').post(hasCondition).then(function(hc) {
+                for(var i=0, len=ch._has_conditions.length; i<len; i++)
+                {
+                    var entry = ch._has_conditions[i];
+                    if(entry.needSync && entry.condition == hc.condition) {
+                        hc._condition = entry._condition;
+                        list.push(hc);
+                        ch._has_conditions[i] = hc;
+                    }
+                }
+            });
+            ch._has_conditions.push(hasCondition);
+        }
+    };
+}]).
+
+factory('ConditionCatalog', ['$rootScope','Restangular',
+function($rootScope, Restangular) {
+    var dict = {}, list, ready = false, cbs = [];
+    Restangular.all('condition').getList().then(function(data){
+        list = data;
+        for(var i=0, len=list.length; i<len; i++)
+        {
+            var item = list[i];
+            dict[item.name] = item;
+        }
+        for(var i=0, len=cbs.length; i<len; i++)
+        {
+            cbs[i]();
+        }
+        cbs = null;
+        ready = true;
+    });
+    return {
+        onReady: function(cb) {
+            if(ready)
+                return cb();
+            cbs.push(cb);
+        },
+        ready: function() { return ready; },
+        listSlice: function(){ return list.slice(); },
+        getItem: function(key){ return dict[key]; }
+    };
+}]).
+
+factory('PowerCatalog', ['$rootScope','Restangular',
+function($rootScope, Restangular) {
+    var dict = {}, list, ready = false, cbs = [];
+    Restangular.all('power').getList({owned: 'True'}).then(function(data){
+        list = data;
+        for(var i=0, len=list.length; i<len; i++)
+        {
+            var item = list[i];
+            dict[item.name] = item;
+        }
+        for(var i=0, len=cbs.length; i<len; i++)
+            cbs[i]();
+        cbs = null;
+        ready = true;
+    });
+    return {
+        onReady: function(cb) {
+            if(ready)
+                return cb();
+            cbs.push(cb);
+        },
+        ready: function() { return ready; },
+        listSlice: function(){ return list.slice(); },
+        getItem: function(key){ return dict[key]; }
+    };
+}]).
+
 // Operator for characters
-factory('Och', ['Restangular', 'roll',
-function(Restangular, WizardsService, roll) {
+factory('Och', ['Restangular', 'roll', 'HasConditionList',
+function(Restangular, roll, HasConditionList) {
     return {
         save: function(c) {
             c.put();
@@ -160,6 +300,13 @@ function(Restangular, WizardsService, roll) {
             if(c.used_hit_points*2 > c.hit_points)
                 return true;
             return false;
+        },
+        remove_condition: function(c, hci) {
+            c._has_conditions[hci].remove().then(null, function() {window.alert("No sync");});
+            c._has_conditions.splice(hci,1);
+        },
+        add_condition: function(c, co) {
+            HasConditionList.add(c, co);
         }
     };
 }]).
@@ -171,23 +318,33 @@ function(Restangular, WizardsService, PowerCatalog) {
             h.put();
         },
         get_power: function(h) {
-            if(h._power)
-                return;
-            PowerCatalog.onReady(function(){
-                h._power = PowerCatalog.getItem(h.power);
-            });
+            h._power = PowerCatalog.getItem(h.power);
         },
         use_power: function(h) {
             h.used = !h.used;
-            Restangular.one('has_power', h.id).get().then(
-                function(data) {
-                    data.used = h.used;
-                    data.put();
-                }
-            );
+            h.put();
         },
-        fetch_from_compendium: function(c){
-            WizardsService.fetch(c.wizards_id, 'power');
+        fetch_from_compendium: function(h){
+            WizardsService.fetch(h._power.wizards_id, 'power');
+        }
+    };
+}]).
+// Operator for HasPowers
+factory('Ohco', ['Restangular', 'WizardsService', 'ConditionCatalog',
+function(Restangular, WizardsService, ConditionCatalog) {
+    return {
+        save: function(h) {
+            h.put();
+        },
+        get_condition: function(h) {
+            h._condition = ConditionCatalog.getItem(h.condition);
+        },
+        remove: function(h) { 
+            Restangular.one('has_condition', h.id)
+            .remove().then(null, function() {window.alert("No sync");});
+        },
+        fetch_from_compendium: function(h){
+            WizardsService.fetch(h._.wizards_id, 'power');
         }
     };
 }]).

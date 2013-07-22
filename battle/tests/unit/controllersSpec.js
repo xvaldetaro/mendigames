@@ -12,6 +12,7 @@ var _characters_from_campaign_data = _characters;
 
 /* jasmine specs for controllers go here */
 describe('Battle controllers', function(){
+    beforeEach(module('battle.services'));
     beforeEach(module('battle.controllers'));
 
     describe('Campaign List Controller', function(){
@@ -43,20 +44,11 @@ describe('Battle controllers', function(){
 
             var ctrl, scope = $rootScope.$new(), routeParams = {"campaignId": '1'};
 
-            $httpBackend.expectGET('/battle/power?format=json&owned=True').
-                respond(_characters_from_campaign_data);
-
-            $httpBackend.expectGET('/battle/condition?format=json').
-                respond(_characters_from_campaign_data);
-
-            $httpBackend.expectGET('/battle/character?campaignId=1&format=json').
-                respond(_characters_from_campaign_data);
-
             $httpBackend.expectGET('/battle/campaign/1?format=json').
                 respond(_campaign1);
 
             ctrl = $controller('CampaignCtrl',
-                {$scope:scope, $routeParams:routeParams });
+                {$scope:scope, CharacterList:{list:_characters}, $routeParams:routeParams });
 
             expect(scope.campaign).toBeUndefined();
             $httpBackend.flush();
