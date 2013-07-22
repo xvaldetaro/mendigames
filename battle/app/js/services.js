@@ -27,6 +27,20 @@ angular.module('battle.services', ['restangular']).
             }
         };
     }]).
+    factory('CharacterList', ['$rootScope','Restangular',
+    function($rootScope, Restangular) {
+        var dict = {}, list, ready = false;
+        return {
+            onReady: function(cb) {
+                if(ready)
+                    return cb();
+                cbs.push(cb);
+            },
+            ready: function() { return ready; },
+            listSlice: function(){ return list.slice(); },
+            getItem: function(key){ return dict[key]; }
+        };
+    }]).
     factory('ConditionCatalog', ['$rootScope','Restangular',
     function($rootScope, Restangular) {
         var dict = {}, list, ready = false, cbs = [];
@@ -81,31 +95,8 @@ angular.module('battle.services', ['restangular']).
             getItem: function(key){ return dict[key]; }
         };
     }]).
-    factory('HasPowerCatalog', ['$rootScope','Restangular',
-    function($rootScope, Restangular) {
-        var dict = {}, list, ready = false, cbs = [];
-        Restangular.all('has_power').getList().then(function(data){
-            list = data;
-            for(var i=0, len=list.length; i<len; i++)
-            {
-                var item = list[i];
-                dict[item.id] = item;
-            }
-            for(var i=0, len=cbs.length; i<len; i++)
-                cbs[i]();
-        });
-        return {
-            onReady: function(cb) {
-                if(ready)
-                    return cb();
-                cbs.push(cb);
-            },
-            listSlice: function(){ return list.slice(); },
-            getItem: function(key){ return dict[key]; }
-        };
-    }]).
-
-factory('Och', ['Restangular', 'WizardsService', 'roll',
+// Operator for characters
+factory('Och', ['Restangular', 'roll',
 function(Restangular, WizardsService, roll) {
     return {
         save: function(c) {
@@ -135,7 +126,7 @@ function(Restangular, WizardsService, roll) {
             c.milestones = c.milestones-c.milestones%2;
             this.save(c);
         },
-        ext_rest: function(c){
+        extended_rest: function(c){
             this.short_rest(c);
             c.milestones = 0;
             c.used_action_points = 0;
@@ -150,7 +141,7 @@ function(Restangular, WizardsService, roll) {
             c.used_healing_surges = c.used_healing_surges+1;
             this.save(c);
         },
-        award_milestone: function(c){
+        milestone: function(c){
             c.milestones = c.milestones+1;
             this.save(c);
         },
@@ -158,13 +149,37 @@ function(Restangular, WizardsService, roll) {
             if(c.used_hit_points*2 > c.hit_points)
                 return true;
             return false;
-        },
-        fetch_from_compendium: function(id, model){
-            WizardsService.fetch(id, model);
         }
     };
 }]).
-
+// Operator for HasPowers
+factory('Ohpo', ['Restangular', 'WizardsService', 'PowerCatalog',
+function(Restangular, WizardsService, PowerCatalog) {
+    return {
+        save: function(h) {
+            h.put();
+        },
+        get_power: function(h) {
+            if(h._power)
+                return;
+            PowerCatalog.onReady(function(){
+                h._power = PowerCatalog.getItem(h.power);
+            });
+        },
+        use_power: function(h) {
+            h.used = !h.used;
+            Restangular.one('has_power', h.id).get().then(
+                function(data) {
+                    data.used = h.used;
+                    data.put();
+                }
+            );
+        },
+        fetch_from_compendium: function(c){
+            WizardsService.fetch(c.wizards_id, 'power');
+        }
+    };
+}]).
 config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
     RestangularProvider.setDefaultRequestParams({format: 'json'});

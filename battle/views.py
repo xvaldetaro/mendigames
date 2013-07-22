@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from battle.models import Campaign, Character, Condition, HasPower, Power, HasCondition
 from battle.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
                                 CampaignSerializer, PowerSerializer, HasPowerSerializer,
@@ -82,8 +83,11 @@ class HasPowerList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = HasPower.objects.all()
         characterId = self.request.QUERY_PARAMS.get('characterId', None)
+        campaignId = self.request.QUERY_PARAMS.get('campaignId', None)
         if characterId is not None:
             queryset = queryset.filter(character=characterId)
+        if campaignId is not None:
+            queryset = queryset.filter(character__campaign=campaignId)
         return queryset
 
 
@@ -103,8 +107,11 @@ class HasConditionList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = HasCondition.objects.all()
         characterId = self.request.QUERY_PARAMS.get('characterId', None)
+        campaignId = self.request.QUERY_PARAMS.get('campaignId', None)
         if characterId is not None:
             queryset = queryset.filter(character=characterId)
+        if campaignId is not None:
+            queryset = queryset.filter(character__campaign=campaignId)
         return queryset
 
 

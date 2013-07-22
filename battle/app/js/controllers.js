@@ -71,8 +71,28 @@ ConditionCatalog) {
 .controller('CharacterController', ['$scope', '$dialog', 'Och',
 function($scope, $dialog, Och) {
     $scope.Och = Och;
-    
-    $scope.initDialog = function(){
+    $scope.short_rest = function(c) {
+        Och.short_rest(c);
+        $scope.log.line(c.name+' short rested');
+    };
+    $scope.extended_rest = function(c) {
+        Och.extended_rest(c);
+        $scope.log.line(c.name+' extended rested');
+    };
+    $scope.spend_ap = function(c) {
+        Och.spend_ap(c);
+        $scope.log.line(c.name+' used an action point');
+    };
+    $scope.spend_hs = function(c) {
+        Och.spend_hs(c);
+        $scope.log.line(c.name+' used a healing surge');
+    };
+    $scope.milestone = function(c) {
+        Och.milestone(c);
+        $scope.log.line(c.name+' reached a milestone');
+    };
+
+    $scope.init_dialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/init.html',
             controller: 'InitDialogController'
@@ -85,7 +105,7 @@ function($scope, $dialog, Och) {
           }
         });
     };
-    $scope.hpDialog = function(){
+    $scope.hp_dialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/hp.html',
             controller: 'HpDialogController'
@@ -93,40 +113,35 @@ function($scope, $dialog, Och) {
         d.open().then(function(result){
           if(result)
           {
-            Och.change_hp($scope.ch, result.result);
-            if(result.result > 0)
+            if(result.heal == 'heal')
+            {
+                Och.change_hp($scope.ch, result.result);
                 $scope.log.line($scope.ch.name+" gained "+result.log+" hit points");
-            if(result.result < 0)
+            }
+            else
+            {
+                var bloodied = Och.bloodied($scope.ch);
+                Och.change_hp($scope.ch, -1*result.result);
                 $scope.log.line($scope.ch.name+" lost "+result.log+" hit points");
+
+                if(bloodied == Och.bloodied($scope.ch))
+                    $scope.log.line($scope.ch.name+" is Bloodied!")
+            }
           }
         });
     };
 }])
 
-.controller('MenuController', ['$scope', 'ConditionCatalog',
-function($scope, ConditionCatalog) {
-    ConditionCatalog.onReady(function() {
-        $scope.conditionList = ConditionCatalog.listSlice();
-    });
-    $scope.$on('Condition.dropped', function() {
-        $scope.conditionList = ConditionCatalog.listSlice();
-    });
-}])
-
-.controller('HasPowerController', ['$scope', 'Restangular', 'PowerCatalog',
-'HasPowerCatalog',
-function($scope, Restangular, PowerCatalog, HasPowerCatalog) {
-    PowerCatalog.onReady(function(){
-        $scope.hasPower._power = PowerCatalog.getItem($scope.hasPower.power);
-    });
+.controller('HasPowerController', ['$scope', 'Restangular', 'Ohpo',
+function($scope, Restangular, Ohpo) {
+    Ohpo.get_power($scope.hasPower);
 
     $scope.use_power = function(){
-        $scope.hasPower.used = !$scope.hasPower.used;
-        Restangular.one('has_power', $scope.hasPower.id).get().then(
-            function(data) {
-                data.used = $scope.hasPower.used;
-                data.put();
-            });
+        Ohpo.use_power($scope.hasPower);
+        if($scope.hasPower.used)
+            $scope.log.line($scope.ch.name+' used: '+$scope.hasPower.power);
+        else
+            $scope.log.line($scope.ch.name+' recharged: '+$scope.hasPower.power);
     };
 }])
 
@@ -148,6 +163,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         Restangular.one('has_condition', $scope.conditionList[hci].id)
             .remove().then(null, function() {window.alert("No sync");});
 
+        $scope.log.line($scope.ch.name+' is not: '+$scope.conditionList[hci].condition+' anymore');
         $scope.conditionList.splice(hci, 1);
     };
     $scope.condition_drop = function(e,o) {
@@ -173,8 +189,19 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         });
 
         $scope.conditionList.push(hasCondition);
+        $scope.log.line($scope.ch.name+' is: '+hasCondition.condition);
         $rootScope.$broadcast('Condition.dropped');
     };
+}])
+
+.controller('MenuController', ['$scope', 'ConditionCatalog',
+function($scope, ConditionCatalog) {
+    ConditionCatalog.onReady(function() {
+        $scope.conditionList = ConditionCatalog.listSlice();
+    });
+    $scope.$on('Condition.dropped', function() {
+        $scope.conditionList = ConditionCatalog.listSlice();
+    });
 }])
 
 .controller('ModalController', ['$scope', 'WizardsService',
@@ -223,16 +250,16 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
             {
                 result: result,
                 log: " "+result+" ",
-                heal: $scope.isHealing
+                heal: $scope.heal
             });
         };
         $scope.rollClose = function(mod, dice) {
             var roll = $scope.roll(mod, dice);
-            roll.result = $scope.isHealing && -1*roll.result || roll.result;
+            roll.heal = $scope.heal;
             dialog.close(roll);
         };
         var numbers = [];
-        for(var i=-4; i<52; i++)
+        for(var i=0; i<52; i++)
         {
             numbers.push(i);
         }
@@ -243,7 +270,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         }
 
         $scope.roll = roll;
-        $scope.isHealing = -1;
+        $scope.heal = 'damage';
         $scope.dice = 8;
         $scope.numbers = numbers;
         $scope.mods = mods;

@@ -42,7 +42,20 @@
                     </div>
                 </div>
                 <div class="span1">
-                    <div class="button-cell"><i class="icon-cog icon-white"></i></div>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle"><div class="button-cell"><i class="icon-cog"></i></div></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                              <a ng-click="short_rest(ch)">Short Rest</a>
+                            </li>
+                            <li>
+                              <a ng-click="extended_rest(ch)">Extended Rest</a>
+                            </li>
+                            <li>
+                              <a ng-click="milestone(ch)">Milestone</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="row-fluid">
@@ -51,28 +64,28 @@
                         <div class="span4">
                             <div class="row-fluid">
                                 <div class="span10">
-                                    <div ng-click="hpDialog()" class="stat-number hp">
+                                    <div ng-click="hp_dialog()" class="stat-number hp">
                                         <p>{{ch|total_hp}}</p>
                                     </div>
                                 </div>
                                 <div class="span2">
-                                    &nbsp;<i ng-show="bloodied(ch)" class="icon-tint"></i>
+                                    &nbsp;<i ng-show="Och.bloodied(ch)" class="icon-tint"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="span3">
-                            <div ng-click="initDialog()" class="stat-number init">
+                            <div ng-click="init_dialog()" class="stat-number init">
                                 <p>{{ch.init}}</p>
                             </div>
                         </div>
                         
                         <div class="span3">
-                            <div ng-click="Och.spend_hs(ch)" class="stat-number hs">
+                            <div ng-click="spend_hs(ch)" class="stat-number hs">
                                 <p>{{ch|total_hs}}</p>
                             </div>
                         </div>
                         <div class="span2">
-                            <div ng-click="Och.spend_ap(ch)" class="stat-number ap">
+                            <div ng-click="spend_ap(ch)" class="stat-number ap">
                                 <p>{{ch|total_ap}}</p>
                             </div>
                         </div>

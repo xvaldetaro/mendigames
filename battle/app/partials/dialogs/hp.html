@@ -1,14 +1,31 @@
 <div class="container">
     <div class="row-fluid">
-        <div class="span6 offset2">
-            <label class="checkbox"><input type="checkbox" ng-model="isHealing">healing</label>
+        <div class="span2 offset1">
+             <div class="row-fluid">
+                 <div class="span2">
+                     <input type="radio" ng-model="heal" value="damage">
+                 </div>
+                 <div class="span2">
+                     <h4>Damage</h4>
+                 </div>
+             </div>
         </div>
+         <div class="span2">
+             <div class="row-fluid">
+                 <div class="span2">
+                     <input type="radio" ng-model="heal" value="heal">
+                 </div>
+                 <div class="span2">
+                     <h4>Heal</h4>
+                 </div>
+             </div>
+         </div>
     </div>
     <div class="row-fluid">
         <div class="span3">
             <div class="row-fluid">
                 <div class="span11 offset1">
-                    <h4>Damage:</h4>
+                    <h4>Set:</h4>
                     <div ng-repeat="number in numbers" ng-click="setClose(number)" class="button-cell">
                         {{number}}
                     </div>
@@ -19,7 +36,7 @@
             <div class="row-fluid">
                 <div class="span11">
 
-                        <h4>Roll Damage:</h4>
+                        <h4>Roll:</h4>
                     <div class="row-fluid">
                         <div class="span4">
                             <label class="checkbox"><input type="radio" ng-model="dice" value="4">d4</label>
@@ -55,7 +72,7 @@
             <h4>Set value manually:</h4>
         </div>
         <div class="span1">
-            <input class="stat-edit" maxlength="2" ng-model="input" type="text">
+            <input class="stat-edit" maxlength="3" ng-model="input" type="text">
         </div>
         <div class="span1">
             <button class="btn btn-primary" ng-click="setClose(input)" type="button">Set
