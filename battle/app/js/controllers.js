@@ -10,31 +10,25 @@ function($scope, Restangular) {
     });
 }]).
 
-controller('CampaignCtrl', ['$scope', '$rootScope','$timeout','Restangular', '$routeParams',
+controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', '$routeParams',
 'PowerCatalog', 'ConditionCatalog',
-function($scope, $rootScope, $timeout, Restangular, $routeParams, PowerCatalog,
+function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, PowerCatalog,
 ConditionCatalog) {
-    PowerCatalog.onReady(function() { $scope.powerCatalogReady = true;});
-    var campaignId = $routeParams.campaignId;
-    $scope.log = {
-        line: function() {
-            var line = "";
-            for (var i = 0; i < arguments.length; i++) {
-                line = line + " " + arguments[i];
-            }
-            this.log.push(line);
-            var console = $("#console");
-            $timeout(function(){ console.animate(
-                { scrollTop: console.prop("scrollHeight") - console.height() }, 300
-                )},100);
-        },
-        log: [],
-    };
+    $scope.campaignId = $routeParams.campaignId;
+    $scope.$watch('log', function() {
+        var console = $("#console");
+        $timeout(function(){
+            console.animate(
+            {
+                scrollTop: console.prop("scrollHeight") - console.height()
+            }, 300);
+        },100);
+    }, true);
 
     // ----------- Create the polling
     // Polls campagin details every 10sec
     function campaign_poll(){
-        Restangular.one('campaign', campaignId).get().then(function(campaign){
+        Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
             $scope.campaign = campaign;
             $timeout(campaign_poll,10000);
         });
@@ -42,7 +36,7 @@ ConditionCatalog) {
     //$timeout(campaign_poll,10000);
 
     // Polls character list every 2sec
-    var params = {campaignId: campaignId};
+    var params = {campaignId: $scope.campaignId};
     $scope.character_poll_timeout = function() {
         Restangular.all('character').getList(params).then(function(characterList){
             $scope.characterList = characterList;
@@ -62,34 +56,34 @@ ConditionCatalog) {
                 newValue.put(); };
 
     
-    Restangular.one('campaign', campaignId).get().then(function(campaign){
+    Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
         $scope.campaign = campaign;
         $scope.$watch('campaign', watcher);
     });
 }])
 
-.controller('CharacterController', ['$scope', '$dialog', 'Och',
-function($scope, $dialog, Och) {
+.controller('CharacterController', ['$scope', '$dialog', 'Och', 'Log',
+function($scope, $dialog, Och, Log) {
     $scope.Och = Och;
     $scope.short_rest = function(c) {
         Och.short_rest(c);
-        $scope.log.line(c.name+' short rested');
+        Log(c.name+' short rested');
     };
     $scope.extended_rest = function(c) {
         Och.extended_rest(c);
-        $scope.log.line(c.name+' extended rested');
+        Log(c.name+' extended rested');
     };
     $scope.spend_ap = function(c) {
         Och.spend_ap(c);
-        $scope.log.line(c.name+' used an action point');
+        Log(c.name+' used an action point');
     };
     $scope.spend_hs = function(c) {
         Och.spend_hs(c);
-        $scope.log.line(c.name+' used a healing surge');
+        Log(c.name+' used a healing surge');
     };
     $scope.milestone = function(c) {
         Och.milestone(c);
-        $scope.log.line(c.name+' reached a milestone');
+        Log(c.name+' reached a milestone');
     };
 
     $scope.init_dialog = function(){
@@ -101,7 +95,7 @@ function($scope, $dialog, Och) {
           if(result)
           {
             Och.set_init($scope.ch, result.result);
-            $scope.log.line($scope.ch.name+" init set to: "+result.log);
+            Log($scope.ch.name+" init set to: "+result.log);
           }
         });
     };
@@ -116,38 +110,38 @@ function($scope, $dialog, Och) {
             if(result.heal == 'heal')
             {
                 Och.change_hp($scope.ch, result.result);
-                $scope.log.line($scope.ch.name+" gained "+result.log+" hit points");
+                Log($scope.ch.name+" gained "+result.log+" hit points");
             }
             else
             {
                 var bloodied = Och.bloodied($scope.ch);
                 Och.change_hp($scope.ch, -1*result.result);
-                $scope.log.line($scope.ch.name+" lost "+result.log+" hit points");
+                Log($scope.ch.name+" lost "+result.log+" hit points");
 
                 if(bloodied == Och.bloodied($scope.ch))
-                    $scope.log.line($scope.ch.name+" is Bloodied!")
+                    Log($scope.ch.name+" is Bloodied!")
             }
           }
         });
     };
 }])
 
-.controller('HasPowerController', ['$scope', 'Restangular', 'Ohpo',
-function($scope, Restangular, Ohpo) {
+.controller('HasPowerController', ['$scope', 'Restangular', 'Ohpo', 'Log',
+function($scope, Restangular, Ohpo, Log) {
     Ohpo.get_power($scope.hasPower);
 
     $scope.use_power = function(){
         Ohpo.use_power($scope.hasPower);
         if($scope.hasPower.used)
-            $scope.log.line($scope.ch.name+' used: '+$scope.hasPower.power);
+            Log($scope.ch.name+' used: '+$scope.hasPower.power);
         else
-            $scope.log.line($scope.ch.name+' recharged: '+$scope.hasPower.power);
+            Log($scope.ch.name+' recharged: '+$scope.hasPower.power);
     };
 }])
 
 .controller('HasConditionListController', ['$rootScope','$scope',
-'Restangular', 'ConditionCatalog',
-function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog) {
+'Restangular', 'ConditionCatalog', 'Log',
+function($rootScope, $scope, Restangular, ConditionCatalog, Log) {
     // gets executed always
     ConditionCatalog.onReady(function() {
         $scope.conditionList = $scope.ch.has_conditions;
@@ -163,7 +157,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         Restangular.one('has_condition', $scope.conditionList[hci].id)
             .remove().then(null, function() {window.alert("No sync");});
 
-        $scope.log.line($scope.ch.name+' is not: '+$scope.conditionList[hci].condition+' anymore');
+        Log($scope.ch.name+' is not: '+$scope.conditionList[hci].condition+' anymore');
         $scope.conditionList.splice(hci, 1);
     };
     $scope.condition_drop = function(e,o) {
@@ -189,7 +183,7 @@ function($rootScope, $scope, Restangular, ConditionCatalog, HasConditionCatalog)
         });
 
         $scope.conditionList.push(hasCondition);
-        $scope.log.line($scope.ch.name+' is: '+hasCondition.condition);
+        Log($scope.ch.name+' is: '+hasCondition.condition);
         $rootScope.$broadcast('Condition.dropped');
     };
 }])

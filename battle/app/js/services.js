@@ -27,6 +27,17 @@ angular.module('battle.services', ['restangular']).
             }
         };
     }]).
+    factory('Log', ['$rootScope',
+    function($rootScope) {
+        $rootScope.log = [];
+        return function() {
+            var line = "";
+            for (var i = 0; i < arguments.length; i++) {
+                line = line + " " + arguments[i];
+            }
+            $rootScope.log.push(line);
+        };
+    }]).
     factory('CharacterList', ['$rootScope','Restangular',
     function($rootScope, Restangular) {
         var dict = {}, list, ready = false;
