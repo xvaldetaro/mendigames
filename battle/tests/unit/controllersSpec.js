@@ -9,7 +9,19 @@ var _character1 = {"id": 1, "campaign": 1};
 var _character2 = {"id": 2, "campaign": 1};
 var _characters = [_character1, _character2];
 var _characters_from_campaign_data = _characters;
-
+function fakePromise () {
+    return {
+        then: function(cb) {
+            cb();
+        }
+    };
+}
+var fakeEM = {
+    ready: fakePromise,
+    listSlice: function(entity) {
+        return _characters;
+    }
+};
 /* jasmine specs for controllers go here */
 describe('Battle controllers', function(){
     beforeEach(module('battle.services'));
@@ -48,7 +60,7 @@ describe('Battle controllers', function(){
                 respond(_campaign1);
 
             ctrl = $controller('CampaignCtrl',
-                {$scope:scope, CharacterList:{list:_characters}, $routeParams:routeParams });
+                {$scope:scope, EM: fakeEM, $routeParams:routeParams });
 
             expect(scope.campaign).toBeUndefined();
             $httpBackend.flush();

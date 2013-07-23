@@ -17,19 +17,9 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
-class HasPowerListingField(serializers.RelatedField):
-    def to_native(self, value):
-        return model_to_dict(value)
-
-
-class HasConditionListingField(serializers.RelatedField):
-    def to_native(self, value):
-        return model_to_dict(value)
-
-
 class CharacterSerializer(serializers.ModelSerializer):
-    has_powers = HasPowerListingField(many=True)
-    has_conditions = HasConditionListingField(many=True)
+    has_powers = serializers.PrimaryKeyRelatedField(many=True)
+    has_conditions = serializers.PrimaryKeyRelatedField(many=True)
     class Meta:
         model = Character
 

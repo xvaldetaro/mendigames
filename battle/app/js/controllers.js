@@ -11,8 +11,8 @@ function($scope, Restangular) {
 }]).
 
 controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', 
-'$routeParams', 'CharacterList',
-function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, CharacterList) {
+'$routeParams', 'EM',
+function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM) {
     $scope.campaignId = $routeParams.campaignId;
 
     // Scroll to bottom of console log window when a new msg arrives
@@ -35,7 +35,9 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, Character
         });
     }
     //$timeout(campaign_poll,10000);
-    $scope.characterList = CharacterList.list;
+    EM.ready().then(function() {
+        $scope.characterList = EM.listSlice('character');
+    });
 
     Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
         $scope.campaign = campaign;
@@ -106,14 +108,16 @@ function($scope, $rootScope, $dialog, Och, Log) {
                 Log($scope.ch.name+" lost "+result.log+" hit points");
 
                 if(bloodied == Och.bloodied($scope.ch))
-                    Log($scope.ch.name+" is Bloodied!")
+                    Log($scope.ch.name+" is Bloodied!");
             }
           }
         });
     };
     $scope.remove_condition = function(hci){
         var name = $scope.ch._has_conditions[hci].condition;
-        Och.remove_condition($scope.ch, hci);
+        Och.remove_condition($scope.ch, hci).fail(function() {
+            window.alert('Connection failed, condition not removed');
+        });
 
         Log($scope.ch.name+' is not: '+name+' anymore');
     };
@@ -127,10 +131,8 @@ function($scope, $rootScope, $dialog, Och, Log) {
     };
 }])
 
-.controller('HasPowerController', ['$scope', 'Restangular', 'Ohpo', 'Log',
-function($scope, Restangular, Ohpo, Log) {
-    Ohpo.get_power($scope.hasPower);
-
+.controller('HasPowerController', ['$scope', 'EM', 'Ohpo', 'Log',
+function($scope, EM, Ohpo, Log) {
     $scope.use_power = function(){
         Ohpo.use_power($scope.hasPower);
         if($scope.hasPower.used)

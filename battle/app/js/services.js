@@ -101,13 +101,13 @@ function(Restangular, $routeParams, $rootScope) {
             }
         }
     }
-    function update(entity, e) {
-        return Q(e.put())
-        .then(function(e) {
-            e.needPut = false;
+    function update(entity, instance) {
+        return Q(instance.put())
+        .then(function(instance) {
+            instance.needPut = false;
         })
         .fail(function() {
-            throw new Error('Failed to put '+entity);
+            window.alert('Connection failed');
         });
     }
     function add(entity, e) {
@@ -121,28 +121,68 @@ function(Restangular, $routeParams, $rootScope) {
             return newE;
         })
         .fail(function() {
-            console.log('Failed to post '+entity);
+            window.alert('Connection failed');
         });
     }
-    function remove(entity, i) {
+    function remove(entity, instance) {
         var entData = all[entity];
-        var e = entData.list[i];
+        var i = entData.dict[instance[entData.pk]];
         entData.list.splice(i, 1);
-        entData.dict[e[entData.pk]] = null;
-        return Q(e.remove())
+        entData.dict[instance[entData.pk]] = null;
+        return Q(instance.remove())
         .fail(function(){
-            console.log('failed to remove remotely '+entity);
-            e.needRemove = true;
+            window.alert('Connection failed');
         });
+    }
+    function by_key(entity, key) {
+        var entData = all[entity];
+        return entData.list[entData.dict[key]];
+    }
+    function fill_related(entityInstance, related) {
+        entityInstance['_'+related] = by_key(related, entityInstance[related]);
+    }
+    function fill_related_array(entityInstance, related) {
+        var pkList = entityInstance[related+'s'], relatedList = [];
+        for(var i=0, len=pkList.length; i<len; i++) {
+            relatedList.push(by_key(related, pkList[i]));
+        }
+        entityInstance['_'+related+'s'] = relatedList;
+    }
+    function fill_related_type(entity, related, isArray) {
+        var entData = all[entity];
+        if(isArray) {
+            for(var i=0, len=entData.list.length; i<len; i++) {
+                fill_related_array(entData.list[i], related);
+            }
+        } else {
+            for(var i=0, len=entData.list.length; i<len; i++) {
+                fill_related(entData.list[i], related);
+            }
+        }
+    }
+    function fill_related_multiple(relationList) {
+        for(var i=0; i<relationList.length; i++) {
+            var entData = all[relationList[i].entity];
+            if(entData && entData.list.length > 0) {
+                fill_related_type(relationList[i].entity, relationList[i].related,
+                    relationList[i].isArray);
+            }
+        }
     }
     poll_multiple([
         {entity: 'condition', pk: 'name'},
         {entity: 'power', pk: 'name'},
         {entity: 'has_condition', pk: 'id'},
         {entity: 'has_power', pk: 'id'},
-        {entity: 'character', pk: 'id'},
-        {entity: 'condition', pk: 'name'}
-    ]).fail(function() {
+        {entity: 'character', pk: 'id'}
+    ]).then(function() {
+        fill_related_multiple([
+            {entity: 'has_condition', related: 'condition', isArray: false},
+            {entity: 'has_power', related: 'power', isArray: false},
+            {entity: 'character', related: 'has_power', isArray: true},
+            {entity: 'character', related: 'has_condition', isArray: true}
+        ]);
+    }).fail(function() {
         throw new Error('Could not fetch data from server');
     }).fin(function() {
         $rootScope.$apply();
@@ -158,183 +198,17 @@ function(Restangular, $routeParams, $rootScope) {
         ready: function() {
             return ready;
         },
-        by_key: function(entity, key) {
-            var entData = all[entity];
-            return entData.list[entData.dict[key]];
-        },
+        by_key: by_key,
         listSlice: function(entity) { return all[entity].list.slice(); }
     };
 }]).
 
-factory('CharacterList', ['Restangular','HasPowerList', 'HasConditionList', '$routeParams',
-function(Restangular, HasPowerList, HasConditionList, $routeParams) {
-    var list = [], dict = {};
-    function poll() {
-        Restangular.all('character').getList({campaignId: $routeParams.campaignId})
-        .then(function(characterList){
-            list.length = 0;
-            for(var i=0, len=characterList.length; i<len; i++) {
-                var c = characterList[i];
-                list.push(c);
-                dict[c.id] = c;
-            }
-
-            HasPowerList.onReady(fill_power_relations);
-            HasConditionList.onReady(fill_condition_relations);
-        });
-    }
-    function fill_power_relations() {
-        for(var i=0, len=list.length; i<len; i++)
-        {
-            var ch = list[i];
-            var hpoList = ch.has_powers;
-            var _hpoList = [];
-            for(var j=0, lenj=hpoList.length; j<lenj; j++) {
-                _hpoList.push(HasPowerList.by_id(hpoList[j].id));
-            }
-            ch._has_powers = _hpoList;
-        }
-    }
-    function fill_condition_relations() {
-        for(var i=0, len=list.length; i<len; i++)
-        {
-            var ch = list[i];
-            var hcoList = ch.has_conditions;
-            var _hcoList = [];
-            for(var j=0, lenj=hcoList.length; j<lenj; j++) {
-                _hcoList.push(HasConditionList.by_id(hcoList[j].id));
-            }
-            ch._has_conditions = _hcoList;
-        }
-    }
-    poll();
-    return {
-        poll: poll,
-        list: list,
-        by_id: function(id){ return dict[id]; }
-    };
-}]).
-
-factory('HasPowerList', ['Restangular','PowerCatalog', '$routeParams',
-function(Restangular, PowerCatalog, $routeParams) {
-    var list, dict = {}, ready = false, cbs = [];
-    function poll() {
-        Restangular.all('has_power').getList({campaignId: $routeParams.campaignId})
-        .then(function(data){
-            list = data;
-            fill_relations(list);
-            for(var i=0, len=list.length; i<len; i++) {
-                dict[list[i].id] = list[i];
-            }
-        });
-    }
-    function fill_relations(hpoList) {
-        PowerCatalog.onReady(function(){
-            for(var i=0, len=hpoList.length; i<len; i++) {
-                hpoList[i]._power = PowerCatalog.getItem(hpoList[i].power);
-            }
-            for(var i=0, len=cbs.length; i<len; i++) {
-                cbs[i]();
-            }
-            cbs = null;
-            ready = true;
-        });
-    }
-    poll();
-    return {
-        onReady: function(cb) {
-            if(ready)
-                return cb();
-            cbs.push(cb);
-        },
-        poll: poll,
-        list: list,
-        by_id: function(id){ return dict[id]; }
-    };
-}]).
-
-factory('HasConditionList', ['EM','$rootScope',
-function(EM, $rootScope) {
-    var list, dict = {}, ready = false, cbs = [];
-    EM.ready().then(function(){
-        list = EM.listSlice('has_condition');
-        fill_relations(list);
-    });
-    function fill_relations() {
-        for(var i=0, len=list.length; i<len; i++) {
-            list[i]._condition = EM.by_key('condition',list[i].condition);
-        }
-        for(var i=0, len=cbs.length; i<len; i++)
-        {
-            cbs[i]();
-        }
-        cbs = null;
-        ready = true;
-    }
-    return {
-        onReady: function(cb) {
-            if(ready)
-                return cb();
-            cbs.push(cb);
-        },
-        list: list,
-        by_id: function(id){ return EM.by_key('has_condition', id); },
-        add: function(ch, co) {
-            // Create a has_condition from it
-            var hasCondition = {
-                character: ch.id,
-                condition: co.name,
-                ends: 'T',
-                started_round: 1,
-                started_init: 1,
-                _condition: co,
-                needSync: true
-            };
-
-            ch._has_conditions.push(hasCondition);
-            var i = ch._has_conditions.length-1;
-            EM.add('has_condition', hasCondition)
-            .then(function(newE) {
-                newE._condition = EM.by_key('condition', newE.condition);
-                ch._has_conditions[i] = newE;
-            });
-        }
-    };
-}]).
-
-factory('PowerCatalog', ['$rootScope','Restangular',
-function($rootScope, Restangular) {
-    var dict = {}, list, ready = false, cbs = [];
-    Restangular.all('power').getList({owned: 'True'}).then(function(data){
-        list = data;
-        for(var i=0, len=list.length; i<len; i++)
-        {
-            var item = list[i];
-            dict[item.name] = item;
-        }
-        for(var i=0, len=cbs.length; i<len; i++)
-            cbs[i]();
-        cbs = null;
-        ready = true;
-    });
-    return {
-        onReady: function(cb) {
-            if(ready)
-                return cb();
-            cbs.push(cb);
-        },
-        ready: function() { return ready; },
-        listSlice: function(){ return list.slice(); },
-        getItem: function(key){ return dict[key]; }
-    };
-}]).
-
 // Operator for characters
-factory('Och', ['Restangular', 'roll', 'HasConditionList',
-function(Restangular, roll, HasConditionList) {
+factory('Och', ['EM', 'roll',
+function(EM, roll, HasConditionList) {
     return {
         save: function(c) {
-            c.put();
+            EM.update('character', c);
         },
         change_hp: function(c, value){
             c.used_hit_points = c.used_hit_points-parseInt(value);
@@ -385,27 +259,43 @@ function(Restangular, roll, HasConditionList) {
             return false;
         },
         remove_condition: function(c, hci) {
-            c._has_conditions[hci].remove().then(null, function() {window.alert("No sync");});
+            var hco = c._has_conditions[hci];
             c._has_conditions.splice(hci,1);
+            c.has_conditions.splice(hci,1);
+
+            return EM.remove('has_condition', hco).fail(function(){
+                c._has_conditions.push(hco);
+                c.has_conditions.push(hco.id);
+            });
         },
-        add_condition: function(c, co) {
-            HasConditionList.add(c, co);
+        add_condition: function(ch, co) {
+            var hasCondition = {
+                character: ch.id,
+                condition: co.name,
+                ends: 'T',
+                started_round: 1,
+                started_init: 1,
+                _condition: co,
+                needSync: true
+            };
+
+            ch._has_conditions.push(hasCondition);
+            var i = ch._has_conditions.length-1;
+            return EM.add('has_condition', hasCondition)
+            .then(function(newE) {
+                newE._condition = EM.by_key('condition', newE.condition);
+                ch._has_conditions[i] = newE;
+            });
         }
     };
 }]).
 // Operator for HasPowers
-factory('Ohpo', ['Restangular', 'WizardsService', 'PowerCatalog',
-function(Restangular, WizardsService, PowerCatalog) {
+factory('Ohpo', ['EM', 'WizardsService',
+function(EM, WizardsService) {
     return {
-        save: function(h) {
-            h.put();
-        },
-        get_power: function(h) {
-            h._power = PowerCatalog.getItem(h.power);
-        },
         use_power: function(h) {
             h.used = !h.used;
-            h.put();
+            EM.update('has_power', h);
         },
         fetch_from_compendium: function(h){
             WizardsService.fetch(h._power.wizards_id, 'power');
@@ -413,8 +303,8 @@ function(Restangular, WizardsService, PowerCatalog) {
     };
 }]).
 // Operator for HasPowers
-factory('Ohco', ['Restangular', 'WizardsService', 'ConditionCatalog',
-function(Restangular, WizardsService, ConditionCatalog) {
+factory('Ohco', ['WizardsService',
+function(WizardsService) {
     return {
         save: function(h) {
             h.put();
