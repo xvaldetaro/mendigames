@@ -39,6 +39,117 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
+factory('EM', ['Restangular','$routeParams','$timeout',
+function(Restangular, $routeParams, $timeout) {
+    var all = {};
+    function poll(entity, pk) {
+        return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
+        owned: true}))
+        .then(function(el) {
+            if(!all[entity]) {
+                all[entity] = {};
+                all[entity].list = [];
+                all[entity].pk = pk;
+            }
+            all[entity].dict = {};
+            all[entity].list.length = 0;
+
+            var list=all[entity].list, dict=all[entity].dict;
+            for(var i=0, len=el.length; i<len; i++) {
+                var e = el[i];
+                list.push(e);
+                dict[e[pk]] = i;
+            }
+        })
+        .fail(function() {
+            $timeout(poll(entity, pk),1000);
+        });
+    }
+    function poll_multiple(eList) {
+        var promiseArray = [];
+        for(var i=0; i<eList.length; i++) {
+            promiseArray.push(poll(eList[i].entity, eList[i].pk));
+        }
+        return Q.all(promiseArray);
+    }
+    function flush_all() {
+        for(var e in all) {
+            flush(e);
+        }
+    }
+    function flush(entity) {
+        var entData = all[entity];
+        for(var i=0, len=entData.list.length; i<len; i++) {
+            var e = entData.list[i];
+            if(e.needPost && !e[entData.pk]) {
+                console.log('Error: trying to flush with unsynced '+entity);
+                console.log('Now trying to sync by posting again to '+entity);
+                entData.list.splice(i, 1);
+                add(entity, e);
+            }
+            else if(e.needPut) {
+                Q(e.put())
+                .then(function(e) {
+                    e.needPush = false;
+                })
+                .fail(function() {
+                    throw new Error('Failed to put '+entity);
+                });
+            }
+            else if(e.needRemove) {
+            }
+        }
+    }
+    function update(entity, e) {
+        return Q(e.put())
+        .then(function(e) {
+            e.needPut = false;
+        })
+        .fail(function() {
+            throw new Error('Failed to put '+entity);
+        });
+    }
+    function add(entity, e) {
+        var entData = all[entity];
+        entData.list.push(e);
+        var i = entData.list.length-1;
+        return Q(Restangular.all(entity).post(e))
+        .then(function(newE) {
+            entData.list[i] = newE;
+            entData.dict[newE[entData.pk]] = i;
+        })
+        .fail(function() {
+            console.log('Failed to post '+entity);
+        });
+    }
+    function remove(entity, i) {
+        var entData = all[entity];
+        var e = entData.list[i];
+        entData.list.splice(i, 1);
+        entData.dict[e[entData.pk]] = null;
+        return Q(e.remove())
+        .fail(function(){
+            console.log('failed to remove remotely '+entity);
+            e.needRemove = true;
+        });
+    }
+    return {
+        poll: poll,
+        poll_multiple: poll_multiple,
+        flush: flush,
+        flush_all: flush_all,
+        update: update,
+        add: add,
+        remove: remove,
+        by_key: function(entity, key) {
+            var entData = all[entity];
+            var e = entData.list[entData.dict[key]];
+            return e; 
+        },
+        listSlice: function(entity) { return all[entity].list.slice(); }
+    };
+}]).
+
 factory('CharacterList', ['Restangular','HasPowerList', 'HasConditionList', '$routeParams',
 function(Restangular, HasPowerList, HasConditionList, $routeParams) {
     var list = [], dict = {};
@@ -190,22 +301,18 @@ function(Restangular, ConditionCatalog, $routeParams) {
     };
 }]).
 
-factory('ConditionCatalog', ['$rootScope','Restangular',
-function($rootScope, Restangular) {
-    var dict = {}, list, ready = false, cbs = [];
-    Restangular.all('condition').getList().then(function(data){
-        list = data;
-        for(var i=0, len=list.length; i<len; i++)
-        {
-            var item = list[i];
-            dict[item.name] = item;
-        }
+factory('ConditionCatalog', ['$rootScope','EM',
+function($rootScope, EM) {
+    var cList, ready = false, cbs = [];
+    EM.poll('condition','name').then(function(){
+        cList = EM.listSlice('condition');
         for(var i=0, len=cbs.length; i<len; i++)
         {
             cbs[i]();
         }
         cbs = null;
         ready = true;
+        $rootScope.$apply();
     });
     return {
         onReady: function(cb) {
@@ -214,8 +321,10 @@ function($rootScope, Restangular) {
             cbs.push(cb);
         },
         ready: function() { return ready; },
-        listSlice: function(){ return list.slice(); },
-        getItem: function(key){ return dict[key]; }
+        listSlice: function(){ return cList.slice(); },
+        getItem: function(key){ 
+            return EM.by_key('condition', key); 
+        }
     };
 }]).
 

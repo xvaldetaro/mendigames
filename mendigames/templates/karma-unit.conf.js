@@ -13,6 +13,7 @@ files = [
   '{{ djangular_root }}/static/lib/angular/jquery-1.9.1.min.js',
   '{{ djangular_root }}/static/lib/angular/angular-dragdrop.min.js',
   '{{ djangular_root }}/static/lib/angular/restangular.js',
+  '{{ djangular_root }}/static/lib/angular/q.js',
 // JS Files to be tested: {% for app_path in app_paths %}
   '{{ app_path }}/app/js/**/*.js', // {% endfor %}
 // JS Tests: {% for app_path in app_paths %}
