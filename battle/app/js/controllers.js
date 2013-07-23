@@ -140,13 +140,14 @@ function($scope, Restangular, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'ConditionCatalog',
-function($scope, ConditionCatalog) {
-    ConditionCatalog.onReady(function() {
-        $scope.conditionList = ConditionCatalog.listSlice();
+.controller('MenuController', ['$scope', 'EM',
+function($scope, EM) {
+    EM.ready().then(function() {
+        $scope.conditionList = EM.listSlice('condition');
     });
+    
     $scope.$on('Condition.dropped', function() {
-        $scope.conditionList = ConditionCatalog.listSlice();
+        $scope.conditionList = EM.listSlice('condition');
     });
 }])
 

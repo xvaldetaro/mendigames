@@ -39,9 +39,9 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
-factory('EM', ['Restangular','$routeParams','$timeout',
-function(Restangular, $routeParams, $timeout) {
-    var all = {};
+factory('EM', ['Restangular','$routeParams','$rootScope',
+function(Restangular, $routeParams, $rootScope) {
+    var all = {}, ready = false, deferreds = [];
     function poll(entity, pk) {
         return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
         owned: true}))
@@ -70,7 +70,8 @@ function(Restangular, $routeParams, $timeout) {
         for(var i=0; i<eList.length; i++) {
             promiseArray.push(poll(eList[i].entity, eList[i].pk));
         }
-        return Q.all(promiseArray);
+        ready = Q.all(promiseArray);
+        return ready;
     }
     function flush_all() {
         for(var e in all) {
@@ -117,6 +118,7 @@ function(Restangular, $routeParams, $timeout) {
         .then(function(newE) {
             entData.list[i] = newE;
             entData.dict[newE[entData.pk]] = i;
+            return newE;
         })
         .fail(function() {
             console.log('Failed to post '+entity);
@@ -133,6 +135,18 @@ function(Restangular, $routeParams, $timeout) {
             e.needRemove = true;
         });
     }
+    poll_multiple([
+        {entity: 'condition', pk: 'name'},
+        {entity: 'power', pk: 'name'},
+        {entity: 'has_condition', pk: 'id'},
+        {entity: 'has_power', pk: 'id'},
+        {entity: 'character', pk: 'id'},
+        {entity: 'condition', pk: 'name'}
+    ]).fail(function() {
+        throw new Error('Could not fetch data from server');
+    }).fin(function() {
+        $rootScope.$apply();
+    });
     return {
         poll: poll,
         poll_multiple: poll_multiple,
@@ -141,10 +155,12 @@ function(Restangular, $routeParams, $timeout) {
         update: update,
         add: add,
         remove: remove,
+        ready: function() {
+            return ready;
+        },
         by_key: function(entity, key) {
             var entData = all[entity];
-            var e = entData.list[entData.dict[key]];
-            return e; 
+            return entData.list[entData.dict[key]];
         },
         listSlice: function(entity) { return all[entity].list.slice(); }
     };
@@ -237,42 +253,32 @@ function(Restangular, PowerCatalog, $routeParams) {
     };
 }]).
 
-factory('HasConditionList', ['Restangular','ConditionCatalog', '$routeParams',
-function(Restangular, ConditionCatalog, $routeParams) {
+factory('HasConditionList', ['EM','$rootScope',
+function(EM, $rootScope) {
     var list, dict = {}, ready = false, cbs = [];
-    function poll() {
-        Restangular.all('has_condition').getList({campaignId: $routeParams.campaignId})
-        .then(function(data){
-            list = data;
-            fill_relations(list);
-            for(var i=0, len=list.length; i<len; i++) {
-                dict[list[i].id] = list[i];
-            }
-        });
+    EM.ready().then(function(){
+        list = EM.listSlice('has_condition');
+        fill_relations(list);
+    });
+    function fill_relations() {
+        for(var i=0, len=list.length; i<len; i++) {
+            list[i]._condition = EM.by_key('condition',list[i].condition);
+        }
+        for(var i=0, len=cbs.length; i<len; i++)
+        {
+            cbs[i]();
+        }
+        cbs = null;
+        ready = true;
     }
-    function fill_relations(hcoList) {
-        ConditionCatalog.onReady(function(){
-            for(var i=0, len=hcoList.length; i<len; i++) {
-                hcoList[i]._condition = ConditionCatalog.getItem(hcoList[i].condition);
-            }
-            for(var i=0, len=cbs.length; i<len; i++)
-            {
-                cbs[i]();
-            }
-            cbs = null;
-            ready = true;
-        });
-    }
-    poll();
     return {
         onReady: function(cb) {
             if(ready)
                 return cb();
             cbs.push(cb);
         },
-        poll: poll,
         list: list,
-        by_id: function(id){ return dict[id]; },
+        by_id: function(id){ return EM.by_key('has_condition', id); },
         add: function(ch, co) {
             // Create a has_condition from it
             var hasCondition = {
@@ -285,45 +291,13 @@ function(Restangular, ConditionCatalog, $routeParams) {
                 needSync: true
             };
 
-            Restangular.all('has_condition').post(hasCondition).then(function(hc) {
-                for(var i=0, len=ch._has_conditions.length; i<len; i++)
-                {
-                    var entry = ch._has_conditions[i];
-                    if(entry.needSync && entry.condition == hc.condition) {
-                        hc._condition = entry._condition;
-                        list.push(hc);
-                        ch._has_conditions[i] = hc;
-                    }
-                }
-            });
             ch._has_conditions.push(hasCondition);
-        }
-    };
-}]).
-
-factory('ConditionCatalog', ['$rootScope','EM',
-function($rootScope, EM) {
-    var cList, ready = false, cbs = [];
-    EM.poll('condition','name').then(function(){
-        cList = EM.listSlice('condition');
-        for(var i=0, len=cbs.length; i<len; i++)
-        {
-            cbs[i]();
-        }
-        cbs = null;
-        ready = true;
-        $rootScope.$apply();
-    });
-    return {
-        onReady: function(cb) {
-            if(ready)
-                return cb();
-            cbs.push(cb);
-        },
-        ready: function() { return ready; },
-        listSlice: function(){ return cList.slice(); },
-        getItem: function(key){ 
-            return EM.by_key('condition', key); 
+            var i = ch._has_conditions.length-1;
+            EM.add('has_condition', hasCondition)
+            .then(function(newE) {
+                newE._condition = EM.by_key('condition', newE.condition);
+                ch._has_conditions[i] = newE;
+            });
         }
     };
 }]).
