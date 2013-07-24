@@ -46,13 +46,10 @@ function(Restangular, $routeParams, $rootScope) {
         return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
         owned: true}))
         .then(function(el) {
-            if(!all[entity]) {
-                all[entity] = {};
-                all[entity].list = [];
-                all[entity].pk = pk;
-            }
+            all[entity] = {};
+            all[entity].list = [];
+            all[entity].pk = pk;
             all[entity].dict = {};
-            all[entity].list.length = 0;
 
             var list=all[entity].list, dict=all[entity].dict;
             for(var i=0, len=el.length; i<len; i++) {
@@ -62,7 +59,7 @@ function(Restangular, $routeParams, $rootScope) {
             }
         })
         .fail(function() {
-            $timeout(poll(entity, pk),1000);
+            window.alert('Server not responding');
         });
     }
     function poll_multiple(eList) {
@@ -72,34 +69,6 @@ function(Restangular, $routeParams, $rootScope) {
         }
         ready = Q.all(promiseArray);
         return ready;
-    }
-    function flush_all() {
-        for(var e in all) {
-            flush(e);
-        }
-    }
-    function flush(entity) {
-        var entData = all[entity];
-        for(var i=0, len=entData.list.length; i<len; i++) {
-            var e = entData.list[i];
-            if(e.needPost && !e[entData.pk]) {
-                console.log('Error: trying to flush with unsynced '+entity);
-                console.log('Now trying to sync by posting again to '+entity);
-                entData.list.splice(i, 1);
-                add(entity, e);
-            }
-            else if(e.needPut) {
-                Q(e.put())
-                .then(function(e) {
-                    e.needPush = false;
-                })
-                .fail(function() {
-                    throw new Error('Failed to put '+entity);
-                });
-            }
-            else if(e.needRemove) {
-            }
-        }
     }
     function update(entity, instance) {
         return Q(instance.put())
@@ -148,9 +117,11 @@ function(Restangular, $routeParams, $rootScope) {
         }
         entityInstance['_'+related+'s'] = relatedList;
     }
-    function fill_related_type(entity, related, isArray) {
+    function fill_related_type(entity, related) {
         var entData = all[entity];
-        if(isArray) {
+        if(entData.list.length === 0)
+            return;
+        if(entData.list[0][related+'s'] instanceof Array) {
             for(var i=0, len=entData.list.length; i<len; i++) {
                 fill_related_array(entData.list[i], related);
             }
@@ -163,7 +134,7 @@ function(Restangular, $routeParams, $rootScope) {
     function fill_related_multiple(relationList) {
         for(var i=0; i<relationList.length; i++) {
             var entData = all[relationList[i].entity];
-            if(entData && entData.list.length > 0) {
+            if(entData) {
                 fill_related_type(relationList[i].entity, relationList[i].related,
                     relationList[i].isArray);
             }
@@ -177,21 +148,15 @@ function(Restangular, $routeParams, $rootScope) {
         {entity: 'character', pk: 'id'}
     ]).then(function() {
         fill_related_multiple([
-            {entity: 'has_condition', related: 'condition', isArray: false},
-            {entity: 'has_power', related: 'power', isArray: false},
-            {entity: 'character', related: 'has_power', isArray: true},
-            {entity: 'character', related: 'has_condition', isArray: true}
+            {entity: 'has_condition', related: 'condition'},
+            {entity: 'has_power', related: 'power'},
+            {entity: 'character', related: 'has_power'},
+            {entity: 'character', related: 'has_condition'}
         ]);
-    }).fail(function() {
-        throw new Error('Could not fetch data from server');
-    }).fin(function() {
-        $rootScope.$apply();
     });
     return {
         poll: poll,
         poll_multiple: poll_multiple,
-        flush: flush,
-        flush_all: flush_all,
         update: update,
         add: add,
         remove: remove,
@@ -324,4 +289,14 @@ function(WizardsService) {
 config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
     RestangularProvider.setDefaultRequestParams({format: 'json'});
+    RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
+        // This is a get for a list
+        if(response.data) {
+            var newResponse;
+            newResponse = response.data;
+            newResponse.metadata = {revision: response.revision};
+            return newResponse;
+        }
+        return {};
+    });
 });

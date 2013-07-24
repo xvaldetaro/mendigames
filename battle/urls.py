@@ -36,6 +36,8 @@ urlpatterns = patterns(
     url(r'^has_condition/?$', views.HasConditionList.as_view()),
 
     url(r'^has_condition/(?P<pk>[0-9]+)/?$', views.HasConditionDetail.as_view()),
+
+    url(r'^rev/?$', views.RevView.as_view()),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

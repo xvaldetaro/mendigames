@@ -2,12 +2,26 @@
 from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
 from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework import viewsets, renderers
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from battle.models import Campaign, Character, Condition, HasPower, Power, HasCondition
 from battle.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
                                 CampaignSerializer, PowerSerializer, HasPowerSerializer,
                                 ConditionSerializer, HasConditionSerializer)
+from django.core.cache import cache
+cache.set('revision', 1, 2592000)
+
+
+class RevJSONRenderer(renderers.JSONRenderer):
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        response_data = {}
+        response_data['data'] = data
+        revision = cache.get('revision')
+        revision = revision
+        response_data['revision'] = revision
+        response = super(RevJSONRenderer, self).render(response_data, accepted_media_type, renderer_context)
+        return response
 
 
 class IndexView(TemplateView):
@@ -30,9 +44,25 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-class CharacterList(generics.ListCreateAPIView):
-    serializer_class = CharacterSerializer
+class RevListView(generics.ListCreateAPIView):
+    renderer_classes = (RevJSONRenderer,)
 
+
+class RevDetailView(generics.RetrieveUpdateDestroyAPIView):
+    renderer_classes = (RevJSONRenderer,)
+
+    def destroy(self, request, *args, **kwargs):
+        cache.set('revision', cache.get('revision')+1)
+        return super(RevDetailView, self).destroy(request, *args, **kwargs)
+
+
+class RevView(APIView):
+    def get(self, request, format=None):
+        return Response({'revision': cache.get('revision')})
+
+
+class CharacterList(RevListView):
+    serializer_class = CharacterSerializer
     def get_queryset(self):
         queryset = Character.objects.all()
         campaign = self.request.QUERY_PARAMS.get('campaignId', None)
@@ -41,22 +71,22 @@ class CharacterList(generics.ListCreateAPIView):
         return queryset
 
 
-class CharacterDetail(generics.RetrieveUpdateDestroyAPIView):
+class CharacterDetail(RevDetailView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
 
 
-class CampaignList(generics.ListCreateAPIView):
+class CampaignList(RevListView):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
 
 
-class CampaignDetail(generics.RetrieveUpdateDestroyAPIView):
+class CampaignDetail(RevDetailView):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
 
 
-class PowerList(generics.ListCreateAPIView):
+class PowerList(RevListView):
     serializer_class = PowerSerializer
 
     def get_queryset(self):
@@ -67,17 +97,17 @@ class PowerList(generics.ListCreateAPIView):
         return queryset
 
 
-class PowerDetail(generics.RetrieveUpdateDestroyAPIView):
+class PowerDetail(RevDetailView):
     queryset = Power.objects.all()
     serializer_class = PowerSerializer
 
 
-class ConditionList(generics.ListCreateAPIView):
+class ConditionList(RevListView):
     queryset = Condition.objects.all()
     serializer_class = ConditionSerializer
 
 
-class HasPowerList(generics.ListCreateAPIView):
+class HasPowerList(RevListView):
     serializer_class = HasPowerSerializer
 
     def get_queryset(self):
@@ -91,17 +121,17 @@ class HasPowerList(generics.ListCreateAPIView):
         return queryset
 
 
-class HasPowerDetail(generics.RetrieveUpdateDestroyAPIView):
+class HasPowerDetail(RevDetailView):
     queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
 
 
-class ConditionDetail(generics.RetrieveUpdateDestroyAPIView):
+class ConditionDetail(RevDetailView):
     queryset = Condition.objects.all()
     serializer_class = ConditionSerializer
 
 
-class HasConditionList(generics.ListCreateAPIView):
+class HasConditionList(RevListView):
     serializer_class = HasConditionSerializer
 
     def get_queryset(self):
@@ -115,6 +145,6 @@ class HasConditionList(generics.ListCreateAPIView):
         return queryset
 
 
-class HasConditionDetail(generics.RetrieveUpdateDestroyAPIView):
+class HasConditionDetail(RevDetailView):
     queryset = HasCondition.objects.all()
     serializer_class = HasConditionSerializer

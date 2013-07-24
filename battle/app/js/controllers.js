@@ -37,6 +37,7 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM) {
     //$timeout(campaign_poll,10000);
     EM.ready().then(function() {
         $scope.characterList = EM.listSlice('character');
+        $scope.$apply();
     });
 
     Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){

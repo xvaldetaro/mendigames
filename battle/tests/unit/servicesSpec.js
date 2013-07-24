@@ -16,35 +16,6 @@ describe('Battle Services', function(){
             $httpBackend = _$httpBackend_;
         }));
 
-
-        it('should return a characterList model', inject(function(Restangular) {
-            $httpBackend.expectGET('/battle/character?format=json').
-                respond(_characterList_data);
-
-            var characterList = Restangular.all('character');
-            characterList.getList().then(function(characterList) {
-                var character1 = characterList[0];
-                expect(character1).toEqual(_character1);
-            });
-
-            $httpBackend.flush();
-        }));
-
-        it('should return a character model', inject(function(Restangular) {
-            $httpBackend.expectGET('/battle/character/2?format=json').
-                respond(_character2);
-            $httpBackend.expectPUT('/battle/character/2?format=json').
-                respond(_character2);
-
-            var character2 = Restangular.one('character', 2).get().then(
-                function(character){
-                    expect(character).toEqual(_character2);
-                    character.name = "newname";
-                    character.put();
-                });
-
-            $httpBackend.flush();
-        }));
     });
 
     describe('Wizards service', function(){
