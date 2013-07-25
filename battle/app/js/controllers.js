@@ -146,12 +146,23 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM',
-function($scope, EM) {
+.controller('MenuController', ['$scope', 'EM','roll','Log',
+function($scope, EM, roll, Log) {
     $scope.$on('EM.update', function() {
         $scope.conditionList = EM.listSlice('condition');
     });
-
+    $scope.diceMult = 1;
+    $scope.roll = function(dice) {
+        var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
+        for(var i = $scope.diceMult - 1; i >= 0; i--) {
+            var result = roll(0, dice).result;
+            logStr = logStr+result+'+';
+            total += result;
+        }
+        logStr = logStr.slice(0, -1);
+        logStr = logStr+ '= '+total;
+        Log(logStr);
+    };
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');
     });

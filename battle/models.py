@@ -9,29 +9,6 @@ class Campaign(models.Model):
         return self.name
 
 
-# Create your models here.
-class Character(models.Model):
-    campaign = models.ForeignKey(Campaign)
-
-    name = models.CharField(max_length=20, default='Unnamed')
-    healing_surges = models.IntegerField(default=6)
-    hit_points = models.IntegerField(default=30)
-
-    experience_points = models.IntegerField(default=0)
-    gold = models.IntegerField(default=0)
-
-    used_action_points = models.IntegerField(default=0)
-    milestones = models.IntegerField(default=0)
-    used_healing_surges = models.IntegerField(default=0)
-    used_hit_points = models.IntegerField(default=0)
-    init = models.IntegerField(default=0)
-
-    def __unicode__(self):
-        return "%s - in Campaign %s" % (self.name, self.campaign)
-
-    class Meta:
-        ordering = ['-init']
-
 class Book(models.Model):
     name = models.CharField(max_length=60, primary_key=True)
 
@@ -48,6 +25,57 @@ class BookEntry(models.Model):
     books = models.ManyToManyField(Book)
     class Meta:
         abstract = True
+
+
+class Monster(BookEntry):
+    GROUP_ROLE = (
+        ('MI', 'Minion'),
+        ('SO', 'Solo'),
+        ('CO', 'Conjured'),
+        ('EL', 'Elite'),
+        ('ST', 'Standard'),
+    )
+    COMBAT_ROLE = (
+        ('LU', 'Lurker'),
+        ('SK', 'Skirmisher'),
+        ('AR', 'Artillery'),
+        ('NO', 'No Role'),
+        ('BR', 'Brute'),
+        ('SO', 'Soldier'),
+        ('CO', 'Controller'),
+        ('LE', 'Leader'),
+    )
+    level = models.IntegerField(default=1, blank=True)
+    group_role = models.CharField(max_length=2, choices=GROUP_ROLE, default='SO')
+    combat_role = models.CharField(max_length=2, choices=COMBAT_ROLE, default='NO')
+    combat_role2 = models.CharField(max_length=2, blank=True, choices=COMBAT_ROLE, default='NO')
+
+
+class Character(models.Model):
+    TYPES = (('Player', 'Player'), ('Enemy', 'Enemy'), ('Neutral', 'Neutral'))
+    campaign = models.ForeignKey(Campaign)
+
+    type = models.CharField(max_length=7, choices=TYPES, default='Player')
+    name = models.CharField(max_length=20, default='Unnamed')
+    healing_surges = models.IntegerField(default=6)
+    hit_points = models.IntegerField(default=30)
+
+    experience_points = models.IntegerField(default=0)
+    gold = models.IntegerField(default=0)
+
+    used_action_points = models.IntegerField(default=0)
+    milestones = models.IntegerField(default=0)
+    used_healing_surges = models.IntegerField(default=0)
+    used_hit_points = models.IntegerField(default=0)
+    init = models.IntegerField(default=0)
+
+    monster = models.ForeignKey(Monster, blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s - in Campaign %s" % (self.name, self.campaign)
+
+    class Meta:
+        ordering = ['-init']
 
 
 class TraitSource(BookEntry):
@@ -174,25 +202,3 @@ class HasCondition(models.Model):
         return self.condition
 
 
-class Monster(BookEntry):
-    GROUP_ROLE = (
-        ('MI', 'Minion'),
-        ('SO', 'Solo'),
-        ('CO', 'Conjured'),
-        ('EL', 'Elite'),
-        ('ST', 'Standard'),
-    )
-    COMBAT_ROLE = (
-        ('LU', 'Lurker'),
-        ('SK', 'Skirmisher'),
-        ('AR', 'Artillery'),
-        ('NO', 'No Role'),
-        ('BR', 'Brute'),
-        ('SO', 'Soldier'),
-        ('CO', 'Controller'),
-        ('LE', 'Leader'),
-    )
-    level = models.IntegerField(default=1, blank=True)
-    group_role = models.CharField(max_length=2, choices=GROUP_ROLE, default='SO')
-    combat_role = models.CharField(max_length=2, choices=COMBAT_ROLE, default='NO')
-    combat_role2 = models.CharField(max_length=2, blank=True, choices=COMBAT_ROLE, default='NO')
