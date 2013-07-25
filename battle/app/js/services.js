@@ -41,7 +41,7 @@ angular.module('battle.services', ['restangular']).
 
 factory('EM', ['Restangular','$routeParams','$http',
 function(Restangular, $routeParams, $http) {
-    var all = {}, pollPromise, revision, emmd;
+    var all = {}, polling = false, revision, emmd, pollPromise;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_related(entity) { return emmd[entity].related; }
     function by_key(entity, key) { return all[entity].edict[key]; }
@@ -70,14 +70,20 @@ function(Restangular, $routeParams, $http) {
         });
     }
     function fetch_multiple(eList) {
+        if(polling)
+            return pollPromise;
+        polling = true;
         var promiseArray = [];
         for (var i = eList.length - 1; i >= 0; i--) {
             promiseArray.push(fetch(eList[i]));
         }
-        return Q.all(promiseArray).then(function(){
+        pollPromise = Q.all(promiseArray).then(function(){
             revision = list(eList[0]).metadata.revision;
             merge_related_multiple(eList);
+        }).fin(function(){
+            polling = false;
         });
+        return pollPromise;
     }
     function fill_related(entityInstance, related) {
         entityInstance['_'+related] = by_key(related, entityInstance[related]);
@@ -112,7 +118,6 @@ function(Restangular, $routeParams, $http) {
     function update(entity, instance) {
         return Q(instance.put())
         .then(function(instance) {
-            instance.needPut = false;
             revision++;
         })
         .fail(function() {
@@ -155,6 +160,9 @@ function(Restangular, $routeParams, $http) {
     function get_revision() {
         return revision;
     }
+    function increase_revision() {
+        revision++;
+    }
     return {
         update: update,
         add: add,
@@ -164,7 +172,8 @@ function(Restangular, $routeParams, $http) {
         listSlice: listSlice,
         fetch_multiple: fetch_multiple,
         set_all_entity_metadata: set_all_entity_metadata,
-        get_revision: get_revision
+        get_revision: get_revision,
+        increase_revision: increase_revision
     };
 }]).
 
@@ -204,18 +213,26 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
         });
     }
     function start_poll_timeout(){
-        $timeout(poll, 2000);
+        //$timeout(poll, 2000);
     }
     function broadcast() {
         $rootScope.$broadcast('EM.update');
     }
     function remove_list(entity, query) {
+        var deferred = Q.defer();
         $http.delete('/battle/'+entity, {params: query}).success(function() {
+            deferred.resolve();
+        });
+        return deferred.promise.then(function(){
             EM.fetch_multiple(syncEntities).then(broadcast);
         });
     }
     function update_list(entity, query, data) {
+        var deferred = Q.defer();
         $http.put('/battle/'+entity, data, {params: query}).success(function() {
+            deferred.resolve();
+        });
+        return deferred.promise.then(function(){
             EM.fetch_multiple(syncEntities).then(broadcast);
         });
     }
@@ -233,95 +250,139 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
 // Operator for characters
 factory('Och', ['EM', 'EMController','roll','Restangular',
 function(EM, EMController, roll, Restangular) {
-    return {
-        save: function(c) {
-            EM.update('character', c);
-        },
-        change_hp: function(c, value){
-            c.used_hit_points = c.used_hit_points-parseInt(value);
-            this.save(c);
-        },
-        set_init: function(c, value){
-            c.init = parseInt(value);
-            this.save(c);
-        },
-        roll_init: function(c, mod){
-            c.init = roll(mod, dice);
-            this.save(c);
-        },
-        change_xp: function(c, value){
-            c.experience_points = c.experience_points+parseInt(value);
-            this.save(c);
-        },
-        change_gold: function(c, value){
-            c.gold = c.gold+parseInt(value);
-            this.save(c);
-        },
-        short_rest: function(c){
-            c.milestones = c.milestones-c.milestones%2;
-            this.save(c);
-        },
-        extended_rest: function(c){
-            this.short_rest(c);
-            c.milestones = 0;
-            c.used_action_points = 0;
-            c.used_healing_surges = 0;
-            this.save(c);
-        },
-        spend_ap: function(c){
-            c.used_action_points = c.used_action_points+1;
-            this.save(c);
-        },
-        spend_hs: function(c){
-            c.used_healing_surges = c.used_healing_surges+1;
-            this.save(c);
-        },
-        milestone: function(c){
-            c.milestones = c.milestones+1;
-            this.save(c);
-        },
-        bloodied: function(c){
-            if(c.used_hit_points*2 > c.hit_points)
-                return true;
-            return false;
-        },
-        recharge_powers: function(c) {
-            EMController.update_list('has_power', {character: c.id}, {used: false});
-        },
-        clear_conditions: function(c) {
-            c.has_conditions = [];
-            c._has_conditions = [];
-            EMController.remove_list('has_condition', {character: c.id});
-        },
-        remove_condition: function(c, hci) {
-            var hco = c._has_conditions[hci];
-            c._has_conditions.splice(hci,1);
-            c.has_conditions.splice(hci,1);
-
-            return EM.remove('has_condition', hco).fail(function(){
-                c._has_conditions.push(hco);
-                c.has_conditions.push(hco.id);
-            });
-        },
-        add_condition: function(ch, co) {
-            var hasCondition = {
-                character: ch.id,
-                condition: co.name,
-                ends: 'T',
-                started_round: 1,
-                started_init: 1,
-                _condition: co,
-                needSync: true
-            };
-
-            ch._has_conditions.push(hasCondition);
-            var i = ch._has_conditions.length-1;
-            return EM.add('has_condition', hasCondition)
-            .then(function(newE) {
-                newE._condition = EM.by_key('condition', newE.condition);
-                ch._has_conditions[i] = newE;
-            });
+    function save(c) {
+        return EM.update('character', c);
+    }
+    function change_hp(c, value){
+        c.used_hit_points = c.used_hit_points-parseInt(value);
+        if(c.used_hit_points < 0)
+            c.used_hit_points = 0;
+        else if(c.used_hit_points > c.hit_points+c.hit_points/3)
+            c.used_hit_points = c.hit_points+c.hit_points/3;
+        save(c);
+    }
+    function set_init(c, value){
+        c.init = parseInt(value);
+        save(c);
+    }
+    function roll_init(c, mod){
+        c.init = roll(mod, dice);
+        save(c);
+    }
+    function change_xp(c, value){
+        c.experience_points = c.experience_points+parseInt(value);
+        save(c);
+    }
+    function change_gold(c, value){
+        c.gold = c.gold+parseInt(value);
+        save(c);
+    }
+    function short_rest(c){
+        c.milestones = c.milestones-c.milestones%2;
+        recharge_encounters(c, save(c));
+    }
+    function extended_rest(c){
+        c.milestones = 0;
+        c.used_action_points = 0;
+        c.used_healing_surges = 0;
+        recharge_powers(c, save(c));
+    }
+    function spend_ap(c){
+        c.used_action_points = c.used_action_points+1;
+        save(c);
+    }
+    function spend_hs(c){
+        c.used_healing_surges = c.used_healing_surges+1;
+        save(c);
+    }
+    function milestone(c){
+        c.milestones = c.milestones+1;
+        save(c);
+    }
+    function bloodied(c){
+        if(c.used_hit_points*2 > c.hit_points)
+            return true;
+        return false;
+    }
+    function recharge_encounters(c, promise) {
+        for (var i = c._has_powers.length - 1; i >= 0; i--) {
+            if(c._has_powers[i]._power.usage == 'E')
+                c._has_powers[i].used = false;
         }
+        if(promise)
+            return promise.then(function() {
+                EMController.update_list('has_power', {character: c.id, power__usage: 'E'},
+                    {used: false});
+            });
+        return EMController.update_list('has_power', {character: c.id, power__usage: 'E'},
+         {used: false});
+    }
+    function recharge_powers(c, promise) {
+        for (var i = c._has_powers.length - 1; i >= 0; i--) {
+            c._has_powers[i].used = false;
+        }
+        if(promise)
+            return promise.then(function() {
+                EMController.update_list('has_power', {character: c.id},{used: false});
+            });
+        return EMController.update_list('has_power', {character: c.id}, {used: false});
+    }
+    function clear_conditions(c, promise) {
+        c.has_conditions = [];
+        c._has_conditions = [];
+        if(promise)
+            return promise.then(function() {
+                EMController.remove_list('has_condition', {character: c.id});
+            });
+        return EMController.remove_list('has_condition', {character: c.id});
+    }
+    function remove_condition(c, hci) {
+        var hco = c._has_conditions[hci];
+        c._has_conditions.splice(hci,1);
+        c.has_conditions.splice(hci,1);
+
+        return EM.remove('has_condition', hco).fail(function(){
+            c._has_conditions.push(hco);
+            c.has_conditions.push(hco.id);
+        });
+    }
+    function add_condition(ch, co) {
+        var hasCondition = {
+            character: ch.id,
+            condition: co.name,
+            ends: 'T',
+            started_round: 1,
+            started_init: 1,
+            _condition: co,
+            needSync: true
+        };
+
+        ch._has_conditions.push(hasCondition);
+        var i = ch._has_conditions.length-1;
+        return EM.add('has_condition', hasCondition)
+        .then(function(newE) {
+            newE._condition = EM.by_key('condition', newE.condition);
+            ch._has_conditions[i] = newE;
+        });
+    }
+    return {
+        save: save,
+        change_hp: change_hp,
+        set_init: set_init,
+        roll_init: roll_init,
+        change_xp: change_xp,
+        change_gold: change_gold,
+        short_rest: short_rest,
+        extended_rest: extended_rest,
+        spend_ap: spend_ap,
+        spend_hs: spend_hs,
+        milestone: milestone,
+        bloodied: bloodied,
+        recharge_encounters: recharge_encounters,
+        recharge_powers: recharge_powers,
+        clear_conditions: clear_conditions,
+        remove_condition: remove_condition,
+        add_condition: add_condition
     };
 }]).
 // Operator for HasPowers
