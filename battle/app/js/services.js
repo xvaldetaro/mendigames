@@ -39,8 +39,8 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
-factory('EM', ['Restangular','$routeParams',
-function(Restangular, $routeParams) {
+factory('EM', ['Restangular','$routeParams','$http',
+function(Restangular, $routeParams, $http) {
     var all = {}, pollPromise, revision, emmd;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_related(entity) { return emmd[entity].related; }
@@ -164,7 +164,7 @@ function(Restangular, $routeParams) {
         listSlice: listSlice,
         fetch_multiple: fetch_multiple,
         set_all_entity_metadata: set_all_entity_metadata,
-        get_revision: get_revision,
+        get_revision: get_revision
     };
 }]).
 
@@ -193,29 +193,37 @@ function(EM, $http, $rootScope,$timeout) {
     function poll() {
         $http.get('/battle/rev').success(function(data,status,headers,config){
             if(EM.get_revision() == data.revision) {
-                $timeout(poll, 2000);
+                start_poll_timeout();
                 return;
             }
 
-            pollPromise = EM.fetch_multiple(syncEntities).then(post_fetch);
+            EM.fetch_multiple(syncEntities).then(broadcast).then(start_poll_timeout);
         });
     }
-    function post_fetch(){
-        $rootScope.$broadcast('EM.update');
+    function start_poll_timeout(){
         $timeout(poll, 2000);
+    }
+    function broadcast() {
+        $rootScope.$broadcast('EM.update');
+    }
+    function remove_list(entity, query) {
+        $http.delete('/battle/'+entity, {params: query}).success(function() {
+            EM.fetch_multiple(initEntities).then(broadcast);
+        });
     }
     function init() {
         EM.set_all_entity_metadata(entitiesMetadata);
-        EM.fetch_multiple(initEntities).then(post_fetch);
+        EM.fetch_multiple(initEntities).then(broadcast).then(start_poll_timeout);
     }
     init();
     return {
+        remove_list: remove_list
     };
 }]).
 
 // Operator for characters
-factory('Och', ['EM', 'roll','Restangular',
-function(EM, roll, Restangular) {
+factory('Och', ['EM', 'EMController','roll','Restangular',
+function(EM, EMController, roll, Restangular) {
     return {
         save: function(c) {
             EM.update('character', c);
@@ -269,11 +277,9 @@ function(EM, roll, Restangular) {
             return false;
         },
         clear_conditions: function(c) {
-            var hcl = Restangular.restangularizeCollection(c, c._has_powers,'has_condition');
-            hcl[0].used = !hcl[0].used;
-            hcl[0].put();
             c.has_conditions = [];
             c._has_conditions = [];
+            EMController.remove_list('has_condition', {characterId: c.id});
         },
         remove_condition: function(c, hci) {
             var hco = c._has_conditions[hci];

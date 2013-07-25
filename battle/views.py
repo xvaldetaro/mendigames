@@ -50,6 +50,11 @@ class RevListView(generics.ListCreateAPIView):
     def delete(self, request, format=None):
         queryset = self.get_queryset()
         queryset.delete()
+        revision = cache.get('revision')
+        if not revision:
+            cache.set('revision', 1, 200000)
+            revision = 1
+        cache.set('revision', revision+1)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
