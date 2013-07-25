@@ -41,72 +41,41 @@ angular.module('battle.services', ['restangular']).
 
 factory('EM', ['Restangular','$routeParams','$rootScope','$timeout','$http',
 function(Restangular, $routeParams, $rootScope,$timeout,$http) {
-    var all = {}, pollPromise, revision;
-    function poll(entity, pk) {
+    var all = {}, pollPromise, revision, emmd;
+    function get_pk(entity) { return emmd[entity].pk; }
+    function get_related(entity) { return emmd[entity].related; }
+    function by_key(entity, key) { return all[entity].edict[key]; }
+    function list(entity) { return all[entity].list; }
+
+    function fetch(entity) {
         return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
         owned: true}))
         .then(function(el) {
             all[entity] = {};
             all[entity].list = el;
-            all[entity].pk = pk;
-            all[entity].dict = {};
+            all[entity].idict = {};
+            all[entity].edict = {};
 
-            var list=all[entity].list, dict=all[entity].dict;
-            for(var i=0, len=el.length; i<len; i++)
-                dict[el[i][pk]] = i;
+            var list=all[entity].list, idict=all[entity].idict, pk = get_pk(entity);
+            var edict=all[entity].edict;
+            for (var i = el.length - 1; i >= 0; i--) {
+                var instance = el[i];
+                idict[instance[pk]] = i;
+                edict[instance[pk]] = instance;
+            }
         })
         .fail(function() {
             window.alert('Server not responding');
         });
     }
-    function poll_multiple(eList) {
+    function fetch_multiple(eList) {
         var promiseArray = [];
-        for(var i=0; i<eList.length; i++) {
-            promiseArray.push(poll(eList[i].entity, eList[i].pk));
+        for (var i = eList.length - 1; i >= 0; i--) {
+            promiseArray.push(fetch(eList[i]));
         }
-        return Q.all(promiseArray);
-    }
-    function update(entity, instance) {
-        return Q(instance.put())
-        .then(function(instance) {
-            instance.needPut = false;
-            revision++;
-        })
-        .fail(function() {
-            window.alert('Connection failed');
+        return Q.all(promiseArray).then(function(){
+            merge_related_multiple(eList);
         });
-    }
-    function add(entity, e) {
-        var entData = all[entity];
-        entData.list.push(e);
-        var i = entData.list.length-1;
-        return Q(Restangular.all(entity).post(e))
-        .then(function(newE) {
-            revision++;
-            entData.list[i] = newE;
-            entData.dict[newE[entData.pk]] = i;
-            return newE;
-        })
-        .fail(function() {
-            window.alert('Connection failed');
-        });
-    }
-    function remove(entity, instance) {
-        var entData = all[entity];
-        var i = entData.dict[instance[entData.pk]];
-        entData.list.splice(i, 1);
-        entData.dict[instance[entData.pk]] = null;
-        return Q(instance.remove())
-        .then(function(){
-            revision++;
-        })
-        .fail(function(){
-            window.alert('Connection failed');
-        });
-    }
-    function by_key(entity, key) {
-        var entData = all[entity];
-        return entData.list[entData.dict[key]];
     }
     function fill_related(entityInstance, related) {
         entityInstance['_'+related] = by_key(related, entityInstance[related]);
@@ -118,29 +87,76 @@ function(Restangular, $routeParams, $rootScope,$timeout,$http) {
         }
         entityInstance['_'+related+'s'] = relatedList;
     }
-    function fill_related_type(entity, related) {
+    function fill_related_type(instanceList, related) {
+        if(instanceList[0][related+'s'] instanceof Array)
+            for (var i = instanceList.length - 1; i >= 0; i--)
+                fill_related_array(instanceList[i], related);
+        else
+            for(var i = instanceList.length - 1; i >= 0; i--)
+                fill_related(instanceList[i], related);
+    }
+    function merge_related_multiple(eList) {
+        for(var i = eList.length - 1; i >= 0; i--) {
+            var entity = eList[i];
+            var instanceList = list(entity);
+            if(instanceList.length != 0) {
+                var relatedList = get_related(entity);
+                for(var j = relatedList.length - 1; j >= 0; j--) {
+                    fill_related_type(instanceList, relatedList[j]);
+                }
+            }
+        }
+    }
+    function update(entity, instance) {
+        return Q(instance.put())
+        .then(function(instance) {
+            instance.needPut = false;
+            revision++;
+        })
+        .fail(function() {
+            window.alert('Connection failed when updating');
+        });
+    }
+    function add(entity, e) {
         var entData = all[entity];
-        if(entData.list.length === 0)
-            return;
-        if(entData.list[0][related+'s'] instanceof Array) {
-            for(var i=0, len=entData.list.length; i<len; i++) {
-                fill_related_array(entData.list[i], related);
-            }
-        } else {
-            for(var i=0, len=entData.list.length; i<len; i++) {
-                fill_related(entData.list[i], related);
-            }
-        }
+        entData.list.push(e);
+        var i = entData.list.length-1;
+        return Q(Restangular.all(entity).post(e))
+        .then(function(newE) {
+            revision++;
+            entData.list[i] = newE;
+            entData.idict[newE[get_pk(entity)]] = i;
+            entData.edict[newE[get_pk(entity)]] = newE;
+            return newE;
+        })
+        .fail(function() {
+            window.alert('Connection failed when adding');
+        });
     }
-    function fill_related_multiple(relationList) {
-        for(var i=0; i<relationList.length; i++) {
-            var entData = all[relationList[i].entity];
-            if(entData) {
-                fill_related_type(relationList[i].entity, relationList[i].related,
-                    relationList[i].isArray);
-            }
-        }
+    function remove(entity, instance) {
+        var entData = all[entity], pk = get_pk(entity);
+        var i = entData.idict[instance[pk]];
+        entData.list.splice(i, 1);
+        entData.idict[instance[pk]] = null;
+        entData.edict[instance[pk]] = null;
+        return Q(instance.remove())
+        .then(function(){
+            revision++;
+        })
+        .fail(function(){
+            window.alert('Connection failed when removing');
+        });
     }
+    function set_all_entity_metadata(metadata) {
+        emmd = metadata;
+    }
+    var battle_emd = {
+        'condition': {pk: 'name', related: []},
+        'power': {pk: 'name', related: []},
+        'has_condition': {pk: 'id', related: ['condition']},
+        'has_power': {pk: 'id', related: ['power']},
+        'character': {pk: 'id', related: ['has_condition','has_power']}
+    };
     function check_poll() {
         $http.get('/battle/rev').success(function(data,status,headers,config){
             if(revision == data.revision) {
@@ -148,55 +164,51 @@ function(Restangular, $routeParams, $rootScope,$timeout,$http) {
                 return;
             }
 
-            poll_multiple([
-                {entity: 'has_condition', pk: 'id'},
-                {entity: 'has_power', pk: 'id'},
-                {entity: 'character', pk: 'id'}
-            ]).then(function() {
-                fill_related_multiple([
-                    {entity: 'has_condition', related: 'condition'},
-                    {entity: 'has_power', related: 'power'},
-                    {entity: 'character', related: 'has_power'},
-                    {entity: 'character', related: 'has_condition'}
-                ]);
-            }).then(function(){
-                revision = all['character'].list.metadata.revision;
+            fetch_multiple([
+                'has_condition',
+                'has_power',
+                'character'
+            ]).then(function(){
+                revision = list('character').metadata.revision;
                 $rootScope.$broadcast('EM.update');
                 //$timeout(check_poll, 2000);
             });
         });
     }
-    pollPromise = poll_multiple([
-        {entity: 'condition', pk: 'name'},
-        {entity: 'power', pk: 'name'},
-        {entity: 'has_condition', pk: 'id'},
-        {entity: 'has_power', pk: 'id'},
-        {entity: 'character', pk: 'id'}
-    ]).then(function() {
-        fill_related_multiple([
-            {entity: 'has_condition', related: 'condition'},
-            {entity: 'has_power', related: 'power'},
-            {entity: 'character', related: 'has_power'},
-            {entity: 'character', related: 'has_condition'}
-        ]);
-    }).fin(function(){
-        revision = all['character'].list.metadata.revision;
+    set_all_entity_metadata(battle_emd);
+    pollPromise = fetch_multiple([
+        'condition',
+        'power',
+        'has_condition',
+        'has_power',
+        'character'
+    ]).then(function(){
+        revision = list('character').metadata.revision;
         $rootScope.$broadcast('EM.update');
         //$timeout(check_poll, 2000);
     });
-
     return {
-        poll: poll,
-        poll_multiple: poll_multiple,
         update: update,
         add: add,
-        fill_related_multiple: fill_related_multiple,
         remove: remove,
         ready: function() {
             return pollPromise;
         },
         by_key: by_key,
         listSlice: function(entity) { return all[entity].list.slice(); }
+    };
+}]).
+
+factory('Battle', ['EM','$http',
+function(EM, $http) {
+    return {
+        use_power: function(h) {
+            h.used = !h.used;
+            EM.update('has_power', h);
+        },
+        fetch_from_compendium: function(h){
+            WizardsService.fetch(h._power.wizards_id, 'power');
+        }
     };
 }]).
 

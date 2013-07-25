@@ -112,7 +112,7 @@ function($scope, $rootScope, $dialog, Och, Log) {
                 Och.change_hp($scope.ch, -1*result.result);
                 Log($scope.ch.name+" lost "+result.log+" hit points");
 
-                if(bloodied == Och.bloodied($scope.ch))
+                if(bloodied == false && Och.bloodied($scope.ch) == true)
                     Log($scope.ch.name+" is Bloodied!");
             }
           }

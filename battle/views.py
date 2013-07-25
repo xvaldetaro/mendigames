@@ -55,7 +55,11 @@ class RevDetailView(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = (RevJSONRenderer,)
 
     def destroy(self, request, *args, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
+        revision = cache.get('revision')
+        if not revision:
+            cache.set('revision', 1, 200000)
+            revision = 1
+        cache.set('revision', revision+1)
         return super(RevDetailView, self).destroy(request, *args, **kwargs)
 
 
