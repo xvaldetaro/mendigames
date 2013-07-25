@@ -17,58 +17,44 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
-class CharacterSerializer(serializers.ModelSerializer):
+class RevSerializer(serializers.ModelSerializer):
+    def save(self, **kwargs):
+        revision = cache.get('revision')
+        if not revision:
+            cache.set('revision', 1, 200000)
+            revision = 1
+        cache.set('revision', revision+1)
+        return super(RevSerializer, self).save(**kwargs)
+
+
+class CharacterSerializer(RevSerializer):
     has_powers = serializers.PrimaryKeyRelatedField(many=True)
     has_conditions = serializers.PrimaryKeyRelatedField(many=True)
-
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(CharacterSerializer, self).save(**kwargs)
 
     class Meta:
         model = Character
 
 
-class CampaignSerializer(serializers.ModelSerializer):
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(CampaignSerializer, self).save(**kwargs)
-
+class CampaignSerializer(RevSerializer):
     class Meta:
         model = Campaign
 
 
-class PowerSerializer(serializers.ModelSerializer):
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(PowerSerializer, self).save(**kwargs)
-
+class PowerSerializer(RevSerializer):
     class Meta:
         model = Power
 
 
-class ConditionSerializer(serializers.ModelSerializer):
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(ConditionSerializer, self).save(**kwargs)
-
+class ConditionSerializer(RevSerializer):
     class Meta:
         model = Condition
 
 
-class HasPowerSerializer(serializers.ModelSerializer):
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(HasPowerSerializer, self).save(**kwargs)
-
+class HasPowerSerializer(RevSerializer):
     class Meta:
         model = HasPower
 
 
-class HasConditionSerializer(serializers.ModelSerializer):
-    def save(self, **kwargs):
-        cache.set('revision', cache.get('revision')+1)
-        return super(HasConditionSerializer, self).save(**kwargs)
-
+class HasConditionSerializer(RevSerializer):
     class Meta:
         model = HasCondition

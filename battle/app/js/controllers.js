@@ -34,8 +34,8 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM) {
             $timeout(campaign_poll,10000);
         });
     }
-    //$timeout(campaign_poll,10000);
-    EM.ready().then(function() {
+
+    $scope.$on('EM.update', function() {
         $scope.characterList = EM.listSlice('character');
         $scope.$apply();
     });
@@ -74,6 +74,10 @@ function($scope, $rootScope, $dialog, Och, Log) {
     $scope.milestone = function(c) {
         Och.milestone(c);
         Log(c.name+' reached a milestone');
+    };
+    $scope.clear_conditions = function(c) {
+        Och.clear_conditions(c);
+        Log(c.name+' is clean');
     };
 
     $scope.init_dialog = function(){

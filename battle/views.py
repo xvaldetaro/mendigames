@@ -1,8 +1,7 @@
 # Create your views here.
 from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
-from rest_framework import generics
-from rest_framework import viewsets, renderers
+from rest_framework import viewsets, renderers, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from battle.models import Campaign, Character, Condition, HasPower, Power, HasCondition
@@ -10,7 +9,6 @@ from battle.serializers import (UserSerializer, GroupSerializer, CharacterSerial
                                 CampaignSerializer, PowerSerializer, HasPowerSerializer,
                                 ConditionSerializer, HasConditionSerializer)
 from django.core.cache import cache
-cache.set('revision', 1, 2592000)
 
 
 class RevJSONRenderer(renderers.JSONRenderer):
@@ -46,6 +44,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class RevListView(generics.ListCreateAPIView):
     renderer_classes = (RevJSONRenderer,)
+
+    def delete(self, request, format=None):
+        queryset = self.get_queryset()
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class RevDetailView(generics.RetrieveUpdateDestroyAPIView):

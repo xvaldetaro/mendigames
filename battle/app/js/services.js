@@ -39,24 +39,21 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
-factory('EM', ['Restangular','$routeParams','$rootScope',
-function(Restangular, $routeParams, $rootScope) {
-    var all = {}, ready = false, deferreds = [];
+factory('EM', ['Restangular','$routeParams','$rootScope','$timeout','$http',
+function(Restangular, $routeParams, $rootScope,$timeout,$http) {
+    var all = {}, pollPromise, revision;
     function poll(entity, pk) {
         return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
         owned: true}))
         .then(function(el) {
             all[entity] = {};
-            all[entity].list = [];
+            all[entity].list = el;
             all[entity].pk = pk;
             all[entity].dict = {};
 
             var list=all[entity].list, dict=all[entity].dict;
-            for(var i=0, len=el.length; i<len; i++) {
-                var e = el[i];
-                list.push(e);
-                dict[e[pk]] = i;
-            }
+            for(var i=0, len=el.length; i<len; i++)
+                dict[el[i][pk]] = i;
         })
         .fail(function() {
             window.alert('Server not responding');
@@ -67,13 +64,13 @@ function(Restangular, $routeParams, $rootScope) {
         for(var i=0; i<eList.length; i++) {
             promiseArray.push(poll(eList[i].entity, eList[i].pk));
         }
-        ready = Q.all(promiseArray);
-        return ready;
+        return Q.all(promiseArray);
     }
     function update(entity, instance) {
         return Q(instance.put())
         .then(function(instance) {
             instance.needPut = false;
+            revision++;
         })
         .fail(function() {
             window.alert('Connection failed');
@@ -85,6 +82,7 @@ function(Restangular, $routeParams, $rootScope) {
         var i = entData.list.length-1;
         return Q(Restangular.all(entity).post(e))
         .then(function(newE) {
+            revision++;
             entData.list[i] = newE;
             entData.dict[newE[entData.pk]] = i;
             return newE;
@@ -99,6 +97,9 @@ function(Restangular, $routeParams, $rootScope) {
         entData.list.splice(i, 1);
         entData.dict[instance[entData.pk]] = null;
         return Q(instance.remove())
+        .then(function(){
+            revision++;
+        })
         .fail(function(){
             window.alert('Connection failed');
         });
@@ -140,7 +141,32 @@ function(Restangular, $routeParams, $rootScope) {
             }
         }
     }
-    poll_multiple([
+    function check_poll() {
+        $http.get('/battle/rev').success(function(data,status,headers,config){
+            if(revision == data.revision) {
+                $timeout(check_poll, 2000);
+                return;
+            }
+
+            poll_multiple([
+                {entity: 'has_condition', pk: 'id'},
+                {entity: 'has_power', pk: 'id'},
+                {entity: 'character', pk: 'id'}
+            ]).then(function() {
+                fill_related_multiple([
+                    {entity: 'has_condition', related: 'condition'},
+                    {entity: 'has_power', related: 'power'},
+                    {entity: 'character', related: 'has_power'},
+                    {entity: 'character', related: 'has_condition'}
+                ]);
+            }).then(function(){
+                revision = all['character'].list.metadata.revision;
+                $rootScope.$broadcast('EM.update');
+                //$timeout(check_poll, 2000);
+            });
+        });
+    }
+    pollPromise = poll_multiple([
         {entity: 'condition', pk: 'name'},
         {entity: 'power', pk: 'name'},
         {entity: 'has_condition', pk: 'id'},
@@ -153,15 +179,21 @@ function(Restangular, $routeParams, $rootScope) {
             {entity: 'character', related: 'has_power'},
             {entity: 'character', related: 'has_condition'}
         ]);
+    }).fin(function(){
+        revision = all['character'].list.metadata.revision;
+        $rootScope.$broadcast('EM.update');
+        //$timeout(check_poll, 2000);
     });
+
     return {
         poll: poll,
         poll_multiple: poll_multiple,
         update: update,
         add: add,
+        fill_related_multiple: fill_related_multiple,
         remove: remove,
         ready: function() {
-            return ready;
+            return pollPromise;
         },
         by_key: by_key,
         listSlice: function(entity) { return all[entity].list.slice(); }
@@ -169,8 +201,8 @@ function(Restangular, $routeParams, $rootScope) {
 }]).
 
 // Operator for characters
-factory('Och', ['EM', 'roll',
-function(EM, roll, HasConditionList) {
+factory('Och', ['EM', 'roll','Restangular',
+function(EM, roll, Restangular) {
     return {
         save: function(c) {
             EM.update('character', c);
@@ -222,6 +254,13 @@ function(EM, roll, HasConditionList) {
             if(c.used_hit_points*2 > c.hit_points)
                 return true;
             return false;
+        },
+        clear_conditions: function(c) {
+            var hcl = Restangular.restangularizeCollection(c, c._has_powers,'has_condition');
+            hcl[0].used = !hcl[0].used;
+            hcl[0].put();
+            c.has_conditions = [];
+            c._has_conditions = [];
         },
         remove_condition: function(c, hci) {
             var hco = c._has_conditions[hci];
