@@ -39,13 +39,14 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
-factory('EM', ['Restangular','$routeParams','$rootScope','$timeout','$http',
-function(Restangular, $routeParams, $rootScope,$timeout,$http) {
+factory('EM', ['Restangular','$routeParams',
+function(Restangular, $routeParams) {
     var all = {}, pollPromise, revision, emmd;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_related(entity) { return emmd[entity].related; }
     function by_key(entity, key) { return all[entity].edict[key]; }
     function list(entity) { return all[entity].list; }
+    function listSlice(entity) { return all[entity].list.slice(); }
 
     function fetch(entity) {
         return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
@@ -74,6 +75,7 @@ function(Restangular, $routeParams, $rootScope,$timeout,$http) {
             promiseArray.push(fetch(eList[i]));
         }
         return Q.all(promiseArray).then(function(){
+            revision = list(eList[0]).metadata.revision;
             merge_related_multiple(eList);
         });
     }
@@ -150,65 +152,64 @@ function(Restangular, $routeParams, $rootScope,$timeout,$http) {
     function set_all_entity_metadata(metadata) {
         emmd = metadata;
     }
-    var battle_emd = {
+    function get_revision() {
+        return revision;
+    }
+    return {
+        update: update,
+        add: add,
+        remove: remove,
+        by_key: by_key,
+        list: list,
+        listSlice: listSlice,
+        fetch_multiple: fetch_multiple,
+        set_all_entity_metadata: set_all_entity_metadata,
+        get_revision: get_revision,
+    };
+}]).
+
+factory('EMController', ['EM','$http','$rootScope','$timeout',
+function(EM, $http, $rootScope,$timeout) {
+    var revision;
+    var entitiesMetadata = {
         'condition': {pk: 'name', related: []},
         'power': {pk: 'name', related: []},
         'has_condition': {pk: 'id', related: ['condition']},
         'has_power': {pk: 'id', related: ['power']},
         'character': {pk: 'id', related: ['has_condition','has_power']}
     };
-    function check_poll() {
-        $http.get('/battle/rev').success(function(data,status,headers,config){
-            if(revision == data.revision) {
-                $timeout(check_poll, 2000);
-                return;
-            }
-
-            fetch_multiple([
-                'has_condition',
-                'has_power',
-                'character'
-            ]).then(function(){
-                revision = list('character').metadata.revision;
-                $rootScope.$broadcast('EM.update');
-                //$timeout(check_poll, 2000);
-            });
-        });
-    }
-    set_all_entity_metadata(battle_emd);
-    pollPromise = fetch_multiple([
+    var initEntities = [
         'condition',
         'power',
         'has_condition',
         'has_power',
         'character'
-    ]).then(function(){
-        revision = list('character').metadata.revision;
-        $rootScope.$broadcast('EM.update');
-        //$timeout(check_poll, 2000);
-    });
-    return {
-        update: update,
-        add: add,
-        remove: remove,
-        ready: function() {
-            return pollPromise;
-        },
-        by_key: by_key,
-        listSlice: function(entity) { return all[entity].list.slice(); }
-    };
-}]).
+    ];
+    var syncEntities = [
+        'has_condition',
+        'has_power',
+        'character'
+    ];
+    function poll() {
+        $http.get('/battle/rev').success(function(data,status,headers,config){
+            if(EM.get_revision() == data.revision) {
+                $timeout(poll, 2000);
+                return;
+            }
 
-factory('Battle', ['EM','$http',
-function(EM, $http) {
+            pollPromise = EM.fetch_multiple(syncEntities).then(post_fetch);
+        });
+    }
+    function post_fetch(){
+        $rootScope.$broadcast('EM.update');
+        $timeout(poll, 2000);
+    }
+    function init() {
+        EM.set_all_entity_metadata(entitiesMetadata);
+        EM.fetch_multiple(initEntities).then(post_fetch);
+    }
+    init();
     return {
-        use_power: function(h) {
-            h.used = !h.used;
-            EM.update('has_power', h);
-        },
-        fetch_from_compendium: function(h){
-            WizardsService.fetch(h._power.wizards_id, 'power');
-        }
     };
 }]).
 

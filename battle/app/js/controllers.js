@@ -11,8 +11,8 @@ function($scope, Restangular) {
 }]).
 
 controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', 
-'$routeParams', 'EM',
-function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM) {
+'$routeParams', 'EM', 'EMController',
+function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM, EMController) {
     $scope.campaignId = $routeParams.campaignId;
 
     // Scroll to bottom of console log window when a new msg arrives
@@ -149,10 +149,10 @@ function($scope, EM, Ohpo, Log) {
 
 .controller('MenuController', ['$scope', 'EM',
 function($scope, EM) {
-    EM.ready().then(function() {
+    $scope.$on('EM.update', function() {
         $scope.conditionList = EM.listSlice('condition');
     });
-    
+
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');
     });

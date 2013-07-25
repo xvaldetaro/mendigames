@@ -16,7 +16,9 @@ class RevJSONRenderer(renderers.JSONRenderer):
         response_data = {}
         response_data['data'] = data
         revision = cache.get('revision')
-        revision = revision
+        if not revision:
+            cache.set('revision', 1, 200000)
+            revision = 1
         response_data['revision'] = revision
         response = super(RevJSONRenderer, self).render(response_data, accepted_media_type, renderer_context)
         return response
