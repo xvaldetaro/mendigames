@@ -79,7 +79,10 @@ function($scope, $rootScope, $dialog, Och, Log) {
         Och.clear_conditions(c);
         Log(c.name+' is clean');
     };
-
+    $scope.recharge_powers = function(c) {
+        Och.recharge_powers(c);
+        Log(c.name+' powers recharged');
+    };
     $scope.init_dialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/init.html',

@@ -47,10 +47,10 @@ function(Restangular, $routeParams, $http) {
     function by_key(entity, key) { return all[entity].edict[key]; }
     function list(entity) { return all[entity].list; }
     function listSlice(entity) { return all[entity].list.slice(); }
+    function get_query(entity) { return emmd[entity].query; }
 
     function fetch(entity) {
-        return Q(Restangular.all(entity).getList({campaignId: $routeParams.campaignId,
-        owned: true}))
+        return Q(Restangular.all(entity).getList(get_query(entity)))
         .then(function(el) {
             all[entity] = {};
             all[entity].list = el;
@@ -168,15 +168,18 @@ function(Restangular, $routeParams, $http) {
     };
 }]).
 
-factory('EMController', ['EM','$http','$rootScope','$timeout',
-function(EM, $http, $rootScope,$timeout) {
+factory('EMController', ['EM','$http','$rootScope','$timeout','$routeParams',
+function(EM, $http, $rootScope,$timeout,$routeParams) {
     var revision;
     var entitiesMetadata = {
-        'condition': {pk: 'name', related: []},
-        'power': {pk: 'name', related: []},
-        'has_condition': {pk: 'id', related: ['condition']},
-        'has_power': {pk: 'id', related: ['power']},
-        'character': {pk: 'id', related: ['has_condition','has_power']}
+        'condition': {pk: 'name', related: [], query: {}},
+        'power': {pk: 'name', related: [], query: {haspower__isnull: false}},
+        'has_condition': {pk: 'id', related: ['condition'],
+            query: {character__campaign: $routeParams.campaignId}},
+        'has_power': {pk: 'id', related: ['power'],
+            query: {character__campaign: $routeParams.campaignId}},
+        'character': {pk: 'id', related: ['has_condition','has_power'],
+            query: {campaign: $routeParams.campaignId}}
     };
     var initEntities = [
         'condition',
@@ -208,7 +211,12 @@ function(EM, $http, $rootScope,$timeout) {
     }
     function remove_list(entity, query) {
         $http.delete('/battle/'+entity, {params: query}).success(function() {
-            EM.fetch_multiple(initEntities).then(broadcast);
+            EM.fetch_multiple(syncEntities).then(broadcast);
+        });
+    }
+    function update_list(entity, query, data) {
+        $http.put('/battle/'+entity, data, {params: query}).success(function() {
+            EM.fetch_multiple(syncEntities).then(broadcast);
         });
     }
     function init() {
@@ -217,7 +225,8 @@ function(EM, $http, $rootScope,$timeout) {
     }
     init();
     return {
-        remove_list: remove_list
+        remove_list: remove_list,
+        update_list: update_list
     };
 }]).
 
@@ -276,10 +285,13 @@ function(EM, EMController, roll, Restangular) {
                 return true;
             return false;
         },
+        recharge_powers: function(c) {
+            EMController.update_list('has_power', {character: c.id}, {used: false});
+        },
         clear_conditions: function(c) {
             c.has_conditions = [];
             c._has_conditions = [];
-            EMController.remove_list('has_condition', {characterId: c.id});
+            EMController.remove_list('has_condition', {character: c.id});
         },
         remove_condition: function(c, hci) {
             var hco = c._has_conditions[hci];
@@ -346,7 +358,6 @@ function(WizardsService) {
 }]).
 config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
-    RestangularProvider.setDefaultRequestParams({format: 'json'});
     RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
         // This is a get for a list
         if(response.data) {

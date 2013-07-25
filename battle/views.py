@@ -57,6 +57,29 @@ class RevListView(generics.ListCreateAPIView):
         cache.set('revision', revision+1)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def get_queryset(self):
+        queryset = super(RevListView, self).get_queryset()
+        params = self.request.QUERY_PARAMS
+        pyparams = {}
+        for k,v in params.iteritems():
+            pyv = v
+            try:
+                pyv = int(v)
+            except:
+                if v == 'true':
+                    pyv = True
+                elif v == 'false':
+                    pyv = False
+            pyparams[k] = pyv
+
+        return queryset.filter(**pyparams)
+
+    def put(self, request, format=None):
+        data = self.request.DATA
+        queryset = self.get_queryset()
+        queryset.update(**data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class RevDetailView(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = (RevJSONRenderer,)
@@ -76,13 +99,8 @@ class RevView(APIView):
 
 
 class CharacterList(RevListView):
+    queryset = Character.objects.all()
     serializer_class = CharacterSerializer
-    def get_queryset(self):
-        queryset = Character.objects.all()
-        campaign = self.request.QUERY_PARAMS.get('campaignId', None)
-        if campaign is not None:
-            queryset = queryset.filter(campaign=campaign)
-        return queryset
 
 
 class CharacterDetail(RevDetailView):
@@ -101,14 +119,8 @@ class CampaignDetail(RevDetailView):
 
 
 class PowerList(RevListView):
+    queryset = Power.objects.all()
     serializer_class = PowerSerializer
-
-    def get_queryset(self):
-        queryset = Power.objects.all()
-        if self.request.QUERY_PARAMS.get('owned', False):
-            queryset = queryset.filter(haspower__isnull=False)
-
-        return queryset
 
 
 class PowerDetail(RevDetailView):
@@ -122,17 +134,8 @@ class ConditionList(RevListView):
 
 
 class HasPowerList(RevListView):
+    queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
-
-    def get_queryset(self):
-        queryset = HasPower.objects.all()
-        characterId = self.request.QUERY_PARAMS.get('characterId', None)
-        campaignId = self.request.QUERY_PARAMS.get('campaignId', None)
-        if characterId is not None:
-            queryset = queryset.filter(character=characterId)
-        if campaignId is not None:
-            queryset = queryset.filter(character__campaign=campaignId)
-        return queryset
 
 
 class HasPowerDetail(RevDetailView):
@@ -146,17 +149,8 @@ class ConditionDetail(RevDetailView):
 
 
 class HasConditionList(RevListView):
+    queryset = HasCondition.objects.all()
     serializer_class = HasConditionSerializer
-
-    def get_queryset(self):
-        queryset = HasCondition.objects.all()
-        characterId = self.request.QUERY_PARAMS.get('characterId', None)
-        campaignId = self.request.QUERY_PARAMS.get('campaignId', None)
-        if characterId is not None:
-            queryset = queryset.filter(character=characterId)
-        if campaignId is not None:
-            queryset = queryset.filter(character__campaign=campaignId)
-        return queryset
 
 
 class HasConditionDetail(RevDetailView):
