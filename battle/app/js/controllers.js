@@ -35,9 +35,11 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM, EMCon
         });
     }
 
-    $scope.$on('EM.update', function() {
-        $scope.characterList = EM.listSlice('character');
-        $scope.$apply();
+    EM.fetch_multiple(EMController.initEntities).then(function(){
+        $scope.$apply(function(){
+            $scope.characterList = EM.list('character');
+            $scope.conditionList = EM.listSlice('condition');
+        });
     });
 
     Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
@@ -79,6 +81,10 @@ function($scope, $rootScope, $dialog, Och, Log) {
         Och.clear_conditions(c);
         Log(c.name+' is clean');
     };
+    $scope.delete_character = function(chi, c) {
+        Och.delete_character(chi,c);
+        Log(c.name+' Removed!');
+    }
     $scope.init_dialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/init.html',
@@ -146,11 +152,8 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','roll','Log',
-function($scope, EM, roll, Log) {
-    $scope.$on('EM.update', function() {
-        $scope.conditionList = EM.listSlice('condition');
-    });
+.controller('MenuController', ['$scope', 'EM','roll','Log','$routeParams','$rootScope',
+function($scope, EM, roll, Log, $routeParams, $rootScope) {
     $scope.diceMult = 1;
     $scope.roll = function(dice) {
         var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
@@ -162,6 +165,15 @@ function($scope, EM, roll, Log) {
         logStr = logStr.slice(0, -1);
         logStr = logStr+ '= '+total;
         Log(logStr);
+    };
+    $scope.enemyCount = 0;
+    $scope.add_enemy = function() {
+        var enemy = {
+            campaign: $routeParams.campaignId,
+            type: 'Enemy',
+            name: 'Enemy'+$scope.enemyCount++
+        };
+        EM.add('character', enemy);
     };
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');

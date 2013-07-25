@@ -75,7 +75,7 @@ class Character(models.Model):
         return "%s - in Campaign %s" % (self.name, self.campaign)
 
     class Meta:
-        ordering = ['-init']
+        ordering = ['-type', 'name']
 
 
 class TraitSource(BookEntry):

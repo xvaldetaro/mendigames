@@ -24,35 +24,48 @@
                 <div ng-click="roll(100)" class="button-cell">d100</div>
             </div>
             <div class="row-fluid">
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="1">x1</label>
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="2">x2</label>
-                            
-                        </div>
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="3">x3</label>
-                            
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="4">x4</label>
-                        </div>
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="5">x5</label>
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="6">x6</label>
-                        </div>
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="7">x7</label>
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="8">x8</label>
-                        </div>
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="9">x9</label>
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="10">x10</label>
-                        </div>
-                        <div class="span2">
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="11">x11</label>
-                            <label class="checkbox"><input type="radio" ng-model="diceMult" value="12">x12</label>
-                        </div>
-                    </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="1">1</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="2">2</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="3">3</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="4">4</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="5">5</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="6">6</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="7">7</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="8">8</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="9">9</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="10">10</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="11">11</label>
+                </div>
+                <div class="span1">
+                    <label class="checkbox"><input type="radio" ng-model="diceMult" value="12">12</label>
+                </div>
+            </div>
             <h4>Turn Manager</h4>
             <h4>Campaign Manager</h4>
+            <div class="row-fluid">
+                <div class="btn" ng-click="add_enemy()">+Enemy</div>
+            </div>
         </div>
     </div>
     <div class="row-fluid">
@@ -84,14 +97,17 @@
                     <div class="dropdown">
                         <a class="dropdown-toggle"><div class="button-cell"><i class="icon-cog"></i></div></a>
                         <ul class="dropdown-menu">
-                            <li>
+                            <li ng-show="ch.type == 'Player'">
                               <a ng-click="short_rest(ch)">Short Rest</a>
                             </li>
-                            <li>
+                            <li ng-show="ch.type == 'Player'">
                               <a ng-click="extended_rest(ch)">Extended Rest</a>
                             </li>
-                            <li>
+                            <li ng-show="ch.type == 'Player'">
                               <a ng-click="milestone(ch)">Milestone</a>
+                            </li>
+                            <li ng-show="ch.type == 'Enemy'">
+                              <a ng-click="delete_character(chi, ch)">Remove</a>
                             </li>
                             <li>
                               <a ng-click="clear_conditions(ch)">Clear Conditions</a>

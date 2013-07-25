@@ -39,8 +39,8 @@ angular.module('battle.services', ['restangular']).
         };
     }]).
 
-factory('EM', ['Restangular','$routeParams','$http',
-function(Restangular, $routeParams, $http) {
+factory('EM', ['Restangular','$routeParams','$rootScope',
+function(Restangular, $routeParams, $rootScope) {
     var all = {}, polling = false, revision, emmd, pollPromise;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_related(entity) { return emmd[entity].related; }
@@ -54,14 +54,11 @@ function(Restangular, $routeParams, $http) {
         .then(function(el) {
             all[entity] = {};
             all[entity].list = el;
-            all[entity].idict = {};
             all[entity].edict = {};
 
-            var list=all[entity].list, idict=all[entity].idict, pk = get_pk(entity);
-            var edict=all[entity].edict;
+            var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
             for (var i = el.length - 1; i >= 0; i--) {
                 var instance = el[i];
-                idict[instance[pk]] = i;
                 edict[instance[pk]] = instance;
             }
         })
@@ -124,28 +121,39 @@ function(Restangular, $routeParams, $http) {
             window.alert('Connection failed when updating');
         });
     }
-    function add(entity, e) {
+    function add(entity, e, callback) {
         var entData = all[entity];
         entData.list.push(e);
         var i = entData.list.length-1;
-        return Q(Restangular.all(entity).post(e))
-        .then(function(newE) {
-            revision++;
-            entData.list[i] = newE;
-            entData.idict[newE[get_pk(entity)]] = i;
-            entData.edict[newE[get_pk(entity)]] = newE;
-            return newE;
-        })
-        .fail(function() {
-            window.alert('Connection failed when adding');
-        });
+        setTimeout(function(){
+            Q(Restangular.all(entity).post(e))
+            .then(function(newE) {
+                revision++;
+                entData.list[i] = newE;
+                entData.edict[newE[get_pk(entity)]] = newE;
+                newE.name = 'Test'+newE.id;
+
+                var relatedList = get_related(entity);
+                for(var j = relatedList.length - 1; j >= 0; j--) {
+                    fill_related_type([newE], relatedList[j]);
+                }
+
+                if(callback)
+                    callback(newE);
+                return newE;
+            })
+            .fail(function() {
+                window.alert('Connection failed when adding');
+            })
+            .fin(function() {
+                $rootScope.$apply();
+            });
+        },0);
     }
-    function remove(entity, instance) {
+    function remove(entity, instance, i) {
         var entData = all[entity], pk = get_pk(entity);
-        var i = entData.idict[instance[pk]];
         entData.list.splice(i, 1);
-        entData.idict[instance[pk]] = null;
-        entData.edict[instance[pk]] = null;
+        delete entData.edict[instance[pk]];
         return Q(instance.remove())
         .then(function(){
             revision++;
@@ -173,7 +181,7 @@ function(Restangular, $routeParams, $http) {
         fetch_multiple: fetch_multiple,
         set_all_entity_metadata: set_all_entity_metadata,
         get_revision: get_revision,
-        increase_revision: increase_revision
+        increase_revision: increase_revision,
     };
 }]).
 
@@ -216,7 +224,7 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
         //$timeout(poll, 2000);
     }
     function broadcast() {
-        $rootScope.$broadcast('EM.update');
+        //$rootScope.$broadcast('EM.update');
     }
     function remove_list(entity, query) {
         var deferred = Q.defer();
@@ -238,12 +246,13 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
     }
     function init() {
         EM.set_all_entity_metadata(entitiesMetadata);
-        EM.fetch_multiple(initEntities).then(broadcast).then(start_poll_timeout);
     }
     init();
     return {
         remove_list: remove_list,
-        update_list: update_list
+        update_list: update_list,
+        initEntities: initEntities,
+        syncEntities: syncEntities
     };
 }]).
 
@@ -341,10 +350,7 @@ function(EM, EMController, roll, Restangular) {
         c._has_conditions.splice(hci,1);
         c.has_conditions.splice(hci,1);
 
-        return EM.remove('has_condition', hco).fail(function(){
-            c._has_conditions.push(hco);
-            c.has_conditions.push(hco.id);
-        });
+        return EM.remove('has_condition', hco);
     }
     function add_condition(ch, co) {
         var hasCondition = {
@@ -359,11 +365,10 @@ function(EM, EMController, roll, Restangular) {
 
         ch._has_conditions.push(hasCondition);
         var i = ch._has_conditions.length-1;
-        return EM.add('has_condition', hasCondition)
-        .then(function(newE) {
-            newE._condition = EM.by_key('condition', newE.condition);
-            ch._has_conditions[i] = newE;
-        });
+        return EM.add('has_condition', hasCondition);
+    }
+    function delete_character(chi, c) {
+        return EM.remove('character', c, chi);
     }
     return {
         save: save,
@@ -382,7 +387,8 @@ function(EM, EMController, roll, Restangular) {
         recharge_powers: recharge_powers,
         clear_conditions: clear_conditions,
         remove_condition: remove_condition,
-        add_condition: add_condition
+        add_condition: add_condition,
+        delete_character: delete_character
     };
 }]).
 // Operator for HasPowers
