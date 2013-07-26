@@ -79,6 +79,7 @@ function(Restangular, $routeParams, $rootScope) {
             merge_related_multiple(eList);
         }).fin(function(){
             polling = false;
+            $rootScope.$apply();
         });
         return pollPromise;
     }
@@ -230,16 +231,11 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
         //$rootScope.$broadcast('EM.update');
     }
     function remove_list(entity, query) {
-        var deferred = Q.defer();
         setTimeout(function(){
             $http.delete('/battle/'+entity, {params: query}).success(function() {
-                deferred.resolve();
+                EM.fetch_multiple(syncEntities);
             });
         },0);
-        
-        return deferred.promise.then(function(){
-            EM.fetch_multiple(syncEntities).then(broadcast);
-        });
     }
     function update_list(entity, query, data) {
         var deferred = Q.defer();
@@ -251,17 +247,11 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
         });
     }
     function add_list(entity, data){
-        var deferred = Q.defer();
         setTimeout(function(){
             $http.post('/battle/'+entity, data, {params: {many: true}}).success(function() {
-                deferred.resolve();
+                EM.fetch_multiple(syncEntities);
             });
         },0);
-        return deferred.promise.then(function(){
-            return EM.fetch_multiple(syncEntities);
-        }).fin(function(){
-            $rootScope.$apply();
-        });
     }
     function init() {
         EM.set_all_entity_metadata(entitiesMetadata);

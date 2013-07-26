@@ -171,6 +171,10 @@ function($scope, EM, roll, Log, $routeParams, $dialog, EMController) {
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');
     });
+    $scope.clear_enemies = function(){
+        EMController.remove_list('character', {campaign: $routeParams.campaignId,
+            type: 'Enemy'});
+    };
     $scope.add_enemy = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/enemy.html',
