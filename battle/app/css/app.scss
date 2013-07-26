@@ -161,6 +161,11 @@ div.inline {
   display: inline-block;
 }
 
+.dropdown-menu {
+  li {
+    cursor:pointer;
+  }
+}
 .stat-number {
   font-size: 3em;
   height: 1em;

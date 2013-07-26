@@ -153,7 +153,8 @@ function($scope, EM, Ohpo, Log) {
 }])
 
 .controller('MenuController', ['$scope', 'EM','roll','Log','$routeParams','$dialog',
-function($scope, EM, roll, Log, $routeParams, $dialog) {
+    'EMController',
+function($scope, EM, roll, Log, $routeParams, $dialog, EMController) {
     $scope.diceMult = 1;
     $scope.roll = function(dice) {
         var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
@@ -175,11 +176,27 @@ function($scope, EM, roll, Log, $routeParams, $dialog) {
             templateUrl:  '/static/battle/partials/dialogs/enemy.html',
             controller: 'EnemyDialogController'
         });
+        function make_enemy(dialogData, index) {
+            return {
+                    name: dialogData.name+index,
+                    init: roll(dialogData.init_mod, 20).result,
+                    hit_points: dialogData.hit_points,
+                    ap: -1*(dialogData.ap-1),
+                    type: 'Enemy',
+                    campaign: $routeParams.campaignId
+                };
+        }
         d.open().then(function(result){
           if(result)
           {
-            Log('Enemy added');
-            EM.add('character', enemy);
+            if(result.count == 1)
+                return EM.add('character', make_enemy(result, ''));
+
+            var enemies = [];
+            for (var i = 1; i <= result.count; i++) {
+                enemies.push(make_enemy(result, i));
+            };
+            EMController.add_list('character', enemies);
           }
         });
     };

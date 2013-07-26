@@ -77,6 +77,26 @@ class RevListView(generics.ListCreateAPIView):
 
         return queryset.filter(**pyparams)
 
+    def post(self, request, *args, **kwargs):
+        many = False
+        try:
+            self.request.QUERY_PARAMS['many']
+            many = True
+        except:
+            pass
+        serializer = self.get_serializer(data=request.DATA, many=many, files=request.FILES)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
     def put(self, request, format=None):
         data = self.request.DATA
         queryset = self.get_queryset()
