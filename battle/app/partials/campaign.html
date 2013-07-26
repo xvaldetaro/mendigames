@@ -79,7 +79,7 @@
 </div>
 <div class="row-fluid">
     <div class="span6">
-        <div ng-controller="CharacterController" ng-repeat="(chi, ch) in characterList" class="row-fluid character-block">
+        <div ng-controller="CharacterController" ng-repeat="(chi, ch) in characterList" class="row-fluid character-block {{ch.type}}">
             <div class="row-fluid">
                 <div class="span2">
                     <div class="row-fluid name-container">
@@ -122,12 +122,14 @@
                         <div class="span4">
                             <div class="row-fluid">
                                 <div class="span10">
-                                    <div ng-click="hp_dialog()" class="stat-number hp">
-                                        <p>{{ch|total_hp}}</p>
+                                    <div ng-click="hp_dialog()" class="stat-number hp {{ch.type}}">
+                                        <p ng-show="ch.type != 'Enemy'">{{ch|total_hp}}</p>
+                                        <p ng-show="ch.type == 'Enemy' && !Och.incapacitated(ch)">{{ch.used_hit_points}}</p>
+                                        <p ng-show="ch.type == 'Enemy' && Och.incapacitated(ch)">XX</p>
                                     </div>
                                 </div>
                                 <div class="span2">
-                                    &nbsp;<i ng-show="Och.bloodied(ch)" class="icon-tint"></i>
+                                    &nbsp;<i ng-show="Och.bloodied(ch)" class="icon-tint icon-white"></i>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +140,7 @@
                         </div>
                         
                         <div class="span3">
-                            <div ng-click="spend_hs(ch)" class="stat-number hs">
+                            <div ng-click="spend_hs(ch)" ng-show="ch.type == 'Player'" class="stat-number hs">
                                 <p>{{ch|total_hs}}</p>
                             </div>
                         </div>

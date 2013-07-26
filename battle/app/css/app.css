@@ -68,16 +68,25 @@ div.condition-box {
     background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
 
 div.character-block {
-  background: #f8f8f8;
   border: 1px solid lightgray;
-  border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px;
   border-radius: 5px;
   padding-top: 0px;
   padding: 2px;
-  margin-bottom: 5px;
-  color: #333333; }
+  margin-bottom: 5px; }
+  div.character-block.Player {
+    background: #003b6f;
+    color: #f8f8f8;
+    border-color: #dddddd; }
+  div.character-block.Enemy {
+    background: #961334;
+    color: #f8f8f8;
+    border-color: #d5d5d5; }
+  div.character-block.Neutral {
+    background: #333333;
+    color: #f8f8f8;
+    border-color: #d5d5d5; }
 
 div.name-container {
   font-family: 'Rum Raisin', cursive;
@@ -124,7 +133,7 @@ div.inline {
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #c3ba48), color-stop(50%, #a79e37), color-stop(100%, #cec76b));
       background-image: -webkit-radial-gradient(#c3ba48, #a79e37, #cec76b);
       background-image: radial-gradient(  #c3ba48, #a79e37, #cec76b); }
-  .stat-number.hp {
+  .stat-number.hp.Player, .stat-number.hp.Neutral {
     background-image: -webkit-linear-gradient(bottom, #982b26, #d24f48);
     background-image: linear-gradient(to top, #982b26, #d24f48);
     cursor: pointer;
@@ -133,11 +142,25 @@ div.inline {
     border-color: #dddddd;
     border-radius: 3px;
     color: white; }
-    .stat-number.hp:hover {
+    .stat-number.hp.Player:hover, .stat-number.hp.Neutral:hover {
       background-color: #bd362f;
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #bd362f), color-stop(50%, #982b26), color-stop(100%, #d24f48));
       background-image: -webkit-radial-gradient(#bd362f, #982b26, #d24f48);
       background-image: radial-gradient(  #bd362f, #982b26, #d24f48); }
+  .stat-number.hp.Enemy {
+    background-image: -webkit-linear-gradient(bottom, #441533, #8a2b69);
+    background-image: linear-gradient(to top, #441533, #8a2b69);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px;
+    color: white; }
+    .stat-number.hp.Enemy:hover {
+      background-color: #67204e;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #67204e), color-stop(50%, #441533), color-stop(100%, #8a2b69));
+      background-image: -webkit-radial-gradient(#67204e, #441533, #8a2b69);
+      background-image: radial-gradient(  #67204e, #441533, #8a2b69); }
   .stat-number.ap {
     background-image: -webkit-linear-gradient(bottom, #002341, #00539d);
     background-image: linear-gradient(to top, #002341, #00539d);

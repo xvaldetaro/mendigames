@@ -47,14 +47,17 @@ class GroupViewSet(viewsets.ModelViewSet):
 class RevListView(generics.ListCreateAPIView):
     renderer_classes = (RevJSONRenderer,)
 
-    def delete(self, request, format=None):
-        queryset = self.get_queryset()
-        queryset.delete()
+    def increase_revision(self):
         revision = cache.get('revision')
         if not revision:
             cache.set('revision', 1, 200000)
             revision = 1
         cache.set('revision', revision+1)
+
+    def delete(self, request, format=None):
+        queryset = self.get_queryset()
+        queryset.delete()
+        self.increase_revision()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
@@ -78,6 +81,7 @@ class RevListView(generics.ListCreateAPIView):
         data = self.request.DATA
         queryset = self.get_queryset()
         queryset.update(**data)
+        self.increase_revision()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

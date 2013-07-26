@@ -313,6 +313,11 @@ function(EM, EMController, roll, Restangular) {
             return true;
         return false;
     }
+    function incapacitated(c){
+        if(c.used_hit_points >= c.hit_points)
+            return true;
+        return false;
+    }
     function recharge_encounters(c, promise) {
         for (var i = c._has_powers.length - 1; i >= 0; i--) {
             if(c._has_powers[i]._power.usage == 'E')
@@ -388,7 +393,8 @@ function(EM, EMController, roll, Restangular) {
         clear_conditions: clear_conditions,
         remove_condition: remove_condition,
         add_condition: add_condition,
-        delete_character: delete_character
+        delete_character: delete_character,
+        incapacitated: incapacitated
     };
 }]).
 // Operator for HasPowers

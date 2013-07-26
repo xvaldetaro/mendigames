@@ -152,8 +152,8 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','roll','Log','$routeParams','$rootScope',
-function($scope, EM, roll, Log, $routeParams, $rootScope) {
+.controller('MenuController', ['$scope', 'EM','roll','Log','$routeParams','$dialog',
+function($scope, EM, roll, Log, $routeParams, $dialog) {
     $scope.diceMult = 1;
     $scope.roll = function(dice) {
         var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
@@ -167,29 +167,50 @@ function($scope, EM, roll, Log, $routeParams, $rootScope) {
         Log(logStr);
     };
     $scope.enemyCount = 0;
-    $scope.add_enemy = function() {
-        var enemy = {
-            campaign: $routeParams.campaignId,
-            type: 'Enemy',
-            name: 'Enemy'+$scope.enemyCount++
-        };
-        EM.add('character', enemy);
-    };
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');
     });
+    $scope.add_enemy = function(){
+        var d = $dialog.dialog({
+            templateUrl:  '/static/battle/partials/dialogs/enemy.html',
+            controller: 'EnemyDialogController'
+        });
+        d.open().then(function(result){
+          if(result)
+          {
+            Log('Enemy added');
+            EM.add('character', enemy);
+          }
+        });
+    };
 }])
 
-.controller('ModalController', ['$scope', 'WizardsService',
-    function($scope, WizardsService) {
-        $scope.wizardsModal = false;
-        $scope.close = function() { $scope.wizardsModal = false; }
-        $scope.$on('WizardsService.fetching', function(event, detailTag) {
-            $scope.wizardsModal = true;
-        });
-        $scope.$on('WizardsService.fetch', function(event, detailTag) {
-            $scope.detailTag = detailTag.html();
-        });
+.controller('EnemyDialogController', ['$scope', 'dialog',
+    function($scope, dialog) {
+        $scope.close = function(){
+            if(!$scope.enemy.hit_points || $scope.enemy.hit_points == ""){
+                window.alert('Invalid Hp');
+                return;
+            }
+            if(!$scope.enemy.init_mod || $scope.enemy.init_mod == ""){
+                $scope.enemy.init_mod = 0;
+            }
+            if(!$scope.enemy.ap || $scope.enemy.ap == ""){
+                $scope.enemy.ap = 0;
+            }
+            if(!$scope.enemy.count || $scope.enemy.count == ""){
+                $scope.enemy.count = 1;
+            }
+            dialog.close($scope.enemy);
+        };
+        $scope.hp_show = 'password';
+        $scope.enemy = {
+            name: 'Enemy',
+            hit_points: "",
+            init_mod: "",
+            ap: '',
+            count: 1
+        };
 }])
 
 .controller('InitDialogController', ['$scope', 'dialog', 'roll',
@@ -252,4 +273,17 @@ function($scope, EM, roll, Log, $routeParams, $rootScope) {
         $scope.mods = mods;
         $scope.input = "";
 }])
+
+.controller('ModalController', ['$scope', 'WizardsService',
+    function($scope, WizardsService) {
+        $scope.wizardsModal = false;
+        $scope.close = function() { $scope.wizardsModal = false; }
+        $scope.$on('WizardsService.fetching', function(event, detailTag) {
+            $scope.wizardsModal = true;
+        });
+        $scope.$on('WizardsService.fetch', function(event, detailTag) {
+            $scope.detailTag = detailTag.html();
+        });
+}])
+
 ;
