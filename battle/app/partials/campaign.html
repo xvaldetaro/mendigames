@@ -78,7 +78,17 @@
                 <div class="btn" ng-click="add_enemy()">+Enemy</div>
                 <div class="btn" ng-click="clear_enemies()">-Enemies</div>
             </div>
-            
+            <h4>Mass Control</h4>
+            <div class="row-fluid">
+                <div class="btn" ng-click="mass_clear_conditions()">Clear Conditions</div>
+                <div class="btn" ng-click="mass_short_rest()">Short Rest</div>
+                <div class="btn" ng-click="mass_extended_rest()">Extended Rest</div>
+                <div class="btn" ng-click="mass_milestone()">Milestone</div>
+                <div class="btn" ng-click="split_gold()">Split Gold</div>
+                <div class="btn" ng-click="mass_give_gold()">Give Gold</div>
+                <div class="btn" ng-click="split_xp()">Split XP</div>
+                <div class="btn" ng-click="mass_give_xp()">Give XP</div>
+            </div>
         </div>
     </div>
 </div>
@@ -94,7 +104,13 @@
                         {{ch.name}}
                     </div>
                 </div>
-                <div class="span9">
+                <div class="span1">
+                    Gold: {{ch.gold}}
+                </div>
+                <div class="span1">
+                    XP: {{ch.experience_points}}
+                </div>
+                <div class="span7">
                     <div class="row-fluid has-conditions-box" data-drop="true" ng-model='droppedConditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
                         <div ng-repeat="(hci, hco) in ch._has_conditions" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}} I:{{hco.started_init}} R:{{hco.started_round}} ">
                             <i class="{{hco._condition|condition_icon}} icon-white"></i>

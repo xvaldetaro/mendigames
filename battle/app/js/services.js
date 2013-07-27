@@ -320,45 +320,55 @@ function(EM, EMController, roll, Restangular) {
             c.used_hit_points = 0;
         else if(c.used_hit_points > c.hit_points+c.hit_points/3)
             c.used_hit_points = c.hit_points+c.hit_points/3;
-        save(c);
+        return save(c);
     }
     function set_init(c, value){
         c.init = parseInt(value);
-        save(c);
+        return save(c);
     }
     function roll_init(c, mod){
         c.init = roll(mod, dice);
-        save(c);
+        return save(c);
     }
     function change_xp(c, value){
         c.experience_points = c.experience_points+parseInt(value);
-        save(c);
+        return save(c);
     }
     function change_gold(c, value){
         c.gold = c.gold+parseInt(value);
-        save(c);
+        return save(c);
+    }
+    function _short_rest_stats(c){
+        c.milestones = c.milestones-c.milestones%2;
+        return save(c);
     }
     function short_rest(c){
-        c.milestones = c.milestones-c.milestones%2;
-        recharge_encounters(c, save(c));
+        _short_rest_stats(c).then(function(){
+            recharge_encounters(c);
+        });
     }
-    function extended_rest(c){
+    function _extended_rest_stats(c){
         c.milestones = 0;
         c.used_action_points = 0;
         c.used_healing_surges = 0;
-        recharge_powers(c, save(c));
+        return save(c);
+    }
+    function extended_rest(c){
+        _extended_rest_stats(c).then(function(){
+            recharge_powers(c);
+        });
     }
     function spend_ap(c){
         c.used_action_points = c.used_action_points+1;
-        save(c);
+        return save(c);
     }
     function spend_hs(c){
         c.used_healing_surges = c.used_healing_surges+1;
-        save(c);
+        return save(c);
     }
     function milestone(c){
         c.milestones = c.milestones+1;
-        save(c);
+        return save(c);
     }
     function bloodied(c){
         if(c.used_hit_points*2 > c.hit_points)
@@ -370,36 +380,23 @@ function(EM, EMController, roll, Restangular) {
             return true;
         return false;
     }
-    function recharge_encounters(c, promise) {
+    function recharge_encounters(c) {
         for (var i = c._has_powers.length - 1; i >= 0; i--) {
             if(c._has_powers[i]._power.usage == 'E')
                 c._has_powers[i].used = false;
         }
-        if(promise)
-            return promise.then(function() {
-                EMController.update_list('has_power', {character: c.id, power__usage: 'E'},
-                    {used: false});
-            });
         return EMController.update_list('has_power', {character: c.id, power__usage: 'E'},
          {used: false});
     }
-    function recharge_powers(c, promise) {
+    function recharge_powers(c) {
         for (var i = c._has_powers.length - 1; i >= 0; i--) {
             c._has_powers[i].used = false;
         }
-        if(promise)
-            return promise.then(function() {
-                EMController.update_list('has_power', {character: c.id},{used: false});
-            });
         return EMController.update_list('has_power', {character: c.id}, {used: false});
     }
-    function clear_conditions(c, promise) {
+    function clear_conditions(c) {
         c.has_conditions = [];
         c._has_conditions = [];
-        if(promise)
-            return promise.then(function() {
-                EMController.remove_list('has_condition', {character: c.id});
-            });
         return EMController.remove_list('has_condition', {character: c.id});
     }
     function remove_condition(c, hci) {
@@ -438,6 +435,8 @@ function(EM, EMController, roll, Restangular) {
         change_gold: change_gold,
         short_rest: short_rest,
         extended_rest: extended_rest,
+        _short_rest_stats: _short_rest_stats,
+        _extended_rest_stats: _extended_rest_stats,
         spend_ap: spend_ap,
         spend_hs: spend_hs,
         milestone: milestone,
@@ -465,8 +464,8 @@ function(EM, WizardsService) {
     };
 }]).
 
-factory('Ocam', ['EM',
-function(EM) {
+factory('Ocam', ['EM','EMController','Och',
+function(EM, EMController, Och) {
     function next(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -503,12 +502,79 @@ function(EM) {
         }
         cam.turn = len-1;
     }
+    function _get_players(characterList) {
+        var playerList = [];
+        for (var i = characterList.length - 1; i >= 0; i--) {
+            if(characterList[i].type=='Player')
+                playerList.push(characterList[i]);
+        }
+        return playerList;
+    }
+    function _call_foreach(list, fName, param){
+        var promises = []
+        for (var i = list.length - 1; i >= 0; i--) {
+            promises.push(Och[fName](list[i], param));
+        }
+        return Q.all(promises);
+    }
+    function split_gold(cam, characterList, value) {
+        var playerList = _get_players(characterList);
+        var share = Math.floor(value/playerList.length);
+        var leftover = value%playerList.length;
+        var lucky = _.random(0, playerList.length-1);
+        playerList[lucky].gold += leftover;
+        return _call_foreach(playerList, 'change_gold', share);
+    }
+    function mass_give_gold(cam, characterList, value) {
+        var playerList = _get_players(characterList);
+        return _call_foreach(playerList, 'change_gold', value);
+    }
+    function split_xp(cam, characterList, value) {
+        var playerList = _get_players(characterList);
+        var share = Math.floor(value/playerList.length);
+        return _call_foreach(playerList, 'change_xp', share);
+    }
+    function mass_give_xp(cam, characterList, value) {
+        var playerList = _get_players(characterList);
+        return _call_foreach(playerList, 'change_xp', value);
+    }
+    function mass_clear_conditions(cam, characterList) {
+        for (var i = characterList.length - 1; i >= 0; i--) {
+            var c = characterList[i];
+            c.has_conditions = [];
+            c._has_conditions = [];
+        }
+        return EMController.remove_list('has_condition', {character__campaign: cam.id});
+    }
+    function mass_milestone(characterList){
+        return _call_foreach(characterList, 'milestone');
+    }
+    function mass_short_rest(cam, characterList){
+        return _call_foreach(characterList, '_short_rest_stats').then(function(){
+            EMController.update_list('has_power',
+            {character__campaign: cam.id, power__usage: 'E'},{used: false});
+        });
+    }
+    function mass_extended_rest(cam, characterList){
+        _call_foreach(characterList, '_extended_rest_stats').then(function(){
+            EMController.update_list('has_power',
+            {character__campaign: cam.id},{used: false});
+        });
+    }
     return {
         next: next,
         set_round: set_round,
         normalize_turn: normalize_turn,
         reorder: reorder,
-        find_turn: find_turn
+        find_turn: find_turn,
+        split_gold: split_gold,
+        mass_give_gold: mass_give_gold,
+        split_xp: split_xp,
+        mass_give_xp: mass_give_xp,
+        mass_clear_conditions: mass_clear_conditions,
+        mass_short_rest: mass_short_rest,
+        mass_extended_rest: mass_extended_rest,
+        mass_milestone: mass_milestone
     };
 }]).
 

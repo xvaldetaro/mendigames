@@ -207,6 +207,50 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
           }
         });
     };
+    var inputDialog = $dialog.dialog({
+        templateUrl:  '/static/battle/partials/dialogs/input.html',
+        controller: 'InputDialogController'
+    });
+    $scope.split_gold = function () {
+        inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.split_gold($scope.campaign, $scope.characterList, result);
+        });
+    };
+    $scope.mass_give_gold = function () {
+        inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.mass_give_gold($scope.campaign, $scope.characterList, result);
+        });
+    };
+    $scope.split_xp = function () {
+        inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.split_xp($scope.campaign, $scope.characterList, result);
+        });
+    };
+    $scope.mass_give_xp = function () {
+        inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.mass_give_xp($scope.campaign, $scope.characterList, result);
+        });
+    };
+    $scope.mass_clear_conditions = function(){
+        Ocam.mass_clear_conditions($scope.campaign, $scope.characterList);
+    };
+    $scope.mass_short_rest = function(){
+        Ocam.mass_short_rest($scope.campaign, $scope.characterList);
+    };
+    $scope.mass_extended_rest = function(){
+        Ocam.mass_extended_rest($scope.campaign, $scope.characterList);
+    };
+    $scope.mass_milestone = function(){
+        Ocam.mass_milestone($scope.characterList);
+    };
 }])
 
 .controller('EnemyDialogController', ['$scope', 'dialog',
@@ -298,10 +342,17 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
         $scope.input = "";
 }])
 
+.controller('InputDialogController', ['$scope', 'dialog',
+    function($scope, dialog) {
+        $scope.close = function() {
+            dialog.close($scope.input);
+        };
+}])
+
 .controller('ModalController', ['$scope', 'WizardsService',
     function($scope, WizardsService) {
         $scope.wizardsModal = false;
-        $scope.close = function() { $scope.wizardsModal = false; }
+        $scope.close = function() { $scope.wizardsModal = false; };
         $scope.$on('WizardsService.fetching', function(event, detailTag) {
             $scope.wizardsModal = true;
         });
