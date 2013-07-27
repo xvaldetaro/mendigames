@@ -318,10 +318,10 @@ class wizards():
 
 
 w = wizards("/home/xande/Documents")
-# w.persist_all_trait_sources()
-# w.persist_all_powers()
-# w.persist_items()
-#w.persist_monsters()
+w.persist_all_trait_sources()
+w.persist_all_powers()
+w.persist_items()
+w.persist_monsters()
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')
 #w.check_value('power', 'power', 'Name')
 w.persist_conditions()

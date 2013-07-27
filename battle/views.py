@@ -15,11 +15,7 @@ class RevJSONRenderer(renderers.JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response_data = {}
         response_data['data'] = data
-        revision = cache.get('revision')
-        if not revision:
-            cache.set('revision', 1, 200000)
-            revision = 1
-        response_data['revision'] = revision
+        response_data['revision'] = cache.get('revision', 0)
         response = super(RevJSONRenderer, self).render(response_data, accepted_media_type, renderer_context)
         return response
 
@@ -47,18 +43,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class RevListView(generics.ListCreateAPIView):
     renderer_classes = (RevJSONRenderer,)
 
-    def increase_revision(self):
-        revision = cache.get('revision')
-        if not revision:
-            cache.set('revision', 1, 200000)
-            revision = 1
-        cache.set('revision', revision+1)
-
     def delete(self, request, format=None):
         queryset = self.get_queryset()
         queryset.delete()
-        self.increase_revision()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        self.get_serializer().save_revision()
+        return Response(data={})
 
     def get_queryset(self):
         queryset = super(RevListView, self).get_queryset()
@@ -101,25 +90,28 @@ class RevListView(generics.ListCreateAPIView):
         data = self.request.DATA
         queryset = self.get_queryset()
         queryset.update(**data)
-        self.increase_revision()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        self.get_serializer().save_revision()
+        return Response(data={})
 
 
 class RevDetailView(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = (RevJSONRenderer,)
 
     def destroy(self, request, *args, **kwargs):
-        revision = cache.get('revision')
-        if not revision:
-            cache.set('revision', 1, 200000)
-            revision = 1
-        cache.set('revision', revision+1)
-        return super(RevDetailView, self).destroy(request, *args, **kwargs)
+        self.get_serializer().save_revision()
+        super(RevDetailView, self).destroy(request, *args, **kwargs)
+        return Response(data={})
 
 
 class RevView(APIView):
     def get(self, request, format=None):
-        return Response({'revision': cache.get('revision')})
+        revision = cache.get('revision', 0)
+        previous = cache.get('previous', 0)
+        return Response({
+            'revision': revision,
+            'previous': previous,
+            'revisionUpdate': cache.get(revision, ''),
+        })
 
 
 class CharacterList(RevListView):

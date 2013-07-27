@@ -48,11 +48,16 @@ function(Restangular, $routeParams, $rootScope) {
     function list(entity) { return all[entity].list; }
     function listSlice(entity) { return all[entity].list.slice(); }
     function get_query(entity) { return emmd[entity].query; }
-
+    function update_revision(response) {
+        if(response.data && response.data.revision)
+            revision = response.data.revision;
+        else
+            revision = response.metadata.revision;
+    }
     function fetch(entity) {
         return Q(Restangular.all(entity).getList(get_query(entity)))
         .then(function(el) {
-            revision = el.metadata.revision;
+            update_revision(el);
             all[entity].list.length = 0;
             all[entity].edict = {};
 
@@ -75,11 +80,15 @@ function(Restangular, $routeParams, $rootScope) {
         for (var i = eList.length - 1; i >= 0; i--) {
             promiseArray.push(fetch(eList[i]));
         }
-        pollPromise = Q.all(promiseArray).then(function(){
-            merge_related_multiple(eList);
-        }).fin(function(){
-            polling = false;
-            $rootScope.$apply();
+
+        console.log('Requesting fetch all');
+        pollPromise = async_request(function(){
+            return Q.all(promiseArray).then(function(){
+                console.log('Received FetchAll response');
+                merge_related_multiple(eList);
+                polling = false;
+                return {data: {revision: revision}};
+            });
         });
         return pollPromise;
     }
@@ -113,23 +122,40 @@ function(Restangular, $routeParams, $rootScope) {
             }
         }
     }
-    function update(entity, instance) {
-        return Q(instance.put())
-        .then(function(instance) {
-            revision++;
-        })
-        .fail(function() {
-            window.alert('Connection failed when updating');
-        });
+    function on_response(response) {
+        update_revision(response);
+            console.log('-- Revision: '+revision);
+            return response;
     }
-    function add(entity, e, callback) {
+    function on_response_err(error){
+        window.alert(error.message);
+    }
+    function on_response_fin() {
+        console.log('Ok! finishing request and applying');
+        $rootScope.$apply();
+    }
+    // Expects a function that executes a request and returns a promise
+    function async_request(func) {
+        var defer = Q.defer();
+        setTimeout(function(){
+            func().then(function(response) {
+                defer.resolve(response);
+            },function(error) {
+                defer.reject(error);
+            });
+        },0);
+        return defer.promise.then(on_response).fail(on_response_err).fin(on_response_fin);
+    }
+    function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
         var i = entData.list.length-1;
-        setTimeout(function(){
-            Q(Restangular.all(entity).post(e))
+
+        console.log('Requesting add '+entity);
+        return async_request(function() {
+            return Restangular.all(entity).post(e)
             .then(function(newE) {
-                revision++;
+                console.log('Received Add '+entity+' response');
                 entData.list[i] = newE;
                 entData.edict[newE[get_pk(entity)]] = newE;
 
@@ -137,30 +163,21 @@ function(Restangular, $routeParams, $rootScope) {
                 for(var j = relatedList.length - 1; j >= 0; j--) {
                     fill_related_type([newE], relatedList[j]);
                 }
-
-                if(callback)
-                    callback(newE);
+                console.log('Added '+entity+' with proper response');
                 return newE;
-            })
-            .fail(function() {
-                window.alert('Connection failed when adding');
-            })
-            .fin(function() {
-                $rootScope.$apply();
             });
-        },0);
+        });
     }
     function remove(entity, instance, i) {
         var entData = all[entity], pk = get_pk(entity);
         entData.list.splice(i, 1);
         delete entData.edict[instance[pk]];
-        return Q(instance.remove())
-        .then(function(){
-            revision++;
-        })
-        .fail(function(){
-            window.alert('Connection failed when removing');
-        });
+        console.log('Requesting Remove '+entity);
+        return async_request(function(){ return instance.remove(); });
+    }
+    function update(entity, instance) {
+        console.log('Requesting Update '+entity);
+        return async_request(function(){ return instance.put(); });
     }
     function set_all_entity_metadata(metadata) {
         emmd = metadata;
@@ -185,7 +202,7 @@ function(Restangular, $routeParams, $rootScope) {
         fetch_multiple: fetch_multiple,
         set_all_entity_metadata: set_all_entity_metadata,
         get_revision: get_revision,
-        increase_revision: increase_revision,
+        async_request: async_request
     };
 }]).
 
@@ -193,6 +210,7 @@ factory('EMController', ['EM','$http','$rootScope','$timeout','$routeParams',
 function(EM, $http, $rootScope,$timeout,$routeParams) {
     var revision;
     var entitiesMetadata = {
+        'campaign': {pk: 'id', related: [], query: {}},
         'condition': {pk: 'name', related: [], query: {}},
         'power': {pk: 'name', related: [], query: {haspower__isnull: false}},
         'has_condition': {pk: 'id', related: ['condition'],
@@ -203,6 +221,7 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
             query: {campaign: $routeParams.campaignId}}
     };
     var initEntities = [
+        'campaign',
         'condition',
         'power',
         'has_condition',
@@ -212,7 +231,8 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
     var syncEntities = [
         'has_condition',
         'has_power',
-        'character'
+        'character',
+        'campaign'
     ];
     function poll() {
         $http.get('/battle/rev').success(function(data,status,headers,config){
@@ -220,38 +240,49 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
                 start_poll_timeout();
                 return;
             }
+            var localRev = EM.get_revision(), remoteRev = data.revision, 
+                prev = data.previous, changed = data.revisionUpdate;
 
-            EM.fetch_multiple(syncEntities).then(broadcast).then(start_poll_timeout);
+            if(localRev!=prev) // more than 1 revision behind, poll everything 
+                EM.fetch_multiple(syncEntities).then(broadcast).then(start_poll_timeout);
         });
     }
     function start_poll_timeout(){
         //$timeout(poll, 2000);
     }
-    function broadcast() {
-        //$rootScope.$broadcast('EM.update');
-    }
     function remove_list(entity, query) {
-        setTimeout(function(){
-            $http.delete('/battle/'+entity, {params: query}).success(function() {
+        return EM.async_request(function(){
+            console.log('Requesting Remove '+entity+' list');
+            return Q($http.delete('/battle/'+entity, {params: query}))
+            .then(function(response) {
+                console.log('Received Remove '+entity+' list response');
                 EM.fetch_multiple(syncEntities);
+                return response;
             });
-        },0);
+        });
     }
     function update_list(entity, query, data) {
-        var deferred = Q.defer();
-        $http.put('/battle/'+entity, data, {params: query}).success(function() {
-            deferred.resolve();
-        });
-        return deferred.promise.then(function(){
-            EM.fetch_multiple(syncEntities).then(broadcast);
+        return EM.async_request(function(){
+            console.log('Requesting Update '+entity+' list');
+            return Q($http.put('/battle/'+entity, data, {params: query}))
+            .then(function(response) {
+                console.log('Received Update '+entity+' list response');
+                return response;
+            });
+        }).then(function(){
+            EM.fetch_multiple(syncEntities);
         });
     }
     function add_list(entity, data){
-        setTimeout(function(){
-            $http.post('/battle/'+entity, data, {params: {many: true}}).success(function() {
+        return EM.async_request(function(){
+            console.log('Requesting Add '+entity+' list');
+            return Q($http.post('/battle/'+entity, data, {params: {many: true}}))
+            .then(function(response) {
+                console.log('Received add '+entity+' list response');
                 EM.fetch_multiple(syncEntities);
+                return response;
             });
-        },0);
+        });
     }
     function init() {
         EM.set_all_entity_metadata(entitiesMetadata);
@@ -420,25 +451,7 @@ function(EM, WizardsService) {
         }
     };
 }]).
-// Operator for HasPowers
-factory('Ohco', ['WizardsService',
-function(WizardsService) {
-    return {
-        save: function(h) {
-            h.put();
-        },
-        get_condition: function(h) {
-            h._condition = ConditionCatalog.getItem(h.condition);
-        },
-        remove: function(h) { 
-            Restangular.one('has_condition', h.id)
-            .remove().then(null, function() {window.alert("No sync");});
-        },
-        fetch_from_compendium: function(h){
-            WizardsService.fetch(h._.wizards_id, 'power');
-        }
-    };
-}]).
+
 config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/battle");
     RestangularProvider.setResponseExtractor(function(response, operation, what, url) {

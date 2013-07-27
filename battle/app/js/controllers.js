@@ -39,9 +39,17 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM, EMCon
         $scope.$apply(function(){
             $scope.characterList = EM.list('character');
             $scope.conditionList = EM.listSlice('condition');
+            $scope.campaign = EM.by_key('campaign', $scope.campaignId);
         });
     });
-
+    function init_sort(c1, c2){
+        return c2.init - c1.init;
+    }
+    $scope.sort_character_list = function(){
+        $scope.characterList.sort(init_sort);
+    }
+    $scope.currentRound = 0;
+    $scope.currentTurn = 0;
     Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
         $scope.campaign = campaign;
         $scope.$watch('campaign', function(newValue,oldValue){
@@ -125,9 +133,7 @@ function($scope, $rootScope, $dialog, Och, Log) {
     };
     $scope.remove_condition = function(hci){
         var name = $scope.ch._has_conditions[hci].condition;
-        Och.remove_condition($scope.ch, hci).fail(function() {
-            window.alert('Connection failed, condition not removed');
-        });
+        Och.remove_condition($scope.ch, hci)
 
         Log($scope.ch.name+' is not: '+name+' anymore');
     };

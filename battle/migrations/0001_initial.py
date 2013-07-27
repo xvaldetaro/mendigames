@@ -13,6 +13,8 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(default='Unnamed', max_length=20)),
             ('text', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('round', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            ('turn', self.gf('django.db.models.fields.IntegerField')(default=1)),
         ))
         db.send_create_signal(u'battle', ['Campaign'])
 
@@ -46,6 +48,7 @@ class Migration(SchemaMigration):
         db.create_table(u'battle_character', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('campaign', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Campaign'])),
+            ('type', self.gf('django.db.models.fields.CharField')(default='Player', max_length=7)),
             ('name', self.gf('django.db.models.fields.CharField')(default='Unnamed', max_length=20)),
             ('healing_surges', self.gf('django.db.models.fields.IntegerField')(default=6)),
             ('hit_points', self.gf('django.db.models.fields.IntegerField')(default=30)),
@@ -56,6 +59,7 @@ class Migration(SchemaMigration):
             ('used_healing_surges', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('used_hit_points', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('init', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('monster', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['battle.Monster'], null=True, blank=True)),
         ))
         db.send_create_signal(u'battle', ['Character'])
 
@@ -230,10 +234,12 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Campaign'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "'Unnamed'", 'max_length': '20'}),
-            'text': ('django.db.models.fields.TextField', [], {'blank': 'True'})
+            'round': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
+            'text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'turn': ('django.db.models.fields.IntegerField', [], {'default': '1'})
         },
         u'battle.character': {
-            'Meta': {'ordering': "['-init']", 'object_name': 'Character'},
+            'Meta': {'ordering': "['-init', 'name']", 'object_name': 'Character'},
             'campaign': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Campaign']"}),
             'experience_points': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'gold': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
@@ -242,7 +248,9 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'init': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'milestones': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'monster': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['battle.Monster']", 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "'Unnamed'", 'max_length': '20'}),
+            'type': ('django.db.models.fields.CharField', [], {'default': "'Player'", 'max_length': '7'}),
             'used_action_points': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'used_healing_surges': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'used_hit_points': ('django.db.models.fields.IntegerField', [], {'default': '0'})

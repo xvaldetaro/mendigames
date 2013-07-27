@@ -4,6 +4,8 @@ from django.db import models
 class Campaign(models.Model):
     name = models.CharField(max_length=20, default='Unnamed')
     text = models.TextField(blank=True)
+    round = models.IntegerField(default=1)
+    turn = models.IntegerField(default=1)
 
     def __unicode__(self):
         return self.name
