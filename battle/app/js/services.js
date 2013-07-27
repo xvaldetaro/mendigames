@@ -409,20 +409,22 @@ function(EM, EMController, roll, Restangular) {
 
         return EM.remove('has_condition', hco);
     }
-    function add_condition(ch, co) {
+    function add_condition(ch, co, init, round) {
         var hasCondition = {
             character: ch.id,
             condition: co.name,
             ends: 'T',
-            started_round: 1,
-            started_init: 1,
+            started_round: round,
+            started_init: init,
             _condition: co,
             needSync: true
         };
 
         ch._has_conditions.push(hasCondition);
         var i = ch._has_conditions.length-1;
-        return EM.add('has_condition', hasCondition);
+        return EM.add('has_condition', hasCondition).then(function(newE){
+            ch._has_conditions[i] = newE;
+        });
     }
     function delete_character(chi, c) {
         return EM.remove('character', c, chi);

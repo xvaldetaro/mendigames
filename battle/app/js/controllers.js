@@ -128,7 +128,8 @@ function($scope, $rootScope, $dialog, Och, Log) {
     $scope.condition_drop = function(e,o) {
         // The condition dropped is the raw Restangular condition object
         var condition = $scope.droppedConditions.pop();
-        Och.add_condition($scope.ch, condition);
+        Och.add_condition($scope.ch, condition,
+            $scope.characterList[$scope.campaign.turn].init, $scope.campaign.round);
 
         Log($scope.ch.name+' is: '+condition.name);
         $rootScope.$broadcast('Condition.dropped');
