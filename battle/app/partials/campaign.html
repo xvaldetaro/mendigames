@@ -7,7 +7,7 @@
         <div class="span12">
             <h4>Conditions</h4>
             <div class="row-fluid conditions-box" data-drop="true" ng-model="conditionList">
-                <div ng-repeat="(ci, condition) in conditionList" class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-show="condition.name" data-drag="true" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" ng-model="conditionList" jqyoui-draggable="{index: {{$index}}}" ng-click="fetch_from_compendium(condition.wizards_id, 'glossary')">
+                <div ng-repeat="(ci, condition) in conditionList" class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-show="condition.name" data-drag="true" data-jqyoui-options="{revert: 'invalid', helper: 'clone'}" ng-model="conditionList" jqyoui-draggable="{index: {{$index}}}" ng-click="fetch_from_compendium(condition, 'glossary')">
                     <i class="{{condition|condition_icon}} icon-white"></i>
                 </div>
             </div>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="span6">
                     <div class="power-container">
-                        <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower.power}} - {{hasPower._power.action}}">
+                        <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._power.name}} - {{hasPower._power.action}}">
                             {{hasPower._power.level}}
                         </div>
                     </div>

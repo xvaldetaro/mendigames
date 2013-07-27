@@ -120,7 +120,7 @@ function($scope, $rootScope, $dialog, Och, Log) {
         });
     };
     $scope.remove_condition = function(hci){
-        var name = $scope.ch._has_conditions[hci].condition;
+        var name = $scope.ch._has_conditions[hci]._condition.name;
         Och.remove_condition($scope.ch, hci)
 
         Log($scope.ch.name+' is not: '+name+' anymore');
@@ -141,15 +141,15 @@ function($scope, EM, Ohpo, Log) {
     $scope.use_power = function(){
         Ohpo.use_power($scope.hasPower);
         if($scope.hasPower.used)
-            Log($scope.ch.name+' used: '+$scope.hasPower.power);
+            Log($scope.ch.name+' used: '+$scope.hasPower._power.name);
         else
-            Log($scope.ch.name+' recharged: '+$scope.hasPower.power);
+            Log($scope.ch.name+' recharged: '+$scope.hasPower._power.name);
     };
 }])
 
 .controller('MenuController', ['$scope', 'EM','roll','Log','$dialog', 'EMController',
-'Ocam',
-function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
+'Ocam','WizardsService',
+function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -174,6 +174,9 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
     $scope.$on('Condition.dropped', function() {
         $scope.conditionList = EM.listSlice('condition');
     });
+    $scope.fetch_from_compendium = function(condition) {
+        WizardsService.fetch(condition.wizards_id, 'glossary', 'condition',condition);
+    }
     $scope.clear_enemies = function(){
         EMController.remove_list('character', {campaign: $scope.campaignId,
             type: 'Enemy'});
@@ -353,11 +356,9 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
     function($scope, WizardsService) {
         $scope.wizardsModal = false;
         $scope.close = function() { $scope.wizardsModal = false; };
-        $scope.$on('WizardsService.fetching', function(event, detailTag) {
-            $scope.wizardsModal = true;
-        });
         $scope.$on('WizardsService.fetch', function(event, detailTag) {
-            $scope.detailTag = detailTag.html();
+            $scope.wizardsModal = true;
+            $scope.detailTag = detailTag;
         });
 }])
 

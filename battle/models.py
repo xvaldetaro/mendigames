@@ -11,20 +11,10 @@ class Campaign(models.Model):
         return self.name
 
 
-class Book(models.Model):
-    name = models.CharField(max_length=60, primary_key=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['name']
-
-
 class BookEntry(models.Model):
-    name = models.CharField(max_length=60, primary_key=True)
+    name = models.CharField(max_length=60)
     wizards_id = models.IntegerField(default=1)
-    books = models.ManyToManyField(Book)
+    html_description = models.TextField(blank=True)
     class Meta:
         abstract = True
 

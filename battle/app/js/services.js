@@ -10,10 +10,18 @@ angular.module('battle.services', ['restangular']).
             log: log
         };
     };}).
-    factory('WizardsService', ['$rootScope', '$http', function($rootScope, $http){
+    factory('WizardsService', ['$rootScope', '$http','EM',
+    function($rootScope, $http, EM){
         return {
-            fetch: function(id, model) {
+            fetch: function(id, model, entity, instance) {
                 $rootScope.$broadcast('WizardsService.fetching');
+                if(instance.html_description) {
+                    $rootScope.$broadcast('WizardsService.fetch',
+                        instance.html_description);
+                    console.log('Got from db');
+                    return;
+                }
+
                 $http({
                     url: '/dndinsider/compendium/'+model+'.aspx?id='+id,
                     method: 'GET',
@@ -21,8 +29,14 @@ angular.module('battle.services', ['restangular']).
                 }).
                 success(function(data){
                     var fakedom = $('<div></div>');
-                    fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>','<i class="icon-star"></i>'));
-                    $rootScope.$broadcast('WizardsService.fetch', $('div[id|="detail"]', fakedom));
+                    fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>',
+                        '<i class="icon-star"></i>'));
+                    var html_description = $('div[id|="detail"]', fakedom).html();
+                    if(entity){
+                        instance.html_description = html_description;
+                        EM.update(entity, instance);
+                    }
+                    $rootScope.$broadcast('WizardsService.fetch', html_description);
                 });
             }
         };
@@ -221,9 +235,9 @@ factory('EMController', ['EM','$http','$rootScope','$timeout','$routeParams',
 function(EM, $http, $rootScope,$timeout,$routeParams) {
     var revision;
     var entitiesMetadata = {
-        'campaign': {pk: 'id', related: [], query: {}},
-        'condition': {pk: 'name', related: [], query: {}},
-        'power': {pk: 'name', related: [], query: {haspower__isnull: false}},
+        'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
+        'condition': {pk: 'id', related: [], query: {}},
+        'power': {pk: 'id', related: [], query: {haspower__isnull: false}},
         'has_condition': {pk: 'id', related: ['condition'],
             query: {character__campaign: $routeParams.campaignId}},
         'has_power': {pk: 'id', related: ['power'],
@@ -409,7 +423,7 @@ function(EM, EMController, roll, Restangular) {
     function add_condition(ch, co, init, round) {
         var hasCondition = {
             character: ch.id,
-            condition: co.name,
+            condition: co.id,
             ends: 'T',
             started_round: round,
             started_init: init,

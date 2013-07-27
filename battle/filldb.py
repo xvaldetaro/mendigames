@@ -1,5 +1,5 @@
 import xmltodict
-from battle.models import Power, Item, TraitSource, Book, Monster, Condition
+from battle.models import Power, Item, TraitSource, Monster, Condition
 from string import capwords
 
 action_types = {
@@ -94,14 +94,15 @@ class wizards():
         self.xmlpath = xmlpath
         self.books = {}
         self.traitSources = {}
+        self.book_length = 0
         try:
             self.blankSource = TraitSource.objects.get(name='No Source')
         except:
             self.blankSource = TraitSource(name='No Source')
             self.blankSource.save()
 
-        for book in Book.objects.all():
-            self.books[book.name] = book
+        #for book in Book.objects.all():
+            #self.books[book.name] = book
 
         for ts in TraitSource.objects.all():
             self.traitSources[ts.name] = ts
@@ -126,7 +127,9 @@ class wizards():
 
     def goc_books(self, books_string):
         ret_books = []
-        for bookname in books_string.split(', '):
+        books = books_string.split(', ')
+        self.book_length = max(self.book_length, len(books))
+        for bookname in books:
             book = self.books.get(bookname)
             if not book:
                 try:
@@ -137,9 +140,10 @@ class wizards():
         return ret_books
 
     def add_books(self, entry, object):
-        books = self.goc_books(entry['SourceBook'])
-        for book in books:
-            object.books.add(book)
+        pass
+        #books = self.goc_books(entry['SourceBook'])
+        #for book in books:
+            #object.books.add(book)
 
     def create_trait_source(self, type_abbr, entry):
         ts = TraitSource(
