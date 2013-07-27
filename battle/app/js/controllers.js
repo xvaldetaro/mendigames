@@ -10,10 +10,26 @@ function($scope, Restangular) {
     });
 }]).
 
-controller('CampaignCtrl', ['$scope', '$rootScope', 'Log', '$timeout','Restangular', 
-'$routeParams', 'EM', 'EMController',
-function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM, EMController) {
+controller('CampaignCtrl', ['$scope', 'Log', '$timeout', '$routeParams', 'EM',
+'EMController', 'Ocam',
+function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam) {
     $scope.campaignId = $routeParams.campaignId;
+    $scope.$on('EM.new_list.character', function(){
+        var newList = EM.listSlice('character');
+        if($scope.campaign){
+            var init = $scope.characterList[$scope.campaign.turn].init;
+            Ocam.find_turn($scope.campaign, newList, init);
+        }
+        $scope.characterList = newList;
+    });
+    $scope.$on('EM.new_list.campaign', function(){
+        $scope.campaign = EM.by_key('campaign', $scope.campaignId);
+        if($scope.characterList)
+            Ocam.normalize_turn($scope.campaign, $scope.characterList);
+    });
+
+    // Bootstrap the scope
+    EM.fetch_multiple(EMController.initEntities);
 
     // Scroll to bottom of console log window when a new msg arrives
     $scope.$watch('log', function() {
@@ -25,39 +41,6 @@ function($scope, $rootScope, Log, $timeout, Restangular, $routeParams, EM, EMCon
             }, 300);
         },100);
     }, true);
-
-    // ----------- Create the polling
-    // Polls campagin details every 10sec
-    function campaign_poll(){
-        Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
-            $scope.campaign = campaign;
-            $timeout(campaign_poll,10000);
-        });
-    }
-
-    EM.fetch_multiple(EMController.initEntities).then(function(){
-        $scope.$apply(function(){
-            $scope.characterList = EM.list('character');
-            $scope.conditionList = EM.listSlice('condition');
-            $scope.campaign = EM.by_key('campaign', $scope.campaignId);
-        });
-    });
-    function init_sort(c1, c2){
-        return c2.init - c1.init;
-    }
-    $scope.sort_character_list = function(){
-        $scope.characterList.sort(init_sort);
-    }
-    $scope.currentRound = 0;
-    $scope.currentTurn = 0;
-    Restangular.one('campaign', $scope.campaignId).get().then(function(campaign){
-        $scope.campaign = campaign;
-        $scope.$watch('campaign', function(newValue,oldValue){
-            if(newValue == oldValue)
-                return;
-            newValue.put();
-        });
-    });
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
@@ -65,6 +48,11 @@ function($scope, $rootScope, $dialog, Och, Log) {
     $scope.Och = Och;
     $scope.droppedConditions = [];
 
+    $scope.has_turn = function() {
+        if($scope.chi == $scope.campaign.turn)
+            return "turn";
+        return '';
+    };
     $scope.short_rest = function(c) {
         Och.short_rest(c);
         Log(c.name+' short rested');
@@ -158,9 +146,17 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','roll','Log','$routeParams','$dialog',
-    'EMController',
-function($scope, EM, roll, Log, $routeParams, $dialog, EMController) {
+.controller('MenuController', ['$scope', 'EM','roll','Log','$dialog', 'EMController',
+'Ocam',
+function($scope, EM, roll, Log, $dialog, EMController, Ocam) {
+    $scope.$on('EM.new_list.condition', function(){
+        $scope.conditionList = EM.listSlice('condition');
+    });
+
+    $scope.next = function(){ Ocam.next($scope.campaign, $scope.characterList); };
+    $scope.set_round = function(value){ Ocam.set_round($scope.campaign, value); };
+    $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
+
     $scope.diceMult = 1;
     $scope.roll = function(dice) {
         var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
@@ -178,7 +174,7 @@ function($scope, EM, roll, Log, $routeParams, $dialog, EMController) {
         $scope.conditionList = EM.listSlice('condition');
     });
     $scope.clear_enemies = function(){
-        EMController.remove_list('character', {campaign: $routeParams.campaignId,
+        EMController.remove_list('character', {campaign: $scope.campaignId,
             type: 'Enemy'});
     };
     $scope.add_enemy = function(){
@@ -193,7 +189,7 @@ function($scope, EM, roll, Log, $routeParams, $dialog, EMController) {
                     hit_points: dialogData.hit_points,
                     ap: -1*(dialogData.ap-1),
                     type: 'Enemy',
-                    campaign: $routeParams.campaignId
+                    campaign: $scope.campaignId
                 };
         }
         d.open().then(function(result){

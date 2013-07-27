@@ -79,14 +79,20 @@ div.character-block {
     background: #003b6f;
     color: #f8f8f8;
     border-color: #dddddd; }
+    div.character-block.Player.turn {
+      box-shadow: 0px 0px 20px blue; }
   div.character-block.Enemy {
     background: #961334;
     color: #f8f8f8;
     border-color: #d5d5d5; }
+    div.character-block.Enemy.turn {
+      box-shadow: 0px 0px 20px red; }
   div.character-block.Neutral {
     background: #333333;
     color: #f8f8f8;
     border-color: #d5d5d5; }
+    div.character-block.Neutral.turn {
+      box-shadow: 0px 0px 20px yellow; }
 
 div.name-container {
   font-family: 'Rum Raisin', cursive;

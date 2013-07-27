@@ -58,13 +58,12 @@ function(Restangular, $routeParams, $rootScope) {
         return Q(Restangular.all(entity).getList(get_query(entity)))
         .then(function(el) {
             update_revision(el);
-            all[entity].list.length = 0;
+            all[entity].list = el;
             all[entity].edict = {};
 
             var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
             for (var i = 0, len=el.length; i < len; i++) {
                 var instance = el[i];
-                list.push(instance);
                 edict[instance[pk]] = instance;
             }
         })
@@ -87,6 +86,9 @@ function(Restangular, $routeParams, $rootScope) {
                 console.log('Received FetchAll response');
                 merge_related_multiple(eList);
                 polling = false;
+                for(var i = eList.length - 1; i >= 0; i--) {
+                    $rootScope.$broadcast('EM.new_list.'+eList[i]);
+                }
                 return {data: {revision: revision}};
             });
         });
@@ -164,6 +166,7 @@ function(Restangular, $routeParams, $rootScope) {
                     fill_related_type([newE], relatedList[j]);
                 }
                 console.log('Added '+entity+' with proper response');
+                $rootScope.$broadcast('EM.new_list.'+entity);
                 return newE;
             });
         });
@@ -173,7 +176,13 @@ function(Restangular, $routeParams, $rootScope) {
         entData.list.splice(i, 1);
         delete entData.edict[instance[pk]];
         console.log('Requesting Remove '+entity);
-        return async_request(function(){ return instance.remove(); });
+        return async_request(function(){
+            return instance.remove()
+            .then(function(response){
+                $rootScope.$broadcast('EM.new_list.'+entity);
+                return response;
+            });
+        });
     }
     function update(entity, instance) {
         console.log('Requesting Update '+entity);
@@ -183,14 +192,16 @@ function(Restangular, $routeParams, $rootScope) {
         emmd = metadata;
         for(var entity in emmd){
             all[entity] = {};
-            all[entity].list = [];
+            emmd[entity].reverse = [];
+        }
+        for(var entity in emmd){
+            var relateds = emmd[entity].related;
+            for(var i=0, len=relateds.length; i<len; i++)
+                emmd[relateds[i]].reverse.push(entity);
         }
     }
     function get_revision() {
         return revision;
-    }
-    function increase_revision() {
-        revision++;
     }
     return {
         update: update,
@@ -449,6 +460,53 @@ function(EM, WizardsService) {
         fetch_from_compendium: function(h){
             WizardsService.fetch(h._power.wizards_id, 'power');
         }
+    };
+}]).
+
+factory('Ocam', ['EM',
+function(EM) {
+    function next(cam, characterList) {
+        cam.turn++;
+        if(cam.turn >= characterList.length) {
+            cam.turn = 0;
+            cam.round++;
+        }
+        EM.update('campaign', cam);
+    }
+    function set_round(cam, value){
+        cam.round = value;
+        EM.update('campaign', cam);
+    }
+    function normalize_turn(cam, characterList) {
+        if(cam.turn >= characterList.length) {
+            cam.turn = characterList.length-1;
+            EM.update(cam);
+        }
+    }
+    function init_sort(c1, c2){
+        return c2.init - c1.init;
+    }
+    function reorder(cam, characterList) {
+        var init = characterList[cam.turn].init;
+        characterList.sort(init_sort);
+        find_turn(cam, characterList, init);
+    }
+    function find_turn(cam, characterList, init) {
+        var i=0, len=characterList.length;
+        for(; i<len; i++) {
+            if(characterList[i].init <= init) {
+                cam.turn = i;
+                return;
+            }
+        }
+        cam.turn = len-1;
+    }
+    return {
+        next: next,
+        set_round: set_round,
+        normalize_turn: normalize_turn,
+        reorder: reorder,
+        find_turn: find_turn
     };
 }]).
 
