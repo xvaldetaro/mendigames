@@ -94,7 +94,7 @@ function(Restangular, $routeParams, $rootScope) {
             promiseArray.push(fetch(eList[i]));
         }
 
-        console.log('Requesting fetch all');
+        console.log('Requesting fetch multiple:'+eList);
         pollPromise = async_request(function(){
             return Q.all(promiseArray).then(function(){
                 console.log('Received FetchAll response');
@@ -107,6 +107,13 @@ function(Restangular, $routeParams, $rootScope) {
             });
         });
         return pollPromise;
+    }
+    function fetch_with_reverse(entity){
+        var eList = [entity], reverses = emmd[entity].reverse;
+        for (var i = reverses.length - 1; i >= 0; i--) {
+            eList.push(reverses[i]);
+        }
+        return fetch_multiple(eList);
     }
     function fill_related(entityInstance, related) {
         entityInstance['_'+related] = by_key(related, entityInstance[related]);
@@ -225,6 +232,7 @@ function(Restangular, $routeParams, $rootScope) {
         list: list,
         listSlice: listSlice,
         fetch_multiple: fetch_multiple,
+        fetch_with_reverse: fetch_with_reverse,
         set_all_entity_metadata: set_all_entity_metadata,
         get_revision: get_revision,
         async_request: async_request
@@ -268,12 +276,16 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
             var localRev = EM.get_revision(), remoteRev = data.revision, 
                 prev = data.previous, changed = data.revisionUpdate;
 
-            if(localRev!=prev) // more than 1 revision behind, poll everything 
-                EM.fetch_multiple(syncEntities).then(broadcast).then(start_poll_timeout);
+            if(localRev!=prev||!changed||changed===''){ // more than 1 revision behind or 0
+                console.log('revision changed, pulling all');
+                return EM.fetch_multiple(syncEntities).then(start_poll_timeout);
+            }
+            console.log('revision changed, pulling '+changed);
+            return EM.fetch_with_reverse(changed).then(start_poll_timeout);
         });
     }
     function start_poll_timeout(){
-        //$timeout(poll, 2000);
+        $timeout(poll, 2000);
     }
     function remove_list(entity, query) {
         return EM.async_request(function(){
@@ -318,7 +330,8 @@ function(EM, $http, $rootScope,$timeout,$routeParams) {
         update_list: update_list,
         add_list: add_list,
         initEntities: initEntities,
-        syncEntities: syncEntities
+        syncEntities: syncEntities,
+        start_poll_timeout: start_poll_timeout
     };
 }]).
 

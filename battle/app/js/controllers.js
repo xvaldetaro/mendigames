@@ -30,6 +30,7 @@ function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam) {
 
     // Bootstrap the scope
     EM.fetch_multiple(EMController.initEntities);
+    EMController.start_poll_timeout();
 
     // Scroll to bottom of console log window when a new msg arrives
     $scope.$watch('log', function() {
