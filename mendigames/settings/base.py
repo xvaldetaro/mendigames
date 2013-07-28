@@ -140,7 +140,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'south',
     'battle',
-    'dilla',
 )
 
 REST_FRAMEWORK = {

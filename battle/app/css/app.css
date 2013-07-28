@@ -76,23 +76,23 @@ div.character-block {
   padding: 2px;
   margin-bottom: 5px; }
   div.character-block.Player {
-    background: #003b6f;
-    color: #f8f8f8;
+    background: #d7e2ea;
+    color: #333333;
     border-color: #dddddd; }
     div.character-block.Player.turn {
       box-shadow: 0px 0px 20px blue; }
   div.character-block.Enemy {
-    background: #961334;
-    color: #f8f8f8;
+    background: #f5e2d7;
+    color: #333333;
     border-color: #d5d5d5; }
     div.character-block.Enemy.turn {
       box-shadow: 0px 0px 20px red; }
   div.character-block.Neutral {
-    background: #333333;
-    color: #f8f8f8;
+    background: #c8c8c8;
+    color: #333333;
     border-color: #d5d5d5; }
     div.character-block.Neutral.turn {
-      box-shadow: 0px 0px 20px yellow; }
+      box-shadow: 0px 0px 20px lime; }
 
 div.name-container {
   font-family: 'Rum Raisin', cursive;
