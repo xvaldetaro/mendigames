@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap.icon-large.min.css' %}">
   <link rel="stylesheet" href="{% static 'boilerplate/css/bootstrap-responsive.min.css' %}">
   <link rel="stylesheet" href="{% static 'mendigames/css/app.css' %}"/>
+  <link rel="stylesheet" href="{% static 'mendigames/css/combat.css' %}"/>
+  <link rel="stylesheet" href="{% static 'mendigames/css/inventory.css' %}"/>
   <link rel="stylesheet" href="{% static 'mendigames/css/wizards.css' %}"/>
   <link rel="stylesheet" href="{% static 'mendigames/css/loading.css' %}"/>
   <script src="{% static 'boilerplate/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
@@ -24,17 +26,7 @@
   <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
   <![endif]-->
 
-<div class="navbar navbar-inverse">
-    <div class="navbar-inner">
-      <a class="brand" href="#">Mendigames</a>
-      <ul class="nav">
-        <li><a href="#/campaign_list">Campaigns</a></li>
-        <li><a href="#/character_list">Characters</a></li>
-        <li><a href="#/power_list">Powers</a></li>
-        <li><a href="#/item_list">Items</a></li>
-      </ul>
-    </div>
-  </div>
+
 <div ng-view>
   
 </div>
@@ -46,28 +38,29 @@
   -->
 <script src="{% static 'boilerplate/js/vendor/jquery-1.9.1.min.js' %}"></script>
 <script src="{% static 'boilerplate/js/vendor/jquery-ui.js' %}"></script>
-  <script src="{% static 'lib/angular/angular.js' %}"></script>
-  <script src="{% static 'lib/angular/angular-sanitize.min.js' %}"></script>
-  <script src="{% static 'lib/angular/angular-cookies.js' %}"></script>
-  <script src="{% static 'lib/angular/angular-dragdrop.js' %}"></script>
-  <script src="{% url 'angular-module' %}"></script>
-  <script src="{% static 'lib/angular/ui-bootstrap-tpls-0.4.0.min.js' %}"></script>
-  <script src="{% static 'lib/angular/underscore.js' %}"></script>
-  <script src="{% static 'lib/angular/restangular.js' %}"></script>
-  <script src="{% static 'lib/angular/q.js' %}"></script>
-  <script src="{% static 'mendigames/js/app.js' %}"></script>
+<script src="{% static 'lib/angular/angular.js' %}"></script>
+<script src="{% static 'lib/angular/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'lib/angular/angular-cookies.js' %}"></script>
+<script src="{% static 'lib/angular/angular-dragdrop.js' %}"></script>
+<script src="{% url 'angular-module' %}"></script>
+<script src="{% static 'lib/angular/ui-bootstrap-tpls-0.4.0.min.js' %}"></script>
+<script src="{% static 'lib/angular/underscore.js' %}"></script>
+<script src="{% static 'lib/angular/restangular.js' %}"></script>
+<script src="{% static 'lib/angular/q.js' %}"></script>
+<script src="{% static 'mendigames/js/app.js' %}"></script>
 
-  <script src="{% static 'mendigames/js/services/EM.js' %}"></script>
-  <script src="{% static 'mendigames/js/services/Ocam.js' %}"></script>
-  <script src="{% static 'mendigames/js/services/Och.js' %}"></script>
-  <script src="{% static 'mendigames/js/services/utils.js' %}"></script>
+<script src="{% static 'mendigames/js/services/EM.js' %}"></script>
+<script src="{% static 'mendigames/js/services/Ocam.js' %}"></script>
+<script src="{% static 'mendigames/js/services/Och.js' %}"></script>
+<script src="{% static 'mendigames/js/services/utils.js' %}"></script>
 
-  <script src="{% static 'mendigames/js/controllers/dialog.js' %}"></script>
-  <script src="{% static 'mendigames/js/controllers/combat.js' %}"></script>
-  <script src="{% static 'mendigames/js/controllers/campaign_list.js' %}"></script>
+<script src="{% static 'mendigames/js/controllers/dialog.js' %}"></script>
+<script src="{% static 'mendigames/js/controllers/combat.js' %}"></script>
+<script src="{% static 'mendigames/js/controllers/inventory.js' %}"></script>
+<script src="{% static 'mendigames/js/controllers/campaign_list.js' %}"></script>
 
-  <script src="{% static 'mendigames/js/filters/filters.js' %}"></script>
-  <script src="{% static 'mendigames/js/directives/directives.js' %}"></script>
+<script src="{% static 'mendigames/js/filters/filters.js' %}"></script>
+<script src="{% static 'mendigames/js/directives/directives.js' %}"></script>
 <!--<script>
 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

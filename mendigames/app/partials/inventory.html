@@ -1,1 +1,26 @@
-AAA
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      <a class="brand" href="#">{{campaign.name}}</a>
+      <ul class="nav">
+        <li>
+            <a href="#/campaign/combat/{{campaign.id}}/">Combat</a>
+        </li>
+        <li class="active">
+            <a href="#/campaign/inventory/{{campaign.id}}/">Inventory</a>
+        </li>
+        <li>
+            <a href="#">Status</a>
+        </li>
+      </ul>
+      <a class="pull-right" href="#">Mendigames</a>
+    </div>
+  </div>
+
+<a ng-click="$apply()">Short Rest</a>
+<tabset>
+    <tab class="pointer" ng-repeat="c in characterList" heading="{{c.name}}" active="c.active">
+        
+      {{c.name}}
+    </tab>
+</tabset>
+

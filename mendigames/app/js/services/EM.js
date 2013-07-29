@@ -16,20 +16,19 @@ function(Restangular, $routeParams, $rootScope) {
             revision = response.metadata.revision;
     }
     function fetch(entity) {
-        return Q(Restangular.all(entity).getList(get_query(entity)))
-        .then(function(el) {
-            update_revision(el);
-            all[entity].list = el;
-            all[entity].edict = {};
+        return async_request(function(){
+            return Restangular.all(entity).getList(get_query(entity))
+            .then(function(el) {
+                all[entity].list = el;
+                all[entity].edict = {};
 
-            var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
-            for (var i = 0, len=el.length; i < len; i++) {
-                var instance = el[i];
-                edict[instance[pk]] = instance;
-            }
-        })
-        .fail(function() {
-            window.alert('Server not responding');
+                var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
+                for (var i = 0, len=el.length; i < len; i++) {
+                    var instance = el[i];
+                    edict[instance[pk]] = instance;
+                }
+                return el;
+            });
         });
     }
     function fetch_multiple(eList) {
@@ -42,18 +41,17 @@ function(Restangular, $routeParams, $rootScope) {
         }
 
         console.log('Requesting fetch multiple:'+eList);
-        pollPromise = async_request(function(){
-            return Q.all(promiseArray).then(function(){
-                console.log('Received FetchAll response');
-                merge_related_multiple(eList);
-                polling = false;
-                for(var i = eList.length - 1; i >= 0; i--) {
-                    $rootScope.$broadcast('EM.new_list.'+eList[i]);
-                }
-                return {data: {revision: revision}};
-            });
+        pollPromise = Q.all(promiseArray);
+
+        return pollPromise.then(function(){
+            console.log('Received FetchAll response');
+            merge_related_multiple(eList);
+            polling = false;
+            for(var i = eList.length - 1; i >= 0; i--) {
+                $rootScope.$broadcast('EM.new_list.'+eList[i]);
+            }
+            return {data: {revision: revision}};
         });
-        return pollPromise;
     }
     function fetch_with_reverse(entity){
         var eList = [entity], reverses = emmd[entity].reverse;
@@ -102,13 +100,13 @@ function(Restangular, $routeParams, $rootScope) {
     }
     function on_response_fin() {
         console.log('Ok! finishing request and applying');
-        $rootScope.$apply();
     }
     // Expects a function that executes a request and returns a promise
     function async_request(func) {
         var defer = Q.defer();
         setTimeout(function(){
             func().then(function(response) {
+                console.log('Resolved');
                 defer.resolve(response);
             },function(error) {
                 defer.reject(error);

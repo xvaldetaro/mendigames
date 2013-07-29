@@ -1,10 +1,20 @@
-<ul class="nav nav-tabs">
-  <li class="active">
-    <a href="#/campaign/{{campaign.id}}">Combat</a>
-  </li>
-  <li><a href="#">...</a></li>
-  <li><a href="#">...</a></li>
-</ul>
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      <a class="brand" href="#">{{campaign.name}}</a>
+      <ul class="nav">
+        <li class="active">
+            <a href="#/campaign/combat/{{campaign.id}}/">Combat</a>
+        </li>
+        <li>
+            <a href="#/campaign/inventory/{{campaign.id}}/">Inventory</a>
+        </li>
+        <li>
+            <a href="#">Status</a>
+        </li>
+      </ul>
+      <a class="pull-right" href="#">Mendigames</a>
+    </div>
+</div>
 <div ng-controller="MenuController" class="docked-menu well hidden-phone">
     <div class="row-fluid">
         <div class="span12">
