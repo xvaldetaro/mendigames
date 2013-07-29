@@ -95,96 +95,81 @@
 <div id="console">
     <div ng-repeat="line in log">{{line}}</div>
 </div>
-<div class="row-fluid">
-    <div class="span6">
+<div class="row">
+    <div class="span7">
         <div ng-controller="CharacterController" ng-repeat="(chi, ch) in characterList" class="row-fluid character-block {{ch.type}} {{has_turn()}}">
-            <div class="row-fluid">
-                <div class="span2">
-                    <div class="row-fluid name-container">
-                        {{ch.name}}
+            <div class="span11">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="dropdown">
+                            <a class="dropdown-toggle">
+                                <div class="name-container">
+                                    <i class="icon-cog"></i>
+                                    {{ch.name}}
+                                </div></a>
+                            <ul class="dropdown-menu">
+                                <li ng-show="ch.type == 'Player'">
+                                  <a ng-click="short_rest(ch)">Short Rest</a>
+                                </li>
+                                <li ng-show="ch.type == 'Player'">
+                                  <a ng-click="extended_rest(ch)">Extended Rest</a>
+                                </li>
+                                <li ng-show="ch.type == 'Player'">
+                                  <a ng-click="milestone(ch)">Milestone</a>
+                                </li>
+                                <li ng-show="ch.type == 'Enemy'">
+                                  <a ng-click="delete_character(chi, ch)">Remove</a>
+                                </li>
+                                <li>
+                                  <a ng-click="clear_conditions(ch)">Clear Conditions</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="span1">
-                    Gold: {{ch.gold}}
-                </div>
-                <div class="span1">
-                    XP: {{ch.experience_points}}
-                </div>
-                <div class="span7">
-                    <div class="row-fluid has-conditions-box" data-drop="true" ng-model='droppedConditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
-                        <div ng-repeat="(hci, hco) in ch._has_conditions" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}} I:{{hco.started_init}} R:{{hco.started_round}} ">
-                            <i class="{{hco._condition|condition_icon}} icon-white"></i>
+                    <div class="span6">
+                        <div ng-click="hp_dialog()" class="stat-number hp {{ch.type}}">
+                            <i ng-show="!Och.bloodied(ch)" class="icon-heart icon-white"></i>
+                            <i ng-show="Och.bloodied(ch)" class="icon-tint icon-white"></i>
+                            <p ng-show="ch.type != 'Enemy'">{{ch|total_hp}}</p>
+                            <p ng-show="ch.type == 'Enemy' && !Och.incapacitated(ch)">{{ch.used_hit_points}}</p>
+                            <p ng-show="ch.type == 'Enemy' && Och.incapacitated(ch)">XX</p>
+                            
+                        </div>
+                        <div ng-click="spend_hs(ch)" ng-show="ch.type == 'Player'" class="stat-number hs">
+                            <i class="icon-plus icon-white"></i><p>{{ch|total_hs}}</p>
+                        </div>
+                        <div ng-click="spend_ap(ch)" class="stat-number ap">
+                            <i class="icon-star icon-white"></i><p>{{ch|total_ap}}</p>
+                        </div>
+                        <div ng-show="ch.type == 'Player'" ng-click="change_gold(ch)" class="stat-number gold">
+                            <i class="icon-shopping-cart icon-white"></i><p>{{ch.gold}}</p>
+                        </div>
+                        <div ng-show="ch.type == 'Player'" ng-click="change_xp(ch)" class="stat-number xp">
+                            <i class="icon-road icon-white"></i><p>{{ch.experience_points}}</p>
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="row-fluid has-conditions-box" data-drop="true" ng-model='droppedConditions' jqyoui-droppable="{multiple:true,onDrop:'condition_drop'}">
+                            <div ng-repeat="(hci, hco) in ch._has_conditions" class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}} I:{{hco.started_init}} R:{{hco.started_round}} ">
+                                <i class="{{hco._condition|condition_icon}} icon-white"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="span1">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle"><div class="button-cell"><i class="icon-cog"></i></div></a>
-                        <ul class="dropdown-menu">
-                            <li ng-show="ch.type == 'Player'">
-                              <a ng-click="short_rest(ch)">Short Rest</a>
-                            </li>
-                            <li ng-show="ch.type == 'Player'">
-                              <a ng-click="extended_rest(ch)">Extended Rest</a>
-                            </li>
-                            <li ng-show="ch.type == 'Player'">
-                              <a ng-click="milestone(ch)">Milestone</a>
-                            </li>
-                            <li ng-show="ch.type == 'Enemy'">
-                              <a ng-click="delete_character(chi, ch)">Remove</a>
-                            </li>
-                            <li>
-                              <a ng-click="clear_conditions(ch)">Clear Conditions</a>
-                            </li>
-                        </ul>
+                <div class="power-container">
+                    <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._power.name}} - {{hasPower._power.action}}">
+                        {{hasPower._power.level}}
                     </div>
                 </div>
             </div>
-            <div class="row-fluid">
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <div class="row-fluid">
-                                <div class="span10">
-                                    <div ng-click="hp_dialog()" class="stat-number hp {{ch.type}}">
-                                        <p ng-show="ch.type != 'Enemy'">{{ch|total_hp}}</p>
-                                        <p ng-show="ch.type == 'Enemy' && !Och.incapacitated(ch)">{{ch.used_hit_points}}</p>
-                                        <p ng-show="ch.type == 'Enemy' && Och.incapacitated(ch)">XX</p>
-                                    </div>
-                                </div>
-                                <div class="span2">
-                                    &nbsp;<i ng-show="Och.bloodied(ch)" class="icon-tint icon-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="span3">
-                            <div ng-click="init_dialog()" class="stat-number init">
-                                <p>{{ch.init}}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="span3">
-                            <div ng-click="spend_hs(ch)" ng-show="ch.type == 'Player'" class="stat-number hs">
-                                <p>{{ch|total_hs}}</p>
-                            </div>
-                        </div>
-                        <div class="span2">
-                            <div ng-click="spend_ap(ch)" class="stat-number ap">
-                                <p>{{ch|total_ap}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="span6">
-                    <div class="power-container">
-                        <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._power.name}} - {{hasPower._power.action}}">
-                            {{hasPower._power.level}}
-                        </div>
-                    </div>
+            <div class="span1">
+                <div ng-click="init_dialog()" class="stat-number init">
+                    <i class="icon-play"></i><p>{{ch.init}}</p>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 <!-- Modal -->
 <div ng-controller='ModalController' class="wizards-modal" modal="wizardsModal" close="close()">

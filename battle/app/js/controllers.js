@@ -11,8 +11,8 @@ function($scope, Restangular) {
 }]).
 
 controller('CampaignCtrl', ['$scope', 'Log', '$timeout', '$routeParams', 'EM',
-'EMController', 'Ocam',
-function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam) {
+'EMController', 'Ocam','$dialog',
+function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam, $dialog) {
     $scope.campaignId = $routeParams.campaignId;
     $scope.$on('EM.new_list.character', function(){
         var newList = EM.listSlice('character');
@@ -42,6 +42,11 @@ function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam) {
             }, 300);
         },100);
     }, true);
+
+    $scope.inputDialog = $dialog.dialog({
+        templateUrl:  '/static/battle/partials/dialogs/input.html',
+        controller: 'InputDialogController'
+    });
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
@@ -49,6 +54,20 @@ function($scope, $rootScope, $dialog, Och, Log) {
     $scope.Och = Och;
     $scope.droppedConditions = [];
 
+    $scope.change_gold = function () {
+        $scope.inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Och.change_gold($scope.ch, result);
+        });
+    };
+    $scope.change_xp = function () {
+        $scope.inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Och.change_xp($scope.ch, result);
+        });
+    };
     $scope.has_turn = function() {
         if($scope.chi == $scope.campaign.turn)
             return "turn";
@@ -177,7 +196,7 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
     });
     $scope.fetch_from_compendium = function(condition) {
         WizardsService.fetch(condition.wizards_id, 'glossary', 'condition',condition);
-    }
+    };
     $scope.clear_enemies = function(){
         EMController.remove_list('character', {campaign: $scope.campaignId,
             type: 'Enemy'});
@@ -211,33 +230,30 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
           }
         });
     };
-    var inputDialog = $dialog.dialog({
-        templateUrl:  '/static/battle/partials/dialogs/input.html',
-        controller: 'InputDialogController'
-    });
+
     $scope.split_gold = function () {
-        inputDialog.open().then(function(result){
+        $scope.inputDialog.open().then(function(result){
             if(!result)
                 return;
             Ocam.split_gold($scope.campaign, $scope.characterList, result);
         });
     };
     $scope.mass_give_gold = function () {
-        inputDialog.open().then(function(result){
+        $scope.inputDialog.open().then(function(result){
             if(!result)
                 return;
             Ocam.mass_give_gold($scope.campaign, $scope.characterList, result);
         });
     };
     $scope.split_xp = function () {
-        inputDialog.open().then(function(result){
+        $scope.inputDialog.open().then(function(result){
             if(!result)
                 return;
             Ocam.split_xp($scope.campaign, $scope.characterList, result);
         });
     };
     $scope.mass_give_xp = function () {
-        inputDialog.open().then(function(result){
+        $scope.inputDialog.open().then(function(result){
             if(!result)
                 return;
             Ocam.mass_give_xp($scope.campaign, $scope.characterList, result);

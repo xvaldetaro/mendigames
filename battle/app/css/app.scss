@@ -5,10 +5,11 @@
 
 // -------------- Colors
 $HP: #bd362f;
-$INIT: #c3ba48;
 $MISC: rgb(56,56,56);
-$AP: rgb(0,59,111);
-$HS: rgb(89,150,83);
+$AP: rgb(56,56,56);
+$HS: rgb(0,158,197);
+$XP: rgb(89,150,83);
+$GOLD: rgb(255,198,19);
 $ENCOUNTER: #961334;
 $ATWILL: darken(#619869,15%);
 $DAILY: #4d4d4f;
@@ -150,12 +151,16 @@ div.character-block {
 div.name-container {
   font-family: 'Rum Raisin', cursive;
   font-size: 1.5em;
-  padding: 6px;
   white-space: nowrap;
   i {
     vertical-align: middle;
   }
+  p {
+    display: inline-block;
+  }
+  color: $FRONT;
   cursor: pointer;
+  @include buttonify($BLOCK);
 }
 span.dropdown-container {
   position: relative;
@@ -176,43 +181,50 @@ div.inline {
   }
 }
 .stat-number {
-  font-size: 3em;
-  height: 1em;
+  font-size: 1.3em;
+  font-weight: bold;
+  min-width: 2em;
+  display: inline-block;
+  color: $IFRONT;
+  white-space: nowrap;
   p {
+    display: inline-block;
+    margin-top: 0.2em;
+    margin-bottom: 0;
     text-align: center;
-    position: relative;
-    top:25%;
+    padding-left: 0.1em;
+    padding-right: 0.1em;
   }
-  &.small {
-    font-size: 2em;
-    p {
-      top: 20%;
-    }
+  i {
+    height: 1em;
+    vertical-align: middle;
+    display: inline-block;
   }
   &.init {
-    @include buttonify($INIT);
-    color: $IFRONT;
+    @include buttonify($BLOCK);
+    color: $FRONT;
   }
   &.hp {
     &.Player,&.Neutral { 
       @include buttonify($HP);
-      color: $IFRONT;
     }
     &.Enemy { 
       @include buttonify(rgb(103,32,78));
-      color: $IFRONT;
     }
   }
   &.ap {
     @include buttonify($AP);
-    color: $IFRONT;
   }
   &.hs {
     @include buttonify($HS);
-    color: $IFRONT;
   }
-  &.misc {
-    @include buttonify($MISC);
+  &.gold {
+    @include buttonify($GOLD);
+    font-size: 1.1em;
+  }
+  &.xp {
+    @include buttonify($XP);
+    font-size: 1.1em;
   }
 }
 div.has-conditions-box {
@@ -243,18 +255,6 @@ div.button-cell{
   height: 1.6em;
   text-align: center;
   @include buttonify($BGRAY);
-  &.hp {
-    @include buttonify($HP);
-  }
-  &.init {
-    @include buttonify($INIT);
-  }
-  &.ap {
-    @include buttonify($AP);
-  }
-  &.hs {
-    @include buttonify($HS);
-  }
   &.misc {
     @include buttonify($MISC);
     color: $FRONT;
