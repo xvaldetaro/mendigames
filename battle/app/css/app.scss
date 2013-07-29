@@ -123,7 +123,7 @@ div.character-block {
   padding: 2px;
   margin-bottom: 5px;
   &.Player {
-    background: rgb(215,226,234);
+    @include background-image(radial-gradient($BLOCK,rgb(215,226,234)));
     color: $FRONT;
     border-color: $BLOCKBORDER;
     &.turn {
@@ -131,7 +131,7 @@ div.character-block {
     }
   }
   &.Enemy {
-    background: rgb(245,226,215);;
+    @include background-image(radial-gradient($BLOCK,rgb(245,226,215)));
     color: $FRONT;
     border-color: rgb(213, 213, 213);
     &.turn {
@@ -139,7 +139,7 @@ div.character-block {
     }
   }
   &.Neutral {
-    background: rgb(200,200,200);
+    @include background-image(radial-gradient($BLOCK,rgb(200,200,200)));
     color: $FRONT;
     border-color: rgb(213, 213, 213);
     &.turn {

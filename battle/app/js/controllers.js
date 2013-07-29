@@ -101,6 +101,10 @@ function($scope, $rootScope, $dialog, Och, Log) {
         Och.delete_character(chi,c);
         Log(c.name+' Removed!');
     }
+    $scope.increase_sub_init = function(c) {
+        Och.increase_sub_init(c);
+        Log(c.name+' sub init increased');
+    };
     $scope.init_dialog = function(){
         var d = $dialog.dialog({
             templateUrl:  '/static/battle/partials/dialogs/init.html',

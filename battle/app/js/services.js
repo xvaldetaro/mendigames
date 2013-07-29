@@ -341,16 +341,24 @@ function(EM, EMController, roll, Restangular) {
     function save(c) {
         return EM.update('character', c);
     }
-    function change_hp(c, value){
+    function _change_hp(c, value) {
         c.used_hit_points = c.used_hit_points-parseInt(value);
         if(c.used_hit_points < 0)
             c.used_hit_points = 0;
         else if(c.used_hit_points > c.hit_points+c.hit_points/3)
             c.used_hit_points = c.hit_points+c.hit_points/3;
+    }
+    function change_hp(c, value){
+        _change_hp(c,value);
         return save(c);
     }
     function set_init(c, value){
         c.init = parseInt(value);
+        c.sub_init = 0;
+        return save(c);
+    }
+    function increase_sub_init(c) {
+        c.sub_init++;
         return save(c);
     }
     function roll_init(c, mod){
@@ -391,6 +399,7 @@ function(EM, EMController, roll, Restangular) {
     }
     function spend_hs(c){
         c.used_healing_surges = c.used_healing_surges+1;
+        _change_hp(c, Math.floor(c.hit_points/4));
         return save(c);
     }
     function milestone(c){
@@ -474,7 +483,8 @@ function(EM, EMController, roll, Restangular) {
         remove_condition: remove_condition,
         add_condition: add_condition,
         delete_character: delete_character,
-        incapacitated: incapacitated
+        incapacitated: incapacitated,
+        increase_sub_init: increase_sub_init
     };
 }]).
 // Operator for HasPowers
@@ -512,7 +522,10 @@ function(EM, EMController, Och) {
         }
     }
     function init_sort(c1, c2){
-        return c2.init - c1.init;
+        var res = c2.init - c1.init;
+        if(res == 0)
+            res = c2.sub_init - c1.sub_init;
+        return res;
     }
     function reorder(cam, characterList) {
         var init = characterList[cam.turn].init;

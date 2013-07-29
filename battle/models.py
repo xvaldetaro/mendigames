@@ -60,6 +60,7 @@ class Character(models.Model):
     used_healing_surges = models.IntegerField(default=0)
     used_hit_points = models.IntegerField(default=0)
     init = models.IntegerField(default=0)
+    sub_init = models.IntegerField(default=0)
 
     monster = models.ForeignKey(Monster, blank=True, null=True)
 
@@ -67,7 +68,7 @@ class Character(models.Model):
         return "%s - in Campaign %s" % (self.name, self.campaign)
 
     class Meta:
-        ordering = ['-init', 'name']
+        ordering = ['-init', '-sub_init', 'name']
 
 
 class TraitSource(BookEntry):
