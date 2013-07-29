@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <h3>Add new Enemy</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">Name x Count</label>
+        <div class="controls">
+            <input type="text" class="span2" ng-model="enemy.name">
+            x
+            <input type="text" class="span1" ng-model="enemy.count" maxlength="2">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">HitPoints</label>
+        <div class="controls">
+            <input type="{{hp_show}}" class="span1" ng-model="enemy.hit_points" maxlength="3">
+            <button type="button" class="btn btn-primary" ng-model="hp_show" btn-checkbox btn-checkbox-true="'text'" btn-checkbox-false="'password'">Show
+            </button>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Initiative Mod</label>
+        <div class="controls">
+            <input type="text" class="span1" ng-model="enemy.init_mod">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Action Points</label>
+        <div class="controls">
+            <input type="text" class="span1" ng-model="enemy.ap">
+        </div>
+    </div>
+    <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-danger" ng-click="close()">Add</button>
+    </div>
+    </div>
+    </form>
+</div>

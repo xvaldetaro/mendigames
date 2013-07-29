@@ -1,0 +1,37 @@
+Div menu - (well hidden-phone) docked-menu[menu preso tamanho fixo]
+    Seção Divs de submenu - (row-fluid)
+        Conditions - (row-fluid) conditions-box[caixa divs stack horizon]
+            Condition-condition-box[grad hover pequeno] tooltip
+                (icon)
+        Dices - (row-fluid)
+            Dice - button-cell[div pequeno ggradient e hover]
+            Multiplier - 
+        Turn Manager - ()
+        CampaignManager - ()
+        Mass Control - ()
+    FIm submenus
+Fim Menu
+Div Console - #console[preso tamanho fixo, autoscroll]
+    Div linha - 
+
+Lista de Characters - ()
+    Character - character-block[cores,border,shadow para subclasses: Player 
+        Monster Neutral turn]
+        row-fluid
+            name-container[font legal pro nome]
+            has-conditions-box[igual conditions-box com padding]
+                condition-box
+            Menu- button-cell
+                (dropdown)
+        row-fluid
+            Life - stat-number hp Monster[grad hover tamanho number]
+            Init - stat-number init
+            HS -stat-number hs
+            AP - stat-number ap
+            Powers - power-container[stack horizon]
+                Power - power-use-button{at-will encounter daily used}
+Modal - Info da winzards 
+
+
+    
+

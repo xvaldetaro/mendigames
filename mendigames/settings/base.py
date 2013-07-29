@@ -139,7 +139,7 @@ INSTALLED_APPS = (
     'djangular',
     'rest_framework',
     'south',
-    'battle',
+    'mendigames',
 )
 
 REST_FRAMEWORK = {
@@ -149,15 +149,15 @@ REST_FRAMEWORK = {
 
 DICTIONARY = "/usr/share/dict/words"
 DILLA_USE_LOREM_IPSUM = False  # set to True ignores dictionary
-DILLA_APPS = ['battle']
-DILLA_SPAMLIBS = ['battle.spamlib']
+DILLA_APPS = ['mendigames']
+DILLA_SPAMLIBS = ['mendigames.spamlib']
 DILLA_EXCLUDE_MODELS = [
-    'battle.CharacterStatus',
-    'battle.Campaign',
-    'battle.Character',
-    'battle.HasPower',
-    'battle.HasItem',
-    'battle.UsedPower',
+    'mendigames.CharacterStatus',
+    'mendigames.Campaign',
+    'mendigames.Character',
+    'mendigames.HasPower',
+    'mendigames.HasItem',
+    'mendigames.UsedPower',
 ]
 
 # A sample logging configuration. The only tangible logging
