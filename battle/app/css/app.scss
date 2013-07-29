@@ -83,7 +83,7 @@ body {
 div.docked-menu {
   position: fixed;
   right: 0%;
-  top: 0%;
+  top: 41px;
   width: 35%;
 }
 // ----------- Docked Menu Config
@@ -220,11 +220,11 @@ div.inline {
   }
   &.gold {
     @include buttonify($GOLD);
-    font-size: 1.1em;
+    font-size: 1.2em;
   }
   &.xp {
     @include buttonify($XP);
-    font-size: 1.1em;
+    font-size: 1.2em;
   }
 }
 div.has-conditions-box {

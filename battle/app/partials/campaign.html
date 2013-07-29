@@ -1,7 +1,10 @@
-<h3>Campaign: {{campaignList[campaignId].name}}</h3>
-<p class="lead">{{campaignList[campaignId].text}}</p>
-
-<h3>Characters:</h3>
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href="#/campaign/{{campaign.id}}">Combat</a>
+  </li>
+  <li><a href="#">...</a></li>
+  <li><a href="#">...</a></li>
+</ul>
 <div ng-controller="MenuController" class="docked-menu well hidden-phone">
     <div class="row-fluid">
         <div class="span12">

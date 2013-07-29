@@ -3,7 +3,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html ng-app="battle" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app="mendigames" class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -23,15 +23,20 @@
   <!--[if lt IE 7]>
   <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
   <![endif]-->
-<div class="container">
-  <ul class="menu">
-      <li><a href="#/campaign_list">campaign_list</a></li>
-      <li><a href="#/character_list">character-list</a></li>
-      <li><a href="#/power_list">power-list</a></li>
-      <li><a href="#/item_list">item-list</a></li>
-    </ul>
 
-    <div ng-view></div>
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      <a class="brand" href="#">Mendigames</a>
+      <ul class="nav">
+        <li><a href="#/campaign_list">Campaigns</a></li>
+        <li><a href="#/character_list">Characters</a></li>
+        <li><a href="#/power_list">Powers</a></li>
+        <li><a href="#/item_list">Items</a></li>
+      </ul>
+    </div>
+  </div>
+<div ng-view>
+  
 </div>
 
 <!-- Le javascript
@@ -51,10 +56,15 @@
   <script src="{% static 'lib/angular/restangular.js' %}"></script>
   <script src="{% static 'lib/angular/q.js' %}"></script>
   <script src="{% static 'battle/js/app.js' %}"></script>
-  <script src="{% static 'battle/js/services.js' %}"></script>
-  <script src="{% static 'battle/js/controllers.js' %}"></script>
-  <script src="{% static 'battle/js/filters.js' %}"></script>
-  <script src="{% static 'battle/js/directives.js' %}"></script>
+
+  <script src="{% static 'battle/js/services/EM.js' %}"></script>
+  <script src="{% static 'battle/js/services/Ocam.js' %}"></script>
+  <script src="{% static 'battle/js/services/Och.js' %}"></script>
+  <script src="{% static 'battle/js/services/utils.js' %}"></script>
+
+  <script src="{% static 'battle/js/controllers/controllers.js' %}"></script>
+  <script src="{% static 'battle/js/filters/filters.js' %}"></script>
+  <script src="{% static 'battle/js/directives/directives.js' %}"></script>
 <!--<script>
 var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

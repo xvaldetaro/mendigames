@@ -25,7 +25,7 @@ body {
 div.docked-menu {
   position: fixed;
   right: 0%;
-  top: 0%;
+  top: 41px;
   width: 35%; }
 
 #console {
@@ -226,7 +226,7 @@ div.inline {
     border-style: solid;
     border-color: #dddddd;
     border-radius: 3px;
-    font-size: 1.1em; }
+    font-size: 1.2em; }
     .stat-number.gold:hover {
       background-color: #ffc613;
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #ffc613), color-stop(50%, #e4ad00), color-stop(100%, #ffd141));
@@ -240,7 +240,7 @@ div.inline {
     border-style: solid;
     border-color: #dddddd;
     border-radius: 3px;
-    font-size: 1.1em; }
+    font-size: 1.2em; }
     .stat-number.xp:hover {
       background-color: #599653;
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #599653), color-stop(50%, #477843), color-stop(100%, #70ad6a));

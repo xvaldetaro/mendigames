@@ -34,7 +34,21 @@ function battleConfigFn($routeProvider, DjangoProperties) {
 }
 
 // Declare app level module which depends on filters, and services
-angular.module('battle',
-    ['djangular','battle.filters', 'battle.services', 'battle.directives',
-        'battle.controllers']).
-    config(['$routeProvider','DjangoProperties', battleConfigFn]);
+angular.module('mendigames',
+['djangular','restangular','ui.bootstrap','ngDragDrop', 'ngSanitize'])
+
+.config(['$routeProvider','DjangoProperties', battleConfigFn])
+
+.config(function(RestangularProvider) {
+    RestangularProvider.setBaseUrl("/battle");
+    RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
+        // This is a get for a list
+        if(response.data) {
+            var newResponse;
+            newResponse = response.data;
+            newResponse.metadata = {revision: response.revision};
+            return newResponse;
+        }
+        return {};
+    });
+});
