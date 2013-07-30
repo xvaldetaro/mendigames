@@ -7,17 +7,22 @@
 .inventory {
     @include borderfy();
     border-top: 0;
-}
-
-span.uneditable-input {
-    &.turn {
-        color: $FRONT;
-        background-color: $IFRONT;
-        font-weight: bold;
-        text-align: center;
+    td.td-name {
+        cursor: pointer;
     }
 }
 
-div.btn-inverse {
-    font-weight: bold;
+.equip-all {
+    text-align: center;
+}
+
+.equip {
+  background-color: $BLOCK;
+  border: 1px solid lightgray;
+  border-color: rgb(213, 213, 213);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding-top: 0px;
+  min-height: 1.6em;
 }

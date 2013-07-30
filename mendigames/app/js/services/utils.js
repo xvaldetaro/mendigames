@@ -14,7 +14,6 @@ angular.module('mendigames')
 function($rootScope, $http, EM){
     return {
         fetch: function(id, model, entity, instance) {
-            $rootScope.$broadcast('WizardsService.fetching');
             if(instance.html_description) {
                 $rootScope.$broadcast('WizardsService.fetch',
                     instance.html_description);
@@ -23,7 +22,7 @@ function($rootScope, $http, EM){
             }
 
             $http({
-                url: '/dndinsider/compendium/'+model+'.aspx?id='+id,
+                url: '/dndinsider/compendium/display.aspx?page='+model+'&id='+id,
                 method: 'GET',
                 dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
             }).

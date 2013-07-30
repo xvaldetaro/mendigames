@@ -15,8 +15,16 @@ div.docked-menu {
     border-radius: 3px;
     padding: 1em; }
     div.docked-menu .menu-group label {
-      font-weight: bold;
-      cursor: default; }
+      font-weight: bold; }
+
+div.btn-inverse {
+  font-weight: bold; }
+
+span.uneditable-input.turn {
+  color: #333333;
+  background-color: white;
+  font-weight: bold;
+  text-align: center; }
 
 #console {
   border-color: #dddddd;

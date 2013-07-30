@@ -29,9 +29,21 @@ div.docked-menu {
     padding: 1em;
     label {
       font-weight: bold;
-      cursor: default;
     }
   }
+}
+
+div.btn-inverse {
+    font-weight: bold;
+}
+
+span.uneditable-input {
+    &.turn {
+        color: $FRONT;
+        background-color: $IFRONT;
+        font-weight: bold;
+        text-align: center;
+    }
 }
 // ----------- Docked Menu Config
 #console {

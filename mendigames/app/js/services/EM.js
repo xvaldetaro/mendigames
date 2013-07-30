@@ -17,9 +17,10 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         else
             revision = response.metadata.revision;
     }
-    function fetch(entity) {
+    function fetch(entity, _query) {
+        var query = _query || get_query(entity)
         return async_request(function(){
-            return Restangular.all(entity).getList(get_query(entity))
+            return Restangular.all(entity).getList(query)
             .then(function(el) {
                 all[entity].list = el;
                 all[entity].edict = {};
@@ -162,7 +163,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             return Q($http.delete('/'+entity, {params: query}))
             .then(function(response) {
                 $log.log('Received Remove '+entity+' list response');
-                fetch_multiple(syncEntities);
+                fetch_multiple(syncE);
                 return response;
             });
         });
@@ -176,7 +177,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
                 return response;
             });
         }).then(function(){
-            fetch_multiple(syncEntities);
+            fetch_multiple(syncE);
         });
     }
     function add_list(entity, data){
@@ -185,7 +186,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             return Q($http.post('/'+entity, data, {params: {many: true}}))
             .then(function(response) {
                 $log.log('Received add '+entity+' list response');
-                fetch_multiple(syncEntities);
+                fetch_multiple(syncE);
                 return response;
             });
         });
@@ -236,7 +237,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             initEntities.push(eName);
         fetch_multiple(initEntities);
     }
-    start_poll_timeout();
+    //start_poll_timeout();
     return {
         update: update,
         add: add,
@@ -249,6 +250,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         list: list,
         listSlice: listSlice,
 
+        fetch: fetch,
         fetch_multiple: fetch_multiple,
         fetch_with_reverse: fetch_with_reverse,
 
