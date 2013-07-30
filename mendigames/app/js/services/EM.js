@@ -229,14 +229,14 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         $timeout(poll, 2000);
     }
     function start(entitiesMetadata, syncEntities) {
+        all = {};
         var initEntities = [];
         set_all_entity_metadata(entitiesMetadata, syncEntities);
         for (var eName in entitiesMetadata)
             initEntities.push(eName);
         fetch_multiple(initEntities);
-        if(syncEntities)
-            start_poll_timeout();
     }
+    start_poll_timeout();
     return {
         update: update,
         add: add,

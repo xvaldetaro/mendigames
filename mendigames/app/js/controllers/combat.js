@@ -16,14 +16,6 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
         'character': {pk: 'id', related: ['has_condition','has_power'],
             query: {campaign: $routeParams.campaignId}}
     };
-    var initEntities = [
-        'campaign',
-        'condition',
-        'power',
-        'has_condition',
-        'has_power',
-        'character'
-    ];
     var syncEntities = [
         'has_condition',
         'has_power',
