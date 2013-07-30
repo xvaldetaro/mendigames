@@ -27,11 +27,17 @@ urlpatterns = patterns('',
 
     url(r'^power/?$', views.PowerList.as_view()),
 
+    url(r'^item/?$', views.ItemList.as_view()),
+
     url(r'^power/(?P<pk>[0-9]+)/?$', views.PowerDetail.as_view()),
 
     url(r'^has_power/?$', views.HasPowerList.as_view()),
 
     url(r'^has_power/(?P<pk>[0-9]+)/?$', views.HasPowerDetail.as_view()),
+
+    url(r'^has_item/?$', views.HasItemList.as_view()),
+
+    url(r'^has_item/(?P<pk>[0-9]+)/?$', views.HasItemDetail.as_view()),
 
     url(r'^condition/?$', views.ConditionList.as_view()),
 

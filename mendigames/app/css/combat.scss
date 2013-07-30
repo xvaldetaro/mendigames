@@ -1,7 +1,6 @@
 /* app css stylesheet */
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
-@import url(http://fonts.googleapis.com/css?family=Rum+Raisin);
 
 // -------------- Colors
 $HP: #bd362f;
@@ -21,7 +20,7 @@ div.docked-menu {
   position: fixed;
   right: 0%;
   top: 41px;
-  width: 35%;
+  width: 400px;
 }
 // ----------- Docked Menu Config
 #console {
@@ -58,9 +57,10 @@ div.character-block {
   border-radius: 5px;
   padding-top: 0px;
   padding: 2px;
+  padding-right: 4px;
   margin-bottom: 5px;
   &.Player {
-    @include background-image(radial-gradient($BLOCK,rgb(215,226,234)));
+    @include background-image(radial-gradient(rgb(215,226,234),rgb(200,200,234)));
     color: $FRONT;
     border-color: $BLOCKBORDER;
     &.turn {
@@ -68,7 +68,7 @@ div.character-block {
     }
   }
   &.Enemy {
-    @include background-image(radial-gradient($BLOCK,rgb(245,226,215)));
+    @include background-image(radial-gradient(rgb(245,226,215),rgb(245,200,200)));
     color: $FRONT;
     border-color: rgb(213, 213, 213);
     &.turn {
@@ -86,18 +86,20 @@ div.character-block {
 }
   
 div.name-container {
-  font-family: 'Rum Raisin', cursive;
-  font-size: 1.5em;
+  padding-top: 0.2em;
+  padding-left: 0.1em;
+  font-size: 1.4em;
+  font-weight: bold;
   white-space: nowrap;
   i {
     vertical-align: middle;
   }
   p {
     display: inline-block;
+    font-family: Verdana;
   }
   color: $FRONT;
   cursor: pointer;
-  @include buttonify($BLOCK);
 }
 span.dropdown-container {
   position: relative;
@@ -124,6 +126,7 @@ div.inline {
   display: inline-block;
   color: $IFRONT;
   white-space: nowrap;
+    text-align: center;
   p {
     display: inline-block;
     margin-top: 0.2em;
@@ -140,6 +143,11 @@ div.inline {
   &.init {
     @include buttonify($BLOCK);
     color: $FRONT;
+    min-width: 2.2em;
+  }
+  &.sub-init {
+    @include buttonify($AP);
+    min-width: 2.2em;
   }
   &.hp {
     &.Player,&.Neutral { 
@@ -162,6 +170,11 @@ div.inline {
   &.xp {
     @include buttonify($XP);
     font-size: 1.2em;
+  }
+  &.dice {
+    @include buttonify($AP);
+    min-width: 2.45em;
+    min-height: 1.7em;
   }
 }
 div.has-conditions-box {
@@ -188,14 +201,11 @@ div.button-cell{
   display: inline-block;
   color: $FRONT;
   font-weight: bold;
-  width: 2em;
-  height: 1.6em;
+  min-width: 2.5em;
+  height: 2em;
   text-align: center;
+  vertical-align: middle;
   @include buttonify($BGRAY);
-  &.misc {
-    @include buttonify($MISC);
-    color: $FRONT;
-  }
 }
 
 .stat-edit {

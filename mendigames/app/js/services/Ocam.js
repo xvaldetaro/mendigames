@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocam', ['EM','EMController','Och',
-function(EM, EMController, Och) {
+.factory('Ocam', ['EM','Och',
+function(EM, Och) {
     function next(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -85,20 +85,20 @@ function(EM, EMController, Och) {
             c.has_conditions = [];
             c._has_conditions = [];
         }
-        return EMController.remove_list('has_condition', {character__campaign: cam.id});
+        return EM.remove_list('has_condition', {character__campaign: cam.id});
     }
     function mass_milestone(characterList){
         return _call_foreach(characterList, 'milestone');
     }
     function mass_short_rest(cam, characterList){
         return _call_foreach(characterList, '_short_rest_stats').then(function(){
-            EMController.update_list('has_power',
+            EM.update_list('has_power',
             {character__campaign: cam.id, power__usage: 'E'},{used: false});
         });
     }
     function mass_extended_rest(cam, characterList){
         _call_foreach(characterList, '_extended_rest_stats').then(function(){
-            EMController.update_list('has_power',
+            EM.update_list('has_power',
             {character__campaign: cam.id},{used: false});
         });
     }

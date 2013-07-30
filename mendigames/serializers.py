@@ -38,6 +38,7 @@ class RevSerializer(serializers.ModelSerializer):
 class CharacterSerializer(RevSerializer):
     has_powers = serializers.PrimaryKeyRelatedField(many=True)
     has_conditions = serializers.PrimaryKeyRelatedField(many=True)
+    has_items = serializers.PrimaryKeyRelatedField(many=True)
     revision_key = 'character'
     class Meta:
         model = Character
@@ -61,6 +62,12 @@ class ConditionSerializer(RevSerializer):
         model = Condition
 
 
+class ItemSerializer(RevSerializer):
+    revision_key = 'condition'
+    class Meta:
+        model = Item
+
+
 class HasPowerSerializer(RevSerializer):
     revision_key = 'has_power'
     class Meta:
@@ -71,3 +78,9 @@ class HasConditionSerializer(RevSerializer):
     revision_key = 'has_condition'
     class Meta:
         model = HasCondition
+
+
+class HasItemSerializer(RevSerializer):
+    revision_key = 'has_item'
+    class Meta:
+        model = HasItem

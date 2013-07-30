@@ -3,8 +3,34 @@
 angular.module('mendigames')
 
 .controller('CombatCtrl', ['$scope', 'Log', '$timeout', '$routeParams', 'EM',
-'EMController', 'Ocam','$dialog',
-function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam, $dialog) {
+'Ocam','$dialog',
+function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
+    var entitiesMetadata = {
+        'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
+        'condition': {pk: 'id', related: [], query: {}},
+        'power': {pk: 'id', related: [], query: {haspower__isnull: false}},
+        'has_condition': {pk: 'id', related: ['condition'],
+            query: {character__campaign: $routeParams.campaignId}},
+        'has_power': {pk: 'id', related: ['power'],
+            query: {character__campaign: $routeParams.campaignId}},
+        'character': {pk: 'id', related: ['has_condition','has_power'],
+            query: {campaign: $routeParams.campaignId}}
+    };
+    var initEntities = [
+        'campaign',
+        'condition',
+        'power',
+        'has_condition',
+        'has_power',
+        'character'
+    ];
+    var syncEntities = [
+        'has_condition',
+        'has_power',
+        'character',
+        'campaign'
+    ];
+
     $scope.campaignId = $routeParams.campaignId;
     $scope.$on('EM.new_list.character', function(){
         var newList = EM.listSlice('character');
@@ -24,8 +50,7 @@ function($scope, Log, $timeout, $routeParams, EM, EMController, Ocam, $dialog) {
     });
 
     // Bootstrap the scope
-    EM.fetch_multiple(EMController.initEntities);
-    //EMController.start_poll_timeout();
+    EM.start(entitiesMetadata, syncEntities);
 
     // Scroll to bottom of console log window when a new msg arrives
     $scope.$watch('log', function() {
@@ -168,9 +193,9 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','roll','Log','$dialog', 'EMController',
-'Ocam','WizardsService',
-function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
+.controller('MenuController', ['$scope', 'EM','roll','Log','$dialog','Ocam',
+'WizardsService',
+function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -180,13 +205,15 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
     $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
 
     $scope.diceMult = 1;
+    $scope.diceMod = 1;
     $scope.roll = function(dice) {
-        var logStr = 'd'+dice+'x'+$scope.diceMult+' : ', total = 0;
+        var logStr = 'd'+dice+'x'+$scope.diceMult+'+'+$scope.diceMod+' : ', total = 0;
         for(var i = $scope.diceMult - 1; i >= 0; i--) {
             var result = roll(0, dice).result;
             logStr = logStr+result+'+';
             total += result;
         }
+        total += parseInt($scope.diceMod);
         logStr = logStr.slice(0, -1);
         logStr = logStr+ '= '+total;
         Log(logStr);
@@ -199,7 +226,7 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
         WizardsService.fetch(condition.wizards_id, 'glossary', 'condition',condition);
     };
     $scope.clear_enemies = function(){
-        EMController.remove_list('character', {campaign: $scope.campaignId,
+        EM.remove_list('character', {campaign: $scope.campaignId,
             type: 'Enemy'});
     };
     $scope.add_enemy = function(){
@@ -227,7 +254,7 @@ function($scope, EM, roll, Log, $dialog, EMController, Ocam, WizardsService) {
             for (var i = 1; i <= result.count; i++) {
                 enemies.push(make_enemy(result, i));
             };
-            EMController.add_list('character', enemies);
+            EM.add_list('character', enemies);
           }
         });
     };

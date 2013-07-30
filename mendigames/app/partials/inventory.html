@@ -16,11 +16,35 @@
     </div>
   </div>
 
-<a ng-click="$apply()">Short Rest</a>
-<tabset>
-    <tab class="pointer" ng-repeat="c in characterList" heading="{{c.name}}" active="c.active">
-        
-      {{c.name}}
-    </tab>
-</tabset>
+<div class="row-fluid content">
+    <div class="span6">
+        <tabset>
+            <tab class="pointer" ng-repeat="c in characterList" heading="{{c.name}}" active="c.active">
+                <div class="inventory">
+                  <table class="table table-striped">
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Level</th>
+                            <th>Rarity</th>
+                            <th>Cost</th>
+                            <th>Weight</th>
+                        </tr>
+                        <tr ng-repeat="hi in c._has_items">
+                          <td>{{hi._item.name}}</td>
+                          <td>{{hi._item.category}}</td>
+                          <td>{{hi._item.level}}</td>
+                          <td>{{hi._item.rarity}}</td>
+                          <td>{{hi._item.cost}}</td>
+                          <td>{{hi._item.weigth}}</td>
+                        </tr>
+                  </table>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+    <div class="span6">
+        &nbsp;
+    </div>
+</div>
 

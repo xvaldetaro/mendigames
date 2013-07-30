@@ -2,20 +2,20 @@
 
 angular.module('mendigames')
 
-.controller('InventoryCtrl', ['$scope','$routeParams','EM','EMController',
-function($scope, $routeParams, EM, EMController) {
+.controller('InventoryCtrl', ['$scope','$routeParams','EM',
+function($scope, $routeParams, EM) {
     var entitiesMetadata = {
+        'item': {pk: 'id', related: [], query: {hasitem__isnull: false}},
         'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
-        'character': {pk: 'id', related: ['has_condition','has_power'],
-            query: {campaign: $routeParams.campaignId}}
+        'character': {pk: 'id', related: ['has_item'],
+            query: {campaign: $routeParams.campaignId, type: 'Player'}},
+        'has_item': {pk: 'id', related: ['item'],
+            query: {character__campaign: $routeParams.campaignId}}
     };
-    var initEntities = [
-        'campaign',
-        'character'
-    ];
     var syncEntities = [
         'character',
-        'campaign'
+        'campaign',
+        'has_item'
     ];
 
     $scope.campaignId = $routeParams.campaignId;
@@ -31,5 +31,5 @@ function($scope, $routeParams, EM, EMController) {
     });
 
     // Bootstrap the scope
-    EM.fetch_multiple(initEntities);
+    EM.start(entitiesMetadata, syncEntities);
 }]);

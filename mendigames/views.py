@@ -4,10 +4,12 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, renderers, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from mendigames.models import Campaign, Character, Condition, HasPower, Power, HasCondition
+from mendigames.models import (Campaign, Character, Condition, HasPower, Power,
+    HasCondition, Item, HasItem)
 from mendigames.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
                                 CampaignSerializer, PowerSerializer, HasPowerSerializer,
-                                ConditionSerializer, HasConditionSerializer)
+                                ConditionSerializer, HasConditionSerializer,
+                                ItemSerializer, HasItemSerializer)
 from django.core.cache import cache
 
 
@@ -144,11 +146,6 @@ class PowerDetail(RevDetailView):
     serializer_class = PowerSerializer
 
 
-class ConditionList(RevListView):
-    queryset = Condition.objects.all()
-    serializer_class = ConditionSerializer
-
-
 class HasPowerList(RevListView):
     queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
@@ -157,6 +154,11 @@ class HasPowerList(RevListView):
 class HasPowerDetail(RevDetailView):
     queryset = HasPower.objects.all()
     serializer_class = HasPowerSerializer
+
+
+class ConditionList(RevListView):
+    queryset = Condition.objects.all()
+    serializer_class = ConditionSerializer
 
 
 class ConditionDetail(RevDetailView):
@@ -172,3 +174,23 @@ class HasConditionList(RevListView):
 class HasConditionDetail(RevDetailView):
     queryset = HasCondition.objects.all()
     serializer_class = HasConditionSerializer
+
+
+class ItemList(RevListView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+
+class ItemDetail(RevDetailView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+
+class HasItemList(RevListView):
+    queryset = HasItem.objects.all()
+    serializer_class = HasItemSerializer
+
+
+class HasItemDetail(RevDetailView):
+    queryset = HasItem.objects.all()
+    serializer_class = HasItemSerializer

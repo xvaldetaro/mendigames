@@ -1,3 +1,10 @@
+@import 'mixins.scss';
+
 .pointer {
     cursor: pointer;
+}
+
+.inventory {
+    @include borderfy();
+    border-top: 0;
 }

@@ -1,7 +1,7 @@
 angular.module('mendigames')
 
-.factory('Och', ['EM', 'EMController','roll','Restangular',
-function(EM, EMController, roll, Restangular) {
+.factory('Och', ['EM', 'roll','Restangular',
+function(EM, roll, Restangular) {
     function save(c) {
         return EM.update('character', c);
     }
@@ -85,19 +85,19 @@ function(EM, EMController, roll, Restangular) {
             if(c._has_powers[i]._power.usage == 'E')
                 c._has_powers[i].used = false;
         }
-        return EMController.update_list('has_power', {character: c.id, power__usage: 'E'},
+        return EM.update_list('has_power', {character: c.id, power__usage: 'E'},
          {used: false});
     }
     function recharge_powers(c) {
         for (var i = c._has_powers.length - 1; i >= 0; i--) {
             c._has_powers[i].used = false;
         }
-        return EMController.update_list('has_power', {character: c.id}, {used: false});
+        return EM.update_list('has_power', {character: c.id}, {used: false});
     }
     function clear_conditions(c) {
         c.has_conditions = [];
         c._has_conditions = [];
-        return EMController.remove_list('has_condition', {character: c.id});
+        return EM.remove_list('has_condition', {character: c.id});
     }
     function remove_condition(c, hci) {
         var hco = c._has_conditions[hci];

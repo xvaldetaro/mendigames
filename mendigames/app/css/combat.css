@@ -1,10 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Rum+Raisin);
 /* app css stylesheet */
 div.docked-menu {
   position: fixed;
   right: 0%;
   top: 41px;
-  width: 35%; }
+  width: 400px; }
 
 #console {
   border-color: #dddddd;
@@ -52,17 +51,18 @@ div.character-block {
   border-radius: 5px;
   padding-top: 0px;
   padding: 2px;
+  padding-right: 4px;
   margin-bottom: 5px; }
   div.character-block.Player {
-    background-image: -webkit-radial-gradient( #f8f8f8, #d7e2ea);
-    background-image: radial-gradient(   #f8f8f8, #d7e2ea);
+    background-image: -webkit-radial-gradient( #d7e2ea, #c8c8ea);
+    background-image: radial-gradient(   #d7e2ea, #c8c8ea);
     color: #333333;
     border-color: #dddddd; }
     div.character-block.Player.turn {
       box-shadow: 0px 0px 20px blue; }
   div.character-block.Enemy {
-    background-image: -webkit-radial-gradient( #f8f8f8, #f5e2d7);
-    background-image: radial-gradient(   #f8f8f8, #f5e2d7);
+    background-image: -webkit-radial-gradient( #f5e2d7, #f5c8c8);
+    background-image: radial-gradient(   #f5e2d7, #f5c8c8);
     color: #333333;
     border-color: #d5d5d5; }
     div.character-block.Enemy.turn {
@@ -76,27 +76,18 @@ div.character-block {
       box-shadow: 0px 0px 20px lime; }
 
 div.name-container {
-  font-family: 'Rum Raisin', cursive;
-  font-size: 1.5em;
+  padding-top: 0.2em;
+  padding-left: 0.1em;
+  font-size: 1.4em;
+  font-weight: bold;
   white-space: nowrap;
   color: #333333;
-  cursor: pointer;
-  background-image: -webkit-linear-gradient(bottom, #e1e1e1, white);
-  background-image: linear-gradient(to top, #e1e1e1, white);
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #dddddd;
-  border-radius: 3px; }
+  cursor: pointer; }
   div.name-container i {
     vertical-align: middle; }
   div.name-container p {
-    display: inline-block; }
-  div.name-container:hover {
-    background-color: #f8f8f8;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f8f8f8), color-stop(50%, #e1e1e1), color-stop(100%, white));
-    background-image: -webkit-radial-gradient(#f8f8f8, #e1e1e1, white);
-    background-image: radial-gradient(  #f8f8f8, #e1e1e1, white); }
+    display: inline-block;
+    font-family: Verdana; }
 
 span.dropdown-container {
   position: relative;
@@ -118,7 +109,8 @@ div.inline {
   min-width: 2em;
   display: inline-block;
   color: white;
-  white-space: nowrap; }
+  white-space: nowrap;
+  text-align: center; }
   .stat-number p {
     display: inline-block;
     margin-top: 0.2em;
@@ -138,12 +130,27 @@ div.inline {
     border-style: solid;
     border-color: #dddddd;
     border-radius: 3px;
-    color: #333333; }
+    color: #333333;
+    min-width: 2.2em; }
     .stat-number.init:hover {
       background-color: #f8f8f8;
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f8f8f8), color-stop(50%, #e1e1e1), color-stop(100%, white));
       background-image: -webkit-radial-gradient(#f8f8f8, #e1e1e1, white);
       background-image: radial-gradient(  #f8f8f8, #e1e1e1, white); }
+  .stat-number.sub-init {
+    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
+    background-image: linear-gradient(to top, #212121, #4f4f4f);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px;
+    min-width: 2.2em; }
+    .stat-number.sub-init:hover {
+      background-color: #383838;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
+      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
+      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
   .stat-number.hp.Player, .stat-number.hp.Neutral {
     background-image: -webkit-linear-gradient(bottom, #982b26, #d24f48);
     background-image: linear-gradient(to top, #982b26, #d24f48);
@@ -224,6 +231,21 @@ div.inline {
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #599653), color-stop(50%, #477843), color-stop(100%, #70ad6a));
       background-image: -webkit-radial-gradient(#599653, #477843, #70ad6a);
       background-image: radial-gradient(  #599653, #477843, #70ad6a); }
+  .stat-number.dice {
+    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
+    background-image: linear-gradient(to top, #212121, #4f4f4f);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px;
+    min-width: 2.45em;
+    min-height: 1.7em; }
+    .stat-number.dice:hover {
+      background-color: #383838;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
+      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
+      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
 
 div.has-conditions-box {
   background-image: -webkit-radial-gradient( #dddddd, #f8f8f8);
@@ -252,9 +274,10 @@ div.button-cell {
   display: inline-block;
   color: #333333;
   font-weight: bold;
-  width: 2em;
-  height: 1.6em;
+  min-width: 2.5em;
+  height: 2em;
   text-align: center;
+  vertical-align: middle;
   background-image: -webkit-linear-gradient(bottom, #c6c6c6, #f4f4f4);
   background-image: linear-gradient(to top, #c6c6c6, #f4f4f4);
   cursor: pointer;
@@ -267,20 +290,6 @@ div.button-cell {
     background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #dddddd), color-stop(50%, #c6c6c6), color-stop(100%, #f4f4f4));
     background-image: -webkit-radial-gradient(#dddddd, #c6c6c6, #f4f4f4);
     background-image: radial-gradient(  #dddddd, #c6c6c6, #f4f4f4); }
-  div.button-cell.misc {
-    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
-    background-image: linear-gradient(to top, #212121, #4f4f4f);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    color: #333333; }
-    div.button-cell.misc:hover {
-      background-color: #383838;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
-      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
-      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
 
 .stat-edit {
   width: 3em;

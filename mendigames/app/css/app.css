@@ -1,6 +1,5 @@
-@import url(http://fonts.googleapis.com/css?family=Expletus+Sans);
 body {
-  font-family: 'Expletus Sans', sans-serif; }
+  font-family: Verdana, sans-serif; }
 
 @media (max-width: 767px) {
   body {
@@ -16,3 +15,9 @@ body {
     font-size: 14px; } }
 .tooltip {
   font-size: 1.5em; }
+
+.content {
+  padding-left: 1.4em; }
+
+ul.nav-tabs {
+  margin-bottom: 0; }

@@ -168,7 +168,7 @@ class Item(BookEntry):
 
 
 class HasItem(models.Model):
-    character = models.ForeignKey(Character)
+    character = models.ForeignKey(Character, related_name="has_items")
     item = models.ForeignKey(Item)
 
     def __unicode__(self):
@@ -193,5 +193,3 @@ class HasCondition(models.Model):
 
     def __unicode__(self):
         return self.condition
-
-
