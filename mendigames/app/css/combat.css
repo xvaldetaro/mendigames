@@ -3,21 +3,31 @@ div.docked-menu {
   position: fixed;
   right: 0%;
   top: 41px;
-  width: 400px; }
+  width: 400px;
+  height: 80%; }
+  div.docked-menu .menu-group {
+    background-image: -webkit-radial-gradient( gainsboro, #c8c8c8);
+    background-image: radial-gradient(   gainsboro, #c8c8c8);
+    color: #333333;
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    padding: 1em; }
+    div.docked-menu .menu-group label {
+      font-weight: bold;
+      cursor: default; }
 
 #console {
   border-color: #dddddd;
   border-style: solid;
   border-width: 1px;
   border-radius: 3px;
-  position: fixed;
-  right: 0%;
-  bottom: 0%;
-  width: 35%;
-  height: 10%;
-  background-color: gainsboro;
+  background-image: -webkit-radial-gradient( #f8ecc2, #f3de94);
+  background-image: radial-gradient(   #f8ecc2, #f3de94);
   overflow: auto;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  height: 30%; }
 
 div.condition-box {
   display: inline-block;

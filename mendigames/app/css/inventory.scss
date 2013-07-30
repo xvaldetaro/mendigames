@@ -8,3 +8,16 @@
     @include borderfy();
     border-top: 0;
 }
+
+span.uneditable-input {
+    &.turn {
+        color: $FRONT;
+        background-color: $IFRONT;
+        font-weight: bold;
+        text-align: center;
+    }
+}
+
+div.btn-inverse {
+    font-weight: bold;
+}

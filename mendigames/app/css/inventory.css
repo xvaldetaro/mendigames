@@ -7,3 +7,12 @@
   border-width: 1px;
   border-radius: 3px;
   border-top: 0; }
+
+span.uneditable-input.turn {
+  color: #333333;
+  background-color: white;
+  font-weight: bold;
+  text-align: center; }
+
+div.btn-inverse {
+  font-weight: bold; }

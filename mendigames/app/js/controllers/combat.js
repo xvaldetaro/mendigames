@@ -199,9 +199,21 @@ function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
-
-    $scope.next = function(){ Ocam.next($scope.campaign, $scope.characterList); };
-    $scope.set_round = function(value){ Ocam.set_round($scope.campaign, value); };
+    $scope.previous_turn = function(){
+        Ocam.previous_turn($scope.campaign, $scope.characterList);
+    };
+    $scope.next_turn = function(){
+        Ocam.next_turn($scope.campaign, $scope.characterList);
+    };
+    $scope.previous_round = function(){
+        Ocam.previous_round($scope.campaign);
+    };
+    $scope.next_round = function(){
+        Ocam.next_round($scope.campaign);
+    };
+    $scope.set_round = function(value) {
+        Ocam.set_round($scope.campaign, value);
+    };
     $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
 
     $scope.diceMult = 1;

@@ -21,18 +21,25 @@ div.docked-menu {
   right: 0%;
   top: 41px;
   width: 400px;
+  height:80%;
+  .menu-group {
+    @include background-image(radial-gradient(rgb(220,220,220),rgb(200,200,200)));
+    color: $FRONT;
+    @include borderfy();
+    padding: 1em;
+    label {
+      font-weight: bold;
+      cursor: default;
+    }
+  }
 }
 // ----------- Docked Menu Config
 #console {
   @include borderfy();
-  position: fixed;
-  right: 0%;
-  bottom: 0%;
-  width: 35%;
-  height: 10%;
-  background-color: rgb(220,220,220);
+  @include background-image(radial-gradient(rgb(248,236,194),darken(rgb(248,236,194),10%)));
   overflow: auto;
   overflow-x: hidden;
+  height: 30%;
 }
 div.condition-box {
   display: inline-block;

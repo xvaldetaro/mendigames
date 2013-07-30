@@ -4,7 +4,7 @@ angular.module('mendigames')
 
 .factory('Ocam', ['EM','Och',
 function(EM, Och) {
-    function next(cam, characterList) {
+    function next_turn(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
             cam.turn = 0;
@@ -12,8 +12,24 @@ function(EM, Och) {
         }
         EM.update('campaign', cam);
     }
+    function previous_turn(cam, characterList) {
+        cam.turn--;
+        if(cam.turn < 0) {
+            cam.turn = characterList.length-1;
+            cam.round--;
+        }
+        EM.update('campaign', cam);
+    }
     function set_round(cam, value){
         cam.round = value;
+        EM.update('campaign', cam);
+    }
+    function next_round(cam){
+        cam.round++;
+        EM.update('campaign', cam);
+    }
+    function previous_round(cam){
+        cam.round--;
         EM.update('campaign', cam);
     }
     function normalize_turn(cam, characterList) {
@@ -103,7 +119,10 @@ function(EM, Och) {
         });
     }
     return {
-        next: next,
+        next_turn: next_turn,
+        next_round: next_round,
+        previous_turn: previous_turn,
+        previous_round: previous_round,
         set_round: set_round,
         normalize_turn: normalize_turn,
         reorder: reorder,
