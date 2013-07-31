@@ -69,10 +69,15 @@
                     <select class="input-small" ng-model="category" ng-options="cat.name for cat in categories"></select>
                     <label class="checkbox">Level: <input type="text" ng-model="level_start" class="input-mini"></label><label>to<input type="text" ng-model="level_stop" class="input-mini"></label>
                     <label class="checkbox">Cost: <input type="text" ng-model="cost_start" class="input-mini"></label><label>to<input type="text" ng-model="cost_stop" class="input-mini"></label>
-                    <button ng-click="shop_search()" class="btn">Search</button>
+                    <button ng-click="shop_search(1)" class="btn">Search</button>
+                    <input type="text" class="input-medium" ng-model="shop_filter" placeholder="Filter">
                 </form>
-                <input type="text" class="input-medium" ng-model="shop_filter" placeholder="Filter">
                 <table class="table table-striped table-condensed">
+                    <tr>
+                        <td colspan="6">
+                            <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+                        </td>
+                    </tr>
                     <tr>
                         <th ng-click="set_predicate('name')">Name</th>
                         <th ng-click="set_predicate('category')">Category</th>
@@ -81,13 +86,18 @@
                         <th ng-click="set_predicate('cost')">Cost</th>
                         <th ng-click="set_predicate('weight')">Weight</th>
                     </tr>
-                    <tr ng-repeat="item in shop | orderBy:predicate:predicate_reverse | filter:shop_filter">
+                    <tr ng-repeat="item in shop.results | orderBy:predicate:predicate_reverse | filter:shop_filter">
                         <td class="td-name" ng-click="fetch_from_compendium(item)">{{item.name}}</td>
                         <td>{{item.category}}</td>
                         <td>{{item.level}}</td>
                         <td>{{item.rarity}}</td>
                         <td>{{item.cost}}</td>
                         <td>{{item.weight}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+                        </td>
                     </tr>
                 </table>
             </div>

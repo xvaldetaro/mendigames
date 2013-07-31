@@ -45,11 +45,6 @@ function($scope) {
 
 .controller('ShopCtrl', ['$scope','EM',
 function($scope, EM) {
-    $scope.$on('EM.new_list.item', function(){
-        $scope.shop = EM.listSlice('item');
-        $scope.$apply();
-    });
-
     $scope.categories = [
         {name: 'Armor', value: 'ARMO'},
         {name: 'Arms', value: 'ARMS'},
@@ -82,8 +77,18 @@ function($scope, EM) {
         {name: 'Common', value: 'C'},
     ];
 
-    $scope.shop_search = function() {
+    function got_shop(list){
+        $scope.shop = list.data.data;
+        $scope.pageCount = Math.ceil($scope.shop.count/100)
+        $scope.$apply();
+    }
+    $scope.shop_search = function(page) {
         var query = {};
+
+        if(!page)
+            $scope.currentPage = 1;
+        else
+            $scope.currentPage = page;
         if($scope.item_name)
             query.name__icontains = $scope.item_name;
         if($scope.category)
@@ -98,13 +103,17 @@ function($scope, EM) {
             query.cost__gte = $scope.cost_start;
         if($scope.cost_stop)
             query.cost__lte = $scope.cost_stop;
-        EM.fetch('item',query).then(function(){
-            $scope.shop = EM.listSlice('item');
-            $scope.$apply();
-        });
+        query.page = $scope.currentPage;
+        EM.just_fetch_list('item_page',query).then(got_shop);
+        $scope.current_query = query;
     };
 
-    $scope.predicate = 'name';
+    $scope.goto_page = function(page) {
+        $scope.current_query.page = page;
+        EM.just_fetch_list('item_page',$scope.current_query).then(got_shop);
+    }
+
+    $scope.predicate = 'level';
     $scope.set_predicate = function(predicate) {
         if($scope.predicate == predicate)
             $scope.predicate_reverse = !$scope.predicate_reverse;

@@ -63,6 +63,15 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         }
         return fetch_multiple(eList);
     }
+    function just_fetch_list(entity, query) {
+        return async_request(function(){
+            $log.log('Requesting just '+entity+' list');
+            return Q($http.get('/'+entity, {params: query}))
+            .then(function(response) {
+                return response;
+            });
+        });
+    }
     function fill_related(entityInstance, related) {
         entityInstance['_'+related] = by_key(related, entityInstance[related]);
     }
@@ -95,8 +104,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
     }
     function on_response(response) {
         update_revision(response);
-            $log.log('-- Revision: '+revision);
-            return response;
+        $log.log('-- Revision: '+revision);
+        return response;
     }
     function on_response_err(error){
         window.alert(error.message);
@@ -253,6 +262,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         fetch: fetch,
         fetch_multiple: fetch_multiple,
         fetch_with_reverse: fetch_with_reverse,
+        just_fetch_list: just_fetch_list,
 
         set_all_entity_metadata: set_all_entity_metadata,
         start_poll_timeout: start_poll_timeout,

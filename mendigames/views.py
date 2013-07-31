@@ -65,7 +65,8 @@ class RevListView(generics.ListCreateAPIView):
                 elif v == 'false':
                     pyv = False
             pyparams[k] = pyv
-
+        if(pyparams.get("page", None)):
+            pyparams.pop("page")
         return queryset.filter(**pyparams)
 
     def post(self, request, *args, **kwargs):
@@ -184,6 +185,13 @@ class ItemList(RevListView):
 class ItemDetail(RevDetailView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+
+
+class ItemPage(RevListView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    paginate_by = 100
+    paginate_by_param = 'page_size'
 
 
 class HasItemList(RevListView):
