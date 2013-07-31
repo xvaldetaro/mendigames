@@ -28,9 +28,11 @@
         <label>Dices</label>
         <div class="row-fluid">
             <div class="span3">
-                <div class="control-group">
+                <div class="control-group borderdices">
+                    <div class="borderdices totalcenteralign text-center">
                     <label class="control-label" for="inputEmail">Multiplier:</label>
-                    <div class="controls">
+                    </div>
+                    <div class="controls text-center controlsmargin">
                         <select class="input-mini" ng-model="diceMult">
                             <option>1</option>
                             <option>2</option>
@@ -52,14 +54,16 @@
                 </div>
             </div>
             <div class="span3">
-                <div class="control-group">
-                    <label class="control-label" for="inputEmail">Modifier:</label>
-                    <div class="controls">
+                <div class="control-group borderdices">
+                    <div class="borderdices totalcenteralign text-center">
+                    <label class="control-label" for="inputEmail">Modifier:</label>    
+                    </div>
+                    <div class="controls text-center controlsmargin">
                         <select class="input-mini" ng-model="diceMod">
                             <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
                         </select>
                     </div>
-                </div>
+                </div> 
             </div>
             <div class="span6">
                 <div ng-click="roll(2)" class="stat-number dice"><p>d2</p></div>
@@ -98,13 +102,6 @@
     </div>
     <div class="menu-group">
         <div class="row-fluid">
-            <div class="span5">
-                <label>Gold</label>
-                <div class="input-prepend input-append">
-                    <div class="btn btn-inverse" ng-click="split_gold()"><i class="icon-shopping-cart icon-white"></i>&nbsp;Split</div>
-                    <div class="btn btn-inverse" ng-click="mass_give_gold()"><i class="icon-shopping-cart icon-white"></i>&nbsp;Give</div>
-                </div>
-            </div>
             <div class="span7">
                 <label>Rest</label>
                 <div class="input-prepend input-append">
@@ -114,13 +111,6 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span5">
-                <label>XP</label>
-                <div class="input-prepend input-append">
-                    <div class="btn btn-inverse" ng-click="split_xp()"><i class="icon-user icon-white"></i>&nbsp;Split</div>
-                    <div class="btn btn-inverse" ng-click="mass_give_xp()"><i class="icon-user icon-white"></i>&nbsp;Give</div>
-                </div>
-            </div>
             <div class="span7">
                 <label>End Combat</label>
                 <div class="input-prepend input-append">
@@ -144,7 +134,8 @@
                             <a class="dropdown-toggle">
                                 <div class="name-container">
                                     {{ch.name}}
-                                </div></a>
+                                </div>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li ng-show="ch.type == 'Player'">
                                   <a ng-click="short_rest(ch)">Short Rest</a>
@@ -178,12 +169,6 @@
                         </div>
                         <div ng-click="spend_ap(ch)" class="stat-number ap">
                             <i class="icon-star icon-white"></i><p>{{ch|total_ap}}</p>
-                        </div>
-                        <div ng-show="ch.type == 'Player'" ng-click="change_gold(ch)" class="stat-number gold">
-                            <i class="icon-shopping-cart icon-white"></i><p>{{ch.gold}}</p>
-                        </div>
-                        <div ng-show="ch.type == 'Player'" ng-click="change_xp(ch)" class="stat-number xp">
-                            <i class="icon-road icon-white"></i><p>{{ch.experience_points}}</p>
                         </div>
                     </div>
                     <div class="span3">

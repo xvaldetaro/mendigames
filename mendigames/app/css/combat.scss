@@ -15,6 +15,8 @@ $DAILY: #4d4d4f;
 $BGRAY: #ddd;
 $GBORDER: rgb(213,213,213);
 
+
+
 // ----------- Docked Menu Config
 div.docked-menu {
   position: fixed;
@@ -22,6 +24,7 @@ div.docked-menu {
   top: 41px;
   width: 400px;
   height:80%;
+  
   .menu-group {
     @include background-image(radial-gradient(rgb(220,220,220),rgb(200,200,200)));
     color: $FRONT;
@@ -30,6 +33,19 @@ div.docked-menu {
     label {
       font-weight: bold;
     }
+  }
+  
+  .borderdices {
+    @include borderfy();
+  }
+
+  .controlsmargin {
+    margin-top: 10px;
+    vertical-align: middle;
+  }
+
+  .totalcenteralign {
+    vertical-align: middle;
   }
 }
 
@@ -67,7 +83,6 @@ div.condition-box {
   width: 1.3em;
   @include buttonify($MISC);
 }
-
 // ------------- Combat List Config
 div.character-block {
   border: 1px solid lightgray;
@@ -79,7 +94,9 @@ div.character-block {
   padding-right: 4px;
   margin-bottom: 5px;
   &.Player {
-    @include background-image(radial-gradient(rgb(215,226,234),rgb(200,200,234)));
+    @include background-image(
+      radial-gradient(rgb(215,226,234),
+        rgb(200,200,234)));
     color: $FRONT;
     border-color: $BLOCKBORDER;
     &.turn {
@@ -87,7 +104,9 @@ div.character-block {
     }
   }
   &.Enemy {
-    @include background-image(radial-gradient(rgb(245,226,215),rgb(245,200,200)));
+    @include background-image(
+      radial-gradient(rgb(245,226,215),
+        rgb(245,200,200)));
     color: $FRONT;
     border-color: rgb(213, 213, 213);
     &.turn {
@@ -95,7 +114,9 @@ div.character-block {
     }
   }
   &.Neutral {
-    @include background-image(radial-gradient($BLOCK,rgb(200,200,200)));
+    @include background-image(
+      radial-gradient($BLOCK,
+        rgb(200,200,200)));
     color: $FRONT;
     border-color: rgb(213, 213, 213);
     &.turn {
@@ -141,7 +162,7 @@ div.inline {
 .stat-number {
   font-size: 1.3em;
   font-weight: bold;
-  min-width: 2em;
+  min-width: 3em;
   display: inline-block;
   color: $IFRONT;
   white-space: nowrap;
@@ -192,7 +213,7 @@ div.inline {
   }
   &.dice {
     @include buttonify($AP);
-    min-width: 2.45em;
+    min-width: 3em;
     min-height: 1.7em;
   }
 }

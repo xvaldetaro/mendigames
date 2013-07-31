@@ -16,6 +16,16 @@ div.docked-menu {
     padding: 1em; }
     div.docked-menu .menu-group label {
       font-weight: bold; }
+  div.docked-menu .borderdices {
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px; }
+  div.docked-menu .controlsmargin {
+    margin-top: 10px;
+    vertical-align: middle; }
+  div.docked-menu .totalcenteralign {
+    vertical-align: middle; }
 
 div.btn-inverse {
   font-weight: bold; }
@@ -124,7 +134,7 @@ div.inline {
 .stat-number {
   font-size: 1.3em;
   font-weight: bold;
-  min-width: 2em;
+  min-width: 3em;
   display: inline-block;
   color: white;
   white-space: nowrap;
@@ -257,7 +267,7 @@ div.inline {
     border-style: solid;
     border-color: #dddddd;
     border-radius: 3px;
-    min-width: 2.45em;
+    min-width: 3em;
     min-height: 1.7em; }
     .stat-number.dice:hover {
       background-color: #383838;
