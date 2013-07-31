@@ -126,6 +126,11 @@ function(EM, roll, Restangular) {
     function delete_character(chi, c) {
         return EM.remove('character', c, chi);
     }
+    function switch_condition(ch, hasCondition){
+        ch._has_conditions.push(hasCondition);
+        hasCondition.character = ch.id;
+        EM.update('has_condition', hasCondition);
+    }
     return {
         save: save,
         change_hp: change_hp,
@@ -148,7 +153,8 @@ function(EM, roll, Restangular) {
         add_condition: add_condition,
         delete_character: delete_character,
         incapacitated: incapacitated,
-        increase_sub_init: increase_sub_init
+        increase_sub_init: increase_sub_init,
+        switch_condition: switch_condition
     };
 }])
 

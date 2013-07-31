@@ -64,7 +64,6 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
 function($scope, $rootScope, $dialog, Och, Log) {
     $scope.Och = Och;
-    $scope.droppedConditions = [];
 
     $scope.change_gold = function () {
         $scope.inputDialog.open().then(function(result){
@@ -163,14 +162,17 @@ function($scope, $rootScope, $dialog, Och, Log) {
 
         Log($scope.ch.name+' is not: '+name+' anymore');
     };
-    $scope.condition_drop = function(e,o) {
+    $scope.drop_condition = function(condition) {
         // The condition dropped is the raw Restangular condition object
-        var condition = $scope.droppedConditions.pop();
+        if(!condition.wizards_id && condition.condition){
+            Och.switch_condition($scope.ch, condition);
+        }
+            return; 
+
         Och.add_condition($scope.ch, condition,
             $scope.characterList[$scope.campaign.turn].init, $scope.campaign.round);
 
         Log($scope.ch.name+' is: '+condition.name);
-        $rootScope.$broadcast('Condition.dropped');
     };
 }])
 
@@ -223,9 +225,6 @@ function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
         Log(logStr);
     };
     $scope.enemyCount = 0;
-    $scope.$on('Condition.dropped', function() {
-        $scope.conditionList = EM.listSlice('condition');
-    });
     $scope.fetch_from_compendium = function(condition) {
         WizardsService.fetch(condition.wizards_id, 'glossary', 'condition',condition);
     };
@@ -303,4 +302,7 @@ function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
     $scope.mass_milestone = function(){
         Ocam.mass_milestone($scope.characterList);
     };
+    $scope.ret_false = function(){ 
+    return false; 
+};
 }])

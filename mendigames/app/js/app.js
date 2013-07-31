@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('mendigames',
-['djangular','restangular','ui.bootstrap','ngDragDrop', 'ngSanitize'])
+['djangular','restangular','ui.bootstrap','btford.dragon-drop','ngSanitize'])
 
 .config(['$routeProvider','DjangoProperties',function ($routeProvider,DjangoProperties){
     var static_url = DjangoProperties.STATIC_URL;
