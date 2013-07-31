@@ -43,7 +43,7 @@ function($scope) {
 
 }])
 
-.controller('ShopCtrl', ['$scope','EM',
+.controller('ItemFinderCtrl', ['$scope','EM',
 function($scope, EM) {
     $scope.categories = [
         {name: 'Armor', value: 'ARMO'},
@@ -77,12 +77,12 @@ function($scope, EM) {
         {name: 'Common', value: 'C'},
     ];
 
-    function got_shop(list){
-        $scope.shop = list.data.data;
-        $scope.pageCount = Math.ceil($scope.shop.count/100)
+    function got_item_finder(list){
+        $scope.item_finder = list.data.data;
+        $scope.pageCount = Math.ceil($scope.item_finder.count/100)
         $scope.$apply();
     }
-    $scope.shop_search = function(page) {
+    $scope.item_finder_search = function(page) {
         var query = {};
 
         if(!page)
@@ -104,13 +104,13 @@ function($scope, EM) {
         if($scope.cost_stop)
             query.cost__lte = $scope.cost_stop;
         query.page = $scope.currentPage;
-        EM.just_fetch_list('item_page',query).then(got_shop);
+        EM.just_fetch_list('item_page',query).then(got_item_finder);
         $scope.current_query = query;
     };
 
     $scope.goto_page = function(page) {
         $scope.current_query.page = page;
-        EM.just_fetch_list('item_page',$scope.current_query).then(got_shop);
+        EM.just_fetch_list('item_page',$scope.current_query).then(got_item_finder);
     }
 
     $scope.predicate = 'level';

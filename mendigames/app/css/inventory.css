@@ -1,15 +1,6 @@
 .pointer {
   cursor: pointer; }
 
-.inventory {
-  border-color: #dddddd;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-  border-top: 0; }
-  .inventory td.td-name {
-    cursor: pointer; }
-
 .equip-all {
   text-align: center; }
 
@@ -22,3 +13,36 @@
   border-radius: 5px;
   padding-top: 0px;
   min-height: 1.6em; }
+
+.inventory-section {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  position: fixed; }
+  .inventory-section.characters {
+    top: 5%;
+    right: 51%;
+    left: 1.5%;
+    bottom: 1.5%; }
+  .inventory-section.stashes {
+    top: 51%;
+    right: 51%;
+    left: 1.5%;
+    bottom: 1.5%; }
+  .inventory-section.finder {
+    top: 5%;
+    right: 1.5%;
+    left: 51%;
+    bottom: 1.5%; }
+  .inventory-section .inventory {
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    overflow: auto;
+    overflow-x: hidden;
+    height: 84%;
+    border: 0; }
+    .inventory-section .inventory td.td-name {
+      cursor: pointer; }

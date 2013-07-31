@@ -1,15 +1,8 @@
+@import 'bourbon/bourbon';
 @import 'mixins.scss';
 
 .pointer {
     cursor: pointer;
-}
-
-.inventory {
-    @include borderfy();
-    border-top: 0;
-    td.td-name {
-        cursor: pointer;
-    }
 }
 
 .equip-all {
@@ -26,3 +19,45 @@
   padding-top: 0px;
   min-height: 1.6em;
 }
+
+$TOP: 5%;
+$MINMARGIN: 1.5%;
+$HALFMIN: 49%;
+$HALFMAX: 51%;
+
+.inventory-section {
+  @include borderfy();
+  position: fixed;
+  &.characters {
+    top: $TOP;
+    right: $HALFMAX;
+    left: $MINMARGIN;
+    bottom: $MINMARGIN;
+  }
+
+  &.stashes {
+    top: $HALFMAX;
+    right: $HALFMAX;
+    left: $MINMARGIN;
+    bottom: $MINMARGIN;
+  }
+
+  &.finder {
+    top: $TOP;
+    right: $MINMARGIN;
+    left: $HALFMAX;
+    bottom: $MINMARGIN;
+  }
+
+  .inventory {
+    @include borderfy();
+    td.td-name {
+        cursor: pointer;
+    }
+    overflow: auto;
+    overflow-x: hidden;
+    height: 84%;
+    border: 0;
+  }
+}
+
