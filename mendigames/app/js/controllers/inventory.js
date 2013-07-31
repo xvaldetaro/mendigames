@@ -22,6 +22,7 @@ function($scope, $routeParams, EM, WizardsService) {
     $scope.$on('EM.new_list.character', function(){
         var newList = EM.listSlice('character');
         $scope.characterList = newList;
+        $scope.character = $scope.characterList[0];
         $scope.$apply();
     });
     $scope.$on('EM.new_list.campaign', function(){
@@ -38,13 +39,18 @@ function($scope, $routeParams, EM, WizardsService) {
     };
 }])
 
-.controller('CharacterInventoryCtrl', ['$scope',
-function($scope) {
-
+.controller('CharacterInventoryCtrl', ['$scope','Och',
+function($scope, Och) {
+    $scope.item_drop = function(item) {
+        Och.add_item($scope.c, item);
+    };
+    $scope.accept_item = function(item) {
+        return !(item.wizards_id === undefined);
+    };
 }])
 
-.controller('ItemFinderCtrl', ['$scope','EM',
-function($scope, EM) {
+.controller('ItemFinderCtrl', ['$scope','EM','Och',
+function($scope, EM, Och) {
     $scope.categories = [
         {name: 'Armor', value: 'ARMO'},
         {name: 'Arms', value: 'ARMS'},
@@ -118,5 +124,13 @@ function($scope, EM) {
         if($scope.predicate == predicate)
             $scope.predicate_reverse = !$scope.predicate_reverse;
         $scope.predicate = predicate;
+    };
+
+    $scope.item_drop = function(hi) {
+        if(!hi.character)
+            return;
+
+        var c = EM.by_key('character', hi.character);
+        Och.remove_item(c, hi);
     };
 }]);

@@ -16,82 +16,92 @@
     </div>
   </div>
 
-<div class="characters inventory-section">
-    <tabset>
-        <tab class="pointer" ng-repeat="c in characterList" ng-controller="CharacterInventoryCtrl" heading="{{c.name}}" active="c.active">
-            <div class="equip-all">
-                <div class="row-fluid">
-                    <div class="offset3 span6">
-                        <label>Head</label>
-                        <div class="equip" data-drop="true" ng-model='droppedConditions' jqyoui-droppable="{multiple:false,onDrop:'head_drop'}">
-                        </div>
-                    </div>               
-                </div>
-                <div class="row-fluid">
-                    <div class="offset3 span6">
-                        <label>Neck</label>
-                        <div class="equip">
-                        </div>
-                    </div>               
-                </div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span4 inventory-section">
+            <div class="inventory-config">
+                AAA
             </div>
-            <div class="inventory">
-                <table class="table table-condensed table-hover">
-                      <tr>
-                          <th>Name</th>
-                          <th>Category</th>
-                          <th>Level</th>
-                          <th>Rarity</th>
-                          <th>Cost</th>
-                          <th>Weight</th>
-                      </tr>
-                      <tr ng-repeat="hi in c._has_items">
-                        <td class="td-name" ng-click="fetch_from_compendium(hi._item)">{{hi._item.name}}</td>
-                        <td>{{hi._item.category}}</td>
-                        <td>{{hi._item.level}}</td>
-                        <td>{{hi._item.rarity}}</td>
-                        <td>{{hi._item.cost}}</td>
-                        <td>{{hi._item.weight}}</td>
-                      </tr>
+            <div class="inventory-list">
+                AAAA
+            </div>
+        </div>
+        <div class="span4 inventory-section">
+            <tabset vertical="false" type="'tabs'" >
+                <tab class="pointer" ng-repeat="c in characterList" heading="{{c.name}}" active="c.active">
+                    <div ng-controller="CharacterInventoryCtrl">
+                        <div class="inventory-config character">
+                            <div class="row-fluid">
+                                <div class="offset3 span5">
+                                    <label>Head</label>
+                                    <div class="equip">
+                                    </div>
+                                </div>        
+                            </div>
+                        </div>
+                        <div class="inventory-list">
+                            <table class="table table-condensed table-hover">
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Category</th>
+                                  <th>Level</th>
+                                  <th>Rarity</th>
+                                  <th>gp</th>
+                                  <th>W</th>
+                                </tr>
+                                <tbody btf-dragon="hi in c._has_items" btf-dragon-drop-function="item_drop" btf-dragon-accepts="accept_item">
+                                    <tr>
+                                        <td class="td-name" ng-click="fetch_from_compendium(hi._item)">{{hi._item.name}}</td>
+                                        <td>{{hi._item.category}}</td>
+                                        <td>{{hi._item.level}}</td>
+                                        <td>{{hi._item.rarity}}</td>
+                                        <td>{{hi._item.cost}}</td>
+                                        <td>{{hi._item.weight}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+        <div class="span4 inventory-section" ng-controller="ItemFinderCtrl">
+            <div class="inventory-config">
+                <form class="form-inline">
+                    <input type="text" class="input-medium" ng-model="item_name" placeholder="Item name">
+                    <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarities"></select>
+                    <select class="input-small" ng-model="category" ng-options="cat.name for cat in categories"></select>
+                    <label class="checkbox">Level: <input type="text" ng-model="level_start" class="input-mini"></label><label>to<input type="text" ng-model="level_stop" class="input-mini"></label>
+                    <label class="checkbox">Cost: <input type="text" ng-model="cost_start" class="input-mini"></label><label>to<input type="text" ng-model="cost_stop" class="input-mini"></label>
+                    <button ng-click="item_finder_search(1)" class="btn">Search</button>
+                    <input type="text" class="input-medium" ng-model="item_finder_filter" placeholder="Filter">
+                </form>
+                <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+            </div>
+            <div class="inventory-list">
+                <table class="table table-condensed">
+                    <tr>
+                        <th ng-click="set_predicate('name')">Name</th>
+                        <th ng-click="set_predicate('category')">Category</th>
+                        <th ng-click="set_predicate('level')">Level</th>
+                        <th ng-click="set_predicate('rarity')">Rarity</th>
+                        <th ng-click="set_predicate('cost')">gp</th>
+                        <th ng-click="set_predicate('weight')">W</th>
+                    </tr>
+                    <tbody btf-dragon="item in item_finder.results | orderBy:predicate:predicate_reverse | filter:item_finder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
+                        <tr>
+                            <td class="td-name" ng-click="fetch_from_compendium(item)">{{item.name}}</td>
+                            <td>{{item.category}}</td>
+                            <td>{{item.level}}</td>
+                            <td>{{item.rarity}}</td>
+                            <td>{{item.cost}}</td>
+                            <td>{{item.weight}}</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-        </tab>
-    </tabset>
-</div>
-<div class="finder inventory-section" ng-controller="ItemFinderCtrl">
-    <form class="form-inline">
-        <input type="text" class="input-medium" ng-model="item_name" placeholder="Item name">
-        <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarities"></select>
-        <select class="input-small" ng-model="category" ng-options="cat.name for cat in categories"></select>
-        <label class="checkbox">Level: <input type="text" ng-model="level_start" class="input-mini"></label><label>to<input type="text" ng-model="level_stop" class="input-mini"></label>
-        <label class="checkbox">Cost: <input type="text" ng-model="cost_start" class="input-mini"></label><label>to<input type="text" ng-model="cost_stop" class="input-mini"></label>
-        <button ng-click="item_finder_search(1)" class="btn">Search</button>
-        <input type="text" class="input-medium" ng-model="item_finder_filter" placeholder="Filter">
-    </form>
-    <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
-    <div class="inventory">
-        <table class="table table-condensed">
-            <tr>
-                <th ng-click="set_predicate('name')">Name</th>
-                <th ng-click="set_predicate('category')">Category</th>
-                <th ng-click="set_predicate('level')">Level</th>
-                <th ng-click="set_predicate('rarity')">Rarity</th>
-                <th ng-click="set_predicate('cost')">Cost</th>
-                <th ng-click="set_predicate('weight')">Weight</th>
-            </tr>
-            <tr ng-repeat="item in item_finder.results | orderBy:predicate:predicate_reverse | filter:item_finder_filter">
-                <td class="td-name" ng-click="fetch_from_compendium(item)">{{item.name}}</td>
-                <td>{{item.category}}</td>
-                <td>{{item.level}}</td>
-                <td>{{item.rarity}}</td>
-                <td>{{item.cost}}</td>
-                <td>{{item.weight}}</td>
-            </tr>
-        </table>
+        </div>
     </div>
-</div>
-<div class="stashes inventory-section">
-    AAA
 </div>
 <!-- Modal -->
 <div ng-controller='ModalController' class="wizards-modal" modal="wizardsModal" close="close()">

@@ -162,6 +162,15 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             });
         });
     }
+    // used when a relation is needed to an entity not from the EM local database
+    function add_local(entity, instance) {
+        if(by_key(entity, instance[get_pk(entity)]))
+            return;
+        var entData = all[entity];
+        entData.list.push(instance);
+        var i = entData.list.length-1;
+        entData.edict[instance[get_pk(entity)]] = instance;
+    }
     function update(entity, instance) {
         $log.log('Requesting Update '+entity);
         return async_request(function(){ return instance.put(); });
@@ -251,6 +260,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         update: update,
         add: add,
         remove: remove,
+        add_local: add_local,
         remove_list: remove_list,
         update_list: update_list,
         add_list: add_list,

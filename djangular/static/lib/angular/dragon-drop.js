@@ -255,7 +255,8 @@ angular.module('btford.dragon-drop', []).
           };
 
           elt.bind('mousedown', function (ev) {
-            mouseDown = true;
+            if(ev.button === 0)
+              mouseDown = true;
           });
           elt.bind('mousemove', function (ev) {
             if (!mouseDown||dragValue) {

@@ -166,8 +166,8 @@ function($scope, $rootScope, $dialog, Och, Log) {
         // The condition dropped is the raw Restangular condition object
         if(!condition.wizards_id && condition.condition){
             Och.switch_condition($scope.ch, condition);
-        }
             return; 
+        }
 
         Och.add_condition($scope.ch, condition,
             $scope.characterList[$scope.campaign.turn].init, $scope.campaign.round);

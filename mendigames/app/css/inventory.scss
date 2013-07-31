@@ -1,6 +1,34 @@
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
 
+$INVCONFIG: 142px;
+$TOPPREAMBLE: 62px;
+@media (max-height: 500px) {
+  .inventory-list {
+    height: 400px - $INVCONFIG - $TOPPREAMBLE;
+  }
+}
+@media (min-height: 500px) {
+  .inventory-list {
+    height: 500px - $INVCONFIG - $TOPPREAMBLE;
+  }
+}
+@media (min-height: 650px) {
+  .inventory-list {
+    height: 650px - $INVCONFIG - $TOPPREAMBLE;
+  }
+}
+@media (min-height: 800px) {
+  .inventory-list {
+    height: 800px - $INVCONFIG - $TOPPREAMBLE;
+  }
+}
+@media (min-height: 950px) {
+  .inventory-list {
+    height: 950px - $INVCONFIG - $TOPPREAMBLE;
+  }
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -20,44 +48,23 @@
   min-height: 1.6em;
 }
 
-$TOP: 5%;
-$MINMARGIN: 1.5%;
-$HALFMIN: 49%;
-$HALFMAX: 51%;
-
 .inventory-section {
   @include borderfy();
-  position: fixed;
-  &.characters {
-    top: $TOP;
-    right: $HALFMAX;
-    left: $MINMARGIN;
-    bottom: $MINMARGIN;
-  }
+  box-shadow: 0px 0px 7px rgb(0,0,0);
+}
 
-  &.stashes {
-    top: $HALFMAX;
-    right: $HALFMAX;
-    left: $MINMARGIN;
-    bottom: $MINMARGIN;
+.inventory-config {
+  height: $INVCONFIG;
+  &.character {
+    height: $INVCONFIG - 37px;
   }
+}
 
-  &.finder {
-    top: $TOP;
-    right: $MINMARGIN;
-    left: $HALFMAX;
-    bottom: $MINMARGIN;
+.inventory-list {
+  td.td-name {
+      cursor: pointer;
   }
-
-  .inventory {
-    @include borderfy();
-    td.td-name {
-        cursor: pointer;
-    }
-    overflow: auto;
-    overflow-x: hidden;
-    height: 84%;
-    border: 0;
-  }
+  overflow: auto;
+  overflow-x: hidden;
 }
 

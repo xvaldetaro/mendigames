@@ -113,14 +113,29 @@ function(EM, roll, Restangular) {
             ends: 'T',
             started_round: round,
             started_init: init,
-            _condition: co,
-            needSync: true
+            _condition: co
         };
 
         ch._has_conditions.push(hasCondition);
         var i = ch._has_conditions.length-1;
         return EM.add('has_condition', hasCondition).then(function(newE){
             ch._has_conditions[i] = newE;
+        });
+    }
+    function remove_item(c, hi) {
+        return EM.remove('has_item', hi);
+    }
+    function add_item(ch, i) {
+        var hasItem = {
+            character: ch.id,
+            item: i.id,
+            _item: i
+        };
+        EM.add_local('item', i);
+        ch._has_items.push(hasItem);
+        var i = ch._has_items.length-1;
+        return EM.add('has_item', hasItem).then(function(newE){
+            ch._has_items[i] = newE;
         });
     }
     function delete_character(chi, c) {
@@ -151,6 +166,8 @@ function(EM, roll, Restangular) {
         clear_conditions: clear_conditions,
         remove_condition: remove_condition,
         add_condition: add_condition,
+        add_item: add_item,
+        remove_item: remove_item,
         delete_character: delete_character,
         incapacitated: incapacitated,
         increase_sub_init: increase_sub_init,
