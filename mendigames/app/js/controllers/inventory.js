@@ -42,10 +42,18 @@ function($scope, $routeParams, EM, WizardsService) {
 .controller('CharacterInventoryCtrl', ['$scope','Och',
 function($scope, Och) {
     $scope.item_drop = function(item) {
+
         Och.add_item($scope.c, item);
     };
     $scope.accept_item = function(item) {
         return !(item.wizards_id === undefined);
+    };
+    $scope.predicate = '_item.cost';
+    $scope.set_predicate = function(predicate) {
+        predicate = '_item.'+predicate;
+        if($scope.predicate == predicate)
+            $scope.predicate_reverse = !$scope.predicate_reverse;
+        $scope.predicate = predicate;
     };
 }])
 

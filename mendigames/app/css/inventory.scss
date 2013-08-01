@@ -4,27 +4,27 @@
 $INVCONFIG: 142px;
 $TOPPREAMBLE: 62px;
 @media (max-height: 500px) {
-  .inventory-list {
+  .inventory-table-body {
     height: 400px - $INVCONFIG - $TOPPREAMBLE;
   }
 }
 @media (min-height: 500px) {
-  .inventory-list {
+  .inventory-table-body {
     height: 500px - $INVCONFIG - $TOPPREAMBLE;
   }
 }
 @media (min-height: 650px) {
-  .inventory-list {
+  .inventory-table-body {
     height: 650px - $INVCONFIG - $TOPPREAMBLE;
   }
 }
 @media (min-height: 800px) {
-  .inventory-list {
+  .inventory-table-body {
     height: 800px - $INVCONFIG - $TOPPREAMBLE;
   }
 }
 @media (min-height: 950px) {
-  .inventory-list {
+  .inventory-table-body {
     height: 950px - $INVCONFIG - $TOPPREAMBLE;
   }
 }
@@ -56,15 +56,49 @@ $TOPPREAMBLE: 62px;
 .inventory-config {
   height: $INVCONFIG;
   &.character {
-    height: $INVCONFIG - 37px;
+    height: $INVCONFIG - 58px;
   }
 }
 
-.inventory-list {
-  td.td-name {
-      cursor: pointer;
+.inventory-table-header {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  .inventory-cell {
+    cursor: pointer;
   }
+}
+.inventory-table-body {
   overflow: auto;
   overflow-x: hidden;
+    border: {
+      color: black;
+      style: solid;
+      width: 1px;
+    }
+  .inventory-row {
+    cursor: pointer;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .inventory-cell {
+    cursor: pointer;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-top: 0;
+    border-left: 0;
+    border-bottom: 0;
+    &.last-cell {
+      border-right: 0;
+    }
+  }
+  .header {
+
+  }
 }
 

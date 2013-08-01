@@ -39,27 +39,23 @@
                                 </div>        
                             </div>
                         </div>
-                        <div class="inventory-list">
-                            <table class="table table-condensed table-hover">
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Category</th>
-                                  <th>Level</th>
-                                  <th>Rarity</th>
-                                  <th>gp</th>
-                                  <th>W</th>
-                                </tr>
-                                <tbody btf-dragon="hi in c._has_items" btf-dragon-drop-function="item_drop" btf-dragon-accepts="accept_item">
-                                    <tr>
-                                        <td class="td-name" ng-click="fetch_from_compendium(hi._item)">{{hi._item.name}}</td>
-                                        <td>{{hi._item.category}}</td>
-                                        <td>{{hi._item.level}}</td>
-                                        <td>{{hi._item.rarity}}</td>
-                                        <td>{{hi._item.cost}}</td>
-                                        <td>{{hi._item.weight}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="row-fluid inventory-table-header">
+                            <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                            <div class="span2 inventory-cell" ng-click="set_predicate('category')">Type</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                            <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                            <div class="span2 inventory-cell" ng-click="set_predicate('weight')">W</div>
+                        </div>
+                        <div class="inventory-table-body" btf-dragon="hi in c._has_items | orderBy:predicate:predicate_reverse" btf-dragon-drop-function="item_drop">
+                            <div class="row-fluid inventory-row">
+                                <div class="span4 inventory-cell"><div class="td-name" ng-click="fetch_from_compendium(item)">{{hi._item.name}}</div></div>
+                                <div class="span2 inventory-cell">{{hi._item.category}}</div>
+                                <div class="span1 inventory-cell">{{hi._item.level}}</div>
+                                <div class="span1 inventory-cell">{{hi._item.rarity}}</div>
+                                <div class="span2 inventory-cell">{{hi._item.cost}}</div>
+                                <div class="span2 inventory-cell last-cell">{{hi._item.weight}}</div>
+                            </div>
                         </div>
                     </div>
                 </tab>
@@ -71,34 +67,30 @@
                     <input type="text" class="input-medium" ng-model="item_name" placeholder="Item name">
                     <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarities"></select>
                     <select class="input-small" ng-model="category" ng-options="cat.name for cat in categories"></select>
-                    <label class="checkbox">Level: <input type="text" ng-model="level_start" class="input-mini"></label><label>to<input type="text" ng-model="level_stop" class="input-mini"></label>
-                    <label class="checkbox">Cost: <input type="text" ng-model="cost_start" class="input-mini"></label><label>to<input type="text" ng-model="cost_stop" class="input-mini"></label>
+                    <label class="checkbox">Level: <input type="text" ng-model="level_start" class="input-nano"></label><label>to<input type="text" ng-model="level_stop" class="input-nano"></label>
+                    <label class="checkbox">Cost: <input type="text" ng-model="cost_start" class="input-nano"></label><label>to<input type="text" ng-model="cost_stop" class="input-nano"></label>
                     <button ng-click="item_finder_search(1)" class="btn">Search</button>
                     <input type="text" class="input-medium" ng-model="item_finder_filter" placeholder="Filter">
                 </form>
                 <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
             </div>
-            <div class="inventory-list">
-                <table class="table table-condensed">
-                    <tr>
-                        <th ng-click="set_predicate('name')">Name</th>
-                        <th ng-click="set_predicate('category')">Category</th>
-                        <th ng-click="set_predicate('level')">Level</th>
-                        <th ng-click="set_predicate('rarity')">Rarity</th>
-                        <th ng-click="set_predicate('cost')">gp</th>
-                        <th ng-click="set_predicate('weight')">W</th>
-                    </tr>
-                    <tbody btf-dragon="item in item_finder.results | orderBy:predicate:predicate_reverse | filter:item_finder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
-                        <tr>
-                            <td class="td-name" ng-click="fetch_from_compendium(item)">{{item.name}}</td>
-                            <td>{{item.category}}</td>
-                            <td>{{item.level}}</td>
-                            <td>{{item.rarity}}</td>
-                            <td>{{item.cost}}</td>
-                            <td>{{item.weight}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="row-fluid inventory-table-header">
+                <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                <div class="span2 inventory-cell" ng-click="set_predicate('category')">Type</div>
+                <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
+                <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                <div class="span2 inventory-cell" ng-click="set_predicate('weight')">W</div>
+            </div>
+            <div class="inventory-table-body" btf-dragon="item in item_finder.results | orderBy:predicate:predicate_reverse | filter:item_finder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
+                <div class="row-fluid inventory-row">
+                    <div class="span4 inventory-cell"><div class="td-name" ng-click="fetch_from_compendium(item)">{{item.name}}</div></div>
+                    <div class="span2 inventory-cell">{{item.category}}</div>
+                    <div class="span1 inventory-cell">{{item.level}}</div>
+                    <div class="span1 inventory-cell">{{item.rarity}}</div>
+                    <div class="span2 inventory-cell">{{item.cost}}</div>
+                    <div class="span2 inventory-cell last-cell">{{item.weight}}</div>
+                </div>
             </div>
         </div>
     </div>
