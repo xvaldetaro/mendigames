@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.controller('InventoryCtrl', ['$scope','$routeParams','EM','WizardsService',
-function($scope, $routeParams, EM, WizardsService) {
+.controller('InventoryCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
+function($scope, $routeParams, EM, WizardsService,$dialog) {
     var entitiesMetadata = {
         'item': {pk: 'id', related: [], query: {hasitem__isnull: false}},
         'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
@@ -30,23 +30,49 @@ function($scope, $routeParams, EM, WizardsService) {
         $scope.title = $scope.campaign.name;
         $scope.$apply();
     });
-
     // Bootstrap the scope
     EM.start(entitiesMetadata, syncEntities);
 
     $scope.fetch_from_compendium = function(item) {
+        if(item.item !== undefined)
+            item = item._item;
         WizardsService.fetch(item.wizards_id, 'item', 'item',item);
     };
+
+    $scope.prices = [
+        {text:'Free',value:0},
+        {text:'25%',value:0.25},
+        {text:'50%',value:0.5},
+        {text:'75%',value:0.75},
+        {text:'100%',value:1},
+    ];
+    $scope.buy_adjustment = $scope.prices[0];
+    $scope.sell_adjustment = $scope.prices[0];
+    $scope.inputDialog = $dialog.dialog({
+        templateUrl:  '/static/mendigames/partials/dialogs/input.html',
+        controller: 'InputDialogController'
+    });
 }])
 
 .controller('CharacterInventoryCtrl', ['$scope','Och',
 function($scope, Och) {
+    $scope.change_gold = function () {
+        $scope.inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Och.change_gold($scope.c, result);
+        });
+    };
     $scope.item_drop = function(item) {
-
-        Och.add_item($scope.c, item);
+        var cost = item.cost * $scope.buy_adjustment.value;
+        if($scope.c.gold < cost) {
+            window.alert($scope.c.name+' has insufficient gold');
+            return;
+        }
+        Och.add_item($scope.c, item, cost);
     };
     $scope.accept_item = function(item) {
-        return !(item.wizards_id === undefined);
+        return item.item === undefined;
     };
     $scope.predicate = '_item.cost';
     $scope.set_predicate = function(predicate) {
@@ -138,7 +164,8 @@ function($scope, EM, Och) {
         if(!hi.character)
             return;
 
+        var cost = hi._item.cost * $scope.sell_adjustment.value;
         var c = EM.by_key('character', hi.character);
-        Och.remove_item(c, hi);
+        Och.remove_item(c, hi, cost);
     };
 }]);

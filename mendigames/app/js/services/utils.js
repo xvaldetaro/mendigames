@@ -33,6 +33,11 @@ function($rootScope, $http, EM){
                 var html_description = $('div[id|="detail"]', fakedom).html();
                 if(entity){
                     instance.html_description = html_description;
+                    if(entity=='item'){
+                        var w = html_description.match(/(\d+)\s*lb/);
+                        if(w)
+                            instance.weight = w[1];
+                    }
                     EM.update(entity, instance);
                 }
                 $rootScope.$broadcast('WizardsService.fetch', html_description);

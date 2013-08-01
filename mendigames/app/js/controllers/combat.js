@@ -65,13 +65,6 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
 function($scope, $rootScope, $dialog, Och, Log) {
     $scope.Och = Och;
 
-    $scope.change_gold = function () {
-        $scope.inputDialog.open().then(function(result){
-            if(!result)
-                return;
-            Och.change_gold($scope.ch, result);
-        });
-    };
     $scope.change_xp = function () {
         $scope.inputDialog.open().then(function(result){
             if(!result)

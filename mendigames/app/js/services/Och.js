@@ -122,15 +122,19 @@ function(EM, roll, Restangular) {
             ch._has_conditions[i] = newE;
         });
     }
-    function remove_item(c, hi) {
+    function remove_item(ch, hi, cost) {
+        if(cost > 0)
+            change_gold(ch, cost);
         return EM.remove('has_item', hi);
     }
-    function add_item(ch, i) {
+    function add_item(ch, i, cost) {
         var hasItem = {
             character: ch.id,
             item: i.id,
             _item: i
         };
+        if(cost > 0)
+            change_gold(ch, -1*cost);
         EM.add_local('item', i);
         ch._has_items.push(hasItem);
         var i = ch._has_items.length-1;
