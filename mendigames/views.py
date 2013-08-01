@@ -5,11 +5,11 @@ from rest_framework import viewsets, renderers, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from mendigames.models import (Campaign, Character, Condition, HasPower, Power,
-    HasCondition, Item, HasItem)
+    HasCondition, Item, HasItem, TemplateItem)
 from mendigames.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
                                 CampaignSerializer, PowerSerializer, HasPowerSerializer,
                                 ConditionSerializer, HasConditionSerializer,
-                                ItemSerializer, HasItemSerializer)
+                                ItemSerializer, HasItemSerializer, TemplateItemSerializer)
 from django.core.cache import cache
 
 
@@ -67,6 +67,7 @@ class RevListView(generics.ListCreateAPIView):
             pyparams[k] = pyv
         if(pyparams.get("page", None)):
             pyparams.pop("page")
+            print pyparams
         return queryset.filter(**pyparams)
 
     def post(self, request, *args, **kwargs):
@@ -185,6 +186,16 @@ class ItemList(RevListView):
 class ItemDetail(RevDetailView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+
+
+class TemplateItemList(RevListView):
+    queryset = TemplateItem.objects.all()
+    serializer_class = TemplateItemSerializer
+
+
+class TemplateItemDetail(RevDetailView):
+    queryset = TemplateItem.objects.all()
+    serializer_class = TemplateItemSerializer
 
 
 class ItemPage(RevListView):

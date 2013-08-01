@@ -255,6 +255,13 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             initEntities.push(eName);
         fetch_multiple(initEntities);
     }
+    function search(entity, key, value){
+        var l = list(entity), res = [];
+        for (var i = 0, len = l.length; i < len; i++) {
+            l[i][key] == value && res.push(l[i]);
+        };
+        return res;
+    }
     //start_poll_timeout();
     return {
         update: update,
@@ -266,6 +273,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         add_list: add_list,
 
         by_key: by_key,
+        search: search,
         list: list,
         listSlice: listSlice,
 

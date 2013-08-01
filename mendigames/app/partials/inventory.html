@@ -37,20 +37,20 @@
                         <button ng-click="change_gold(0)" class="btn">Gold:{{c.gold}}</button>
                         <div class="row-fluid inventory-table-header">
                             <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                            <div class="span2 inventory-cell" ng-click="set_predicate('category')">Type</div>
+                            <div class="span3 inventory-cell" ng-click="set_predicate('category')">Template</div>
                             <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
                             <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
                             <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
-                            <div class="span2 inventory-cell" ng-click="set_predicate('weight')">W</div>
                         </div>
                         <div class="inventory-table-body" btf-dragon="hi in c._has_items" btf-dragon-drop-function="item_drop">
                             <div class="row-fluid inventory-row">
                                 <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._item)">{{hi._item.name}}</div>
-                                <div class="span2 inventory-cell">{{hi._item.category}}</div>
+                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._item)">{{hi._template_item.id}}</div>
                                 <div class="span1 inventory-cell">{{hi._item.level}}</div>
                                 <div class="span1 inventory-cell">{{hi._item.rarity}}</div>
-                                <div class="span2 inventory-cell">{{hi._item.cost}}</div>
-                                <div class="span2 inventory-cell last-cell">{{hi._item.weight}}</div>
+                                <div class="span1 inventory-cell">{{hi.weight}}</div>
+                                <div class="span2 inventory-cell last-cell">{{hi._item.cost}}</div>
                             </div>
                         </div>
                     </div>
@@ -71,20 +71,20 @@
             </div>
             <div class="row-fluid inventory-table-header">
                 <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                <div class="span2 inventory-cell" ng-click="set_predicate('category')">Type</div>
+                <div class="span3 inventory-cell" ng-click="set_predicate('category')">Type</div>
                 <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
                 <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
                 <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
-                <div class="span2 inventory-cell" ng-click="set_predicate('weight')">W</div>
             </div>
             <div class="inventory-table-body" btf-dragon="item in item_finder.results | orderBy:predicate:predicate_reverse | filter:item_finder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
                 <div class="row-fluid inventory-row">
                     <div class="span4 inventory-cell" ng-click="fetch_from_compendium(item)">{{item.name}}</div>
-                    <div class="span2 inventory-cell">{{item.category}}</div>
+                    <div class="span3 inventory-cell">{{item.category}}</div>
                     <div class="span1 inventory-cell">{{item.level}}</div>
                     <div class="span1 inventory-cell">{{item.rarity}}</div>
-                    <div class="span2 inventory-cell">{{item.cost}}</div>
-                    <div class="span2 inventory-cell last-cell">{{item.weight}}</div>
+                    <div class="span1 inventory-cell">{{item.weight}}</div>
+                    <div class="span2 inventory-cell last-cell">{{item.cost}}</div>
                 </div>
             </div>
         </div>

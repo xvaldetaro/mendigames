@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.forms.models import model_to_dict
 from mendigames.models import (Character, Power, HasPower, HasCondition,
-                               Condition, Campaign, Item, HasItem)
+                               Condition, Campaign, Item, HasItem, TemplateItem)
 from rest_framework import serializers
 from django.core.cache import cache
 import random
@@ -63,9 +63,15 @@ class ConditionSerializer(RevSerializer):
 
 
 class ItemSerializer(RevSerializer):
-    revision_key = 'condition'
+    revision_key = 'item'
     class Meta:
         model = Item
+
+
+class TemplateItemSerializer(RevSerializer):
+    revision_key = 'template_item'
+    class Meta:
+        model = TemplateItem
 
 
 class HasPowerSerializer(RevSerializer):

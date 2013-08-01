@@ -6,10 +6,11 @@ angular.module('mendigames')
 function($scope, $routeParams, EM, WizardsService,$dialog) {
     var entitiesMetadata = {
         'item': {pk: 'id', related: [], query: {hasitem__isnull: false}},
+        'template_item': {pk: 'id', related: [], query: {}},
         'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
         'character': {pk: 'id', related: ['has_item'],
             query: {campaign: $routeParams.campaignId, type: 'Player'}},
-        'has_item': {pk: 'id', related: ['item'],
+        'has_item': {pk: 'id', related: ['item','template_item'],
             query: {character__campaign: $routeParams.campaignId}}
     };
     var syncEntities = [
@@ -52,10 +53,14 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
         templateUrl:  '/static/mendigames/partials/dialogs/input.html',
         controller: 'InputDialogController'
     });
+    $scope.createItemDialog = $dialog.dialog({
+        templateUrl:  '/static/mendigames/partials/dialogs/create_item.html',
+        controller: 'CreateItemDialogController'
+    })
 }])
 
-.controller('CharacterInventoryCtrl', ['$scope','Och',
-function($scope, Och) {
+.controller('CharacterInventoryCtrl', ['$scope','Och','EM',
+function($scope, Och, EM) {
     $scope.change_gold = function () {
         $scope.inputDialog.open().then(function(result){
             if(!result)
@@ -69,7 +74,19 @@ function($scope, Och) {
             window.alert($scope.c.name+' has insufficient gold');
             return;
         }
-        Och.add_item($scope.c, item, cost);
+        if(item.rarity!=='A' && (item.category==='ARMO' || item.category==='WEAP')) {
+            $scope.createItemDialog.options.resolve['item'] = function(){ 
+                return item; 
+            };
+            $scope.createItemDialog.open().then(function(result){
+                if(!result)
+                    result = EM.by_key('template_item',item.category);
+                Och.add_item($scope.c, item, cost, result);
+            });
+            return;
+        } 
+
+        Och.add_item($scope.c, item, cost, EM.by_key('template_item',item.category));
     };
     $scope.accept_item = function(item) {
         return item.item === undefined;
@@ -86,35 +103,36 @@ function($scope, Och) {
 .controller('ItemFinderCtrl', ['$scope','EM','Och',
 function($scope, EM, Och) {
     $scope.categories = [
+        {name: '----', value: ''},
+        {name: 'Alchemical Item', value: 'ALCH'},
+        {name: 'Alternative Reward', value: 'ALTE'},
+        {name: 'Ammunition', value: 'AMMU'},
         {name: 'Armor', value: 'ARMO'},
         {name: 'Arms', value: 'ARMS'},
-        {name: 'Item Set', value: 'ITEM'},
-        {name: 'Wondrous', value: 'WOND'},
-        {name: 'Ammunition', value: 'AMMU'},
-        {name: 'Waist', value: 'WAIS'},
-        {name: 'Alternative Reward', value: 'ALTE'},
-        {name: 'Head', value: 'HEAD'},
-        {name: 'Familiar', value: 'FAMI'},
         {name: 'Artifact', value: 'ARTI'},
         {name: 'Companion', value: 'COMP'},
-        {name: 'Hands', value: 'HAND'},
         {name: 'Consumable', value: 'CONS'},
+        {name: 'Equipment', value: 'EQUI'},
+        {name: 'Familiar', value: 'FAMI'},
+        {name: 'Feet', value: 'FEET'},
+        {name: 'Hands', value: 'HAND'},
+        {name: 'Head', value: 'HEAD'},
+        {name: 'Implement', value: 'IMPL'},
+        {name: 'Item Set', value: 'ITEM'},
         {name: 'Mount', value: 'MOUN'},
         {name: 'Neck', value: 'NECK'},
-        {name: 'Weapon', value: 'WEAP'},
-        {name: 'Implement', value: 'IMPL'},
-        {name: 'Equipment', value: 'EQUI'},
-        {name: 'Alchemical Item', value: 'ALCH'},
-        {name: 'Feet', value: 'FEET'},
-        {name: 'Head and Neck', value: 'HEAD'},
         {name: 'Ring', value: 'RING'},
+        {name: 'Waist', value: 'WAIS'},
+        {name: 'Weapon', value: 'WEAP'},
+        {name: 'Wondrous', value: 'WOND'},
     ];
 
     $scope.rarities = [
-        {name: 'Rare', value: 'R'},
-        {name: 'Uncommon', value: 'U'},
+        {name: '----', value: ''},
         {name: 'Mundane', value: 'A'},
         {name: 'Common', value: 'C'},
+        {name: 'Uncommon', value: 'U'},
+        {name: 'Rare', value: 'R'},
     ];
 
     function got_item_finder(list){

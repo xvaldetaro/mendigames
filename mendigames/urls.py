@@ -31,6 +31,10 @@ urlpatterns = patterns('',
 
     url(r'^item_page/?$', views.ItemPage.as_view()),
 
+    url(r'^template_item/?$', views.TemplateItemList.as_view()),
+
+    url(r'^template_item/(?P<pk>[0-9]+)/?$', views.TemplateItemDetail.as_view()),
+
     url(r'^item/(?P<pk>[0-9]+)/?$', views.ItemDetail.as_view()),
 
     url(r'^power/(?P<pk>[0-9]+)/?$', views.PowerDetail.as_view()),

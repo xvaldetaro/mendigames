@@ -127,11 +127,14 @@ function(EM, roll, Restangular) {
             change_gold(ch, cost);
         return EM.remove('has_item', hi);
     }
-    function add_item(ch, i, cost) {
+    function add_item(ch, i, cost, templateItem) {
         var hasItem = {
             character: ch.id,
             item: i.id,
-            _item: i
+            _item: i,
+            template_item: templateItem.id,
+            _template_item: templateItem,
+            weight: templateItem.weight
         };
         if(cost > 0)
             change_gold(ch, -1*cost);

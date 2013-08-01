@@ -1,5 +1,6 @@
 import xmltodict
-from mendigames.models import Power, Item, TraitSource, Monster, Condition
+from mendigames.models import (Power, Item, TraitSource, Monster, Condition,
+    TemplateItem)
 from string import capwords
 
 action_types = {
@@ -119,25 +120,25 @@ class wizards():
         return dom['Data']['Results'][capcut(tag_name)]
 
     def create_book(self, name):
-        book = Book(name=name)
-        book.save()
-        print "Saved book: %s" % book.name
-        self.books[name] = book
-        return book
+        pass
+        #book.save()
+        #print "Saved book: %s" % book.name
+        #self.books[name] = book
+        #return book
 
     def goc_books(self, books_string):
         ret_books = []
         books = books_string.split(', ')
-        self.book_length = max(self.book_length, len(books))
-        for bookname in books:
-            book = self.books.get(bookname)
-            if not book:
-                try:
-                    book = Book.objects.get(name=bookname)
-                except:
-                    book = self.create_book(bookname)
-            ret_books.append(book)
-        return ret_books
+        # self.book_length = max(self.book_length, len(books))
+        # for bookname in books:
+        #     book = self.books.get(bookname)
+        #     if not book:
+        #         try:
+        #             book = Book.objects.get(name=bookname)
+        #         except:
+        #             book = self.create_book(bookname)
+        #     ret_books.append(book)
+        return books
 
     def add_books(self, entry, object):
         pass
@@ -284,6 +285,29 @@ class wizards():
                 except:
                     self.create_condition(m_entry)
 
+    def create_baseitem(self, entry):
+        cat = categories.get(entry['Category'])
+        rar = self.get_rarity(entry)
+        if not ((cat == 'ARMO' or cat == 'WEAP') and rar == 'A'):
+            return
+        i = TemplateItem(
+            id=entry['Name'],
+            category=categories.get(entry['Category']),
+        )
+        i.save()
+        print "Created TemplateItem %s" % i.id
+
+    def persist_baseitems(self):
+        i_list = self.get_list_from_xml('item', 'item')
+
+        for i_entry in i_list:
+            books = self.goc_books(i_entry['SourceBook'])
+            if "Player's Handbook" in books:
+                try:
+                    TemplateItem.objects.get(id=i_entry['Name'])
+                except:
+                    self.create_baseitem(i_entry)
+
     def print_dict_choices(self, xmlfile, tag, subtag, defaults_to):
         il = self.get_list_from_xml(tag, xmlfile)
         item_types = {}
@@ -308,17 +332,23 @@ class wizards():
         tuples += "}"
         print tuples
 
-    def check_value(self, xmlfile, tag, subtag):
+    def persist_templateitems_base(self, xmlfile, tag, subtag):
         il = self.get_list_from_xml(tag, xmlfile)
-        biggest = 0
-        bvalue = ""
+        values = {}
         for i in il:
             value = i.get(subtag)
-            if len(value) > biggest:
-                biggest = len(value)
-                bvalue = value
-
-        print "Biggest is %s, with %s" % (bvalue, biggest)
+            values[value] = True
+        for v, _ in values.iteritems():
+            print v
+            try:
+                TemplateItem.objects.get(id=v)
+            except:
+                i = TemplateItem(
+                    id=categories.get(v),
+                    category=categories.get(v),
+                )
+                i.save()
+                print "Created TemplateItem %s" % i.id
 
 
 w = wizards("/home/xande/Documents")
@@ -326,6 +356,8 @@ w.persist_all_trait_sources()
 w.persist_all_powers()
 w.persist_items()
 w.persist_monsters()
+w.persist_baseitems()
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')
-#w.check_value('power', 'power', 'Name')
+w.persist_templateitems_base('item', 'item', 'Category')
 w.persist_conditions()
+1/0

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mendigames.models import (Character, Power, HasPower, TraitSource,
+from mendigames.models import (Character, Power, HasPower, TraitSource, TemplateItem,
                                Condition, HasCondition, Campaign, Item, HasItem)
 
 
@@ -44,6 +44,10 @@ class ItemAdmin(admin.ModelAdmin):
     pass
 
 
+class TemplateItemAdmin(admin.ModelAdmin):
+    pass
+
+
 class TraitSourceAdmin(admin.ModelAdmin):
     inlines = [PowerInline]
 
@@ -52,5 +56,6 @@ admin.site.register(Character, CharacterAdmin)
 admin.site.register(Campaign, CampaignAdmin)
 admin.site.register(Power, PowerAdmin)
 admin.site.register(Item, ItemAdmin)
+admin.site.register(TemplateItem, TemplateItemAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(TraitSource, TraitSourceAdmin)
