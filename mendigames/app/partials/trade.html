@@ -6,7 +6,7 @@
             <a href="#/campaign/combat/{{campaign.id}}/">Combat</a>
         </li>
         <li class="active">
-            <a href="#/campaign/inventory/{{campaign.id}}/">Inventory</a>
+            <a href="#/campaign/trade/{{campaign.id}}/">Trade</a>
         </li>
         <li>
             <a href="#">Status</a>
@@ -18,7 +18,7 @@
 
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span4 inventory-section">
+        <div class="span4 trade-section">
             <div class="inventory-config">
                 AAA
             </div>
@@ -26,14 +26,14 @@
                 AAAA
             </div>
         </div>
-        <div class="span4 inventory-section">
+        <div class="span4 trade-section">
             <form class="form-inline">
                 <label class="checkbox">Buy Price: <select class="input-small" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select></label>
                 <label class="checkbox">Sell Price: <select class="input-small" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select></label>
             </form>
             <tabset vertical="false" type="'tabs'" >
                 <tab class="pointer" ng-repeat="co in containerList" heading="{{co.name}}" active="co.active">
-                    <div ng-controller="CharacterInventoryCtrl">
+                    <div ng-controller="InventoryCtrl">
                         <button ng-click="change_gold(0)" class="btn">Gold:{{co.gold}}</button>
                         <div class="row-fluid inventory-table-header">
                             <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
@@ -57,7 +57,7 @@
                 </tab>
             </tabset>
         </div>
-        <div class="span4 inventory-section" ng-controller="ItemFinderCtrl">
+        <div class="span4 trade-section" ng-controller="ItemFinderCtrl">
             <div class="inventory-config">
                 <form class="form-inline">
                     <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">

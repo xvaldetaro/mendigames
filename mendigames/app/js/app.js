@@ -18,9 +18,9 @@ angular.module('mendigames',
         controller: 'CombatCtrl'
     });
 
-    $routeProvider.when('/campaign/inventory/:campaignId', {
-        templateUrl: static_url+'mendigames/partials/inventory.html',
-        controller: 'InventoryCtrl'
+    $routeProvider.when('/campaign/trade/:campaignId', {
+        templateUrl: static_url+'mendigames/partials/trade.html',
+        controller: 'TradeCtrl'
     });
 }])
 

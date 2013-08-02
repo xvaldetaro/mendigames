@@ -2,7 +2,7 @@
 
 angular.module('mendigames')
 
-.controller('InventoryCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
+.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
 function($scope, $routeParams, EM, WizardsService,$dialog) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
@@ -61,7 +61,7 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     })
 }])
 
-.controller('CharacterInventoryCtrl', ['$scope','Och','EM',
+.controller('InventoryCtrl', ['$scope','Och','EM',
 function($scope, Och, EM) {
     $scope.change_gold = function () {
         $scope.inputDialog.open().then(function(result){
