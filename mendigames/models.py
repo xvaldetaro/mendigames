@@ -145,7 +145,7 @@ class ItemCategory(models.Model):
 
 class ItemGroup(models.Model):
     name = models.CharField(max_length=30)
-    category = models.ForeignKey(ItemCategory, related_name='item_groups')
+    item_category = models.ForeignKey(ItemCategory, related_name='item_groups')
     tags = models.CharField(max_length=30, blank=True)
     drop = models.IntegerField(default=100)
     on_empty = models.BooleanField(default=False)
@@ -159,7 +159,7 @@ class ItemGroup(models.Model):
 
 class ItemTemplate(BookEntry):
     weight = models.IntegerField(default=0)
-    group = models.ForeignKey(ItemGroup, related_name='item_templates')
+    item_group = models.ForeignKey(ItemGroup, related_name='item_templates')
     drop = models.IntegerField(default=100)
     tags = models.CharField(max_length=30, blank=True)
     core = models.BooleanField(default=True)
@@ -177,7 +177,7 @@ class ItemDecorator(BookEntry):
         ('U', 'Uncommon'),
         ('R', 'Rare')
     )
-    category = models.ForeignKey(ItemCategory, related_name='item_decorators')
+    item_category = models.ForeignKey(ItemCategory, related_name='item_decorators')
     level = models.IntegerField(default=1, blank=True)
     level_cost_plus = models.BooleanField(default=False)
     rarity = models.CharField(max_length=1, choices=RARITY, default='C')

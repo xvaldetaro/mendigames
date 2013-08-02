@@ -9,6 +9,9 @@ def redb():
 def fix():
     local('python manage.py loaddata fix.json')
 
+def dump():
+    local('python manage.py dumpdata >> fix.json')
+
 def sminit():
     local('python manage.py schemamigration mendigames --init')
     local('python manage.py migrate mendigames --fake')

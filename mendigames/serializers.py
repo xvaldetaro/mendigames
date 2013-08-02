@@ -112,6 +112,12 @@ class M2MItemDecoratorItemGroupSerializer(ThroughSerializer):
         model = models.M2MItemDecoratorItemGroup
 
 
+class ContainerSerializer(RevSerializer):
+    revision_key = 'container'
+    class Meta:
+        model = models.Container
+
+
 class ItemGroupSerializer(RevSerializer):
     item_decorators = M2MItemDecoratorItemGroupSerializer(many=True,
         through='item_decorator')

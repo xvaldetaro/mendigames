@@ -1,7 +1,9 @@
+"use strict";
+
 angular.module('mendigames')
 
-.factory('Och', ['EM', 'roll','Restangular',
-function(EM, roll, Restangular) {
+.factory('Och', ['EM', 'roll',
+function(EM, roll) {
     function save(c) {
         return EM.update('character', c);
     }

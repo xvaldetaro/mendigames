@@ -216,9 +216,9 @@ class wizards():
             cat = self.create_from_dict(models.ItemCategory, cat_dict)
             groups = cat_dict['groups']
             for group_dict in groups:
-                group = self.create_from_dict(models.ItemGroup, group_dict, category=cat)
+                group = self.create_from_dict(models.ItemGroup, group_dict, item_category=cat)
                 for template_dict in group_dict['templates']:
-                    self.create_from_dict(models.ItemTemplate, template_dict, group=group)
+                    self.create_from_dict(models.ItemTemplate, template_dict, item_group=group)
 
     def get_rarity(self, entry):
         rarity = entry.get('Rarity', 'Mundane')
@@ -242,7 +242,7 @@ class wizards():
             i = models.ItemDecorator(
                 name=entry['Name'],
                 wizards_id=entry['ID'],
-                category=cat,
+                item_category=cat,
                 cost=entry['CostSort'],
                 rarity=self.get_rarity(entry),
                 level=entry['LevelSort'],
@@ -267,7 +267,7 @@ class wizards():
                     drop=100,
                     cost=entry['CostSort'],
                     core=True,
-                    group=group
+                    item_group=group
                 )
                 it.save()
                 print "Created ItemTemplate %s" % it.name
@@ -282,7 +282,7 @@ class wizards():
             else:
                 self.create_item_decorator(i_entry)
 
-        models.ItemTemplate.objects.get(group__category__name='Equipment', 
+        models.ItemTemplate.objects.get(item_group__item_category__name='Equipment', 
                 name__exact='Equipment').delete()
 
 w = wizards("/home/xande/Documents")

@@ -4,29 +4,32 @@ angular.module('mendigames')
 
 .controller('InventoryCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
 function($scope, $routeParams, EM, WizardsService,$dialog) {
+    var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
-        'campaign': { related: [], query: {id: $routeParams.campaignId}},
-        'character': { related: ['item'],
-            query: {campaign: $routeParams.campaignId, type: 'Player'}},
+        'campaign': { related: [], query: { id: campaign } },
+        'container': { related: ['item', 'campaign'], query: { campaign: campaign} },
         'item': { related: ['item_decorator','item_template', 'container'], 
-            query: {campaign: $routeParams.campaignId}}
-        'item_decorator': {pk: ''}
+            query: {campaign: campaign}},
+        'item_decorator': { related: ['item_category', 'item_group'], query: {
+            items__isnull: false } },
+        'item_category': { related: ['item_group'] },
+        'item_group': { related: ['item_template', 'item_category', 'item_decorator'] },
+        'item_template': { related: ['item_group'], query: { items__isnull: false } }
     };
     var syncEntities = [
-        'character',
+        'container',
         'campaign',
+        'item'
     ];
 
     $scope.campaignId = $routeParams.campaignId;
-    $scope.$on('EM.new_list.character', function(){
-        var newList = EM.listSlice('character');
-        $scope.characterList = newList;
-        $scope.character = $scope.characterList[0];
+    $scope.$on('EM.new_list.container', function(){
+        $scope.containerList = EM.list('container');
+        $scope.container = $scope.containerList[0];
         $scope.$apply();
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
-        $scope.title = $scope.campaign.name;
         $scope.$apply();
     });
     // Bootstrap the scope
@@ -100,42 +103,23 @@ function($scope, Och, EM) {
 
 .controller('ItemFinderCtrl', ['$scope','EM','Och',
 function($scope, EM, Och) {
-    $scope.categories = [
-        {name: '----', value: ''},
-        {name: 'Alchemical Item', value: 'ALCH'},
-        {name: 'Alternative Reward', value: 'ALTE'},
-        {name: 'Ammunition', value: 'AMMU'},
-        {name: 'Armor', value: 'ARMO'},
-        {name: 'Arms', value: 'ARMS'},
-        {name: 'Artifact', value: 'ARTI'},
-        {name: 'Companion', value: 'COMP'},
-        {name: 'Consumable', value: 'CONS'},
-        {name: 'Equipment', value: 'EQUI'},
-        {name: 'Familiar', value: 'FAMI'},
-        {name: 'Feet', value: 'FEET'},
-        {name: 'Hands', value: 'HAND'},
-        {name: 'Head', value: 'HEAD'},
-        {name: 'Implement', value: 'IMPL'},
-        {name: 'Item Set', value: 'ITEM'},
-        {name: 'Mount', value: 'MOUN'},
-        {name: 'Neck', value: 'NECK'},
-        {name: 'Ring', value: 'RING'},
-        {name: 'Waist', value: 'WAIS'},
-        {name: 'Weapon', value: 'WEAP'},
-        {name: 'Wondrous', value: 'WOND'},
-    ];
+    $scope.$on('EM.new_list.item_category', function(){
+        $scope.categoryList = EM.list('item_category');
+        $scope.$apply();
+    });
 
-    $scope.rarities = [
-        {name: '----', value: ''},
-        {name: 'Mundane', value: 'A'},
+    $scope.get_category = function(itemDecorator) {
+        return EM.by_key('item_category', itemDecorator.item_category)
+    };
+    $scope.rarityList = [
         {name: 'Common', value: 'C'},
         {name: 'Uncommon', value: 'U'},
         {name: 'Rare', value: 'R'},
     ];
 
     function got_item_finder(list){
-        $scope.item_finder = list.data.data;
-        $scope.pageCount = Math.ceil($scope.item_finder.count/100)
+        $scope.itemFinder = list.data.data;
+        $scope.pageCount = Math.ceil($scope.itemFinder.count/100)
         $scope.$apply();
     }
     $scope.item_finder_search = function(page) {
@@ -145,28 +129,28 @@ function($scope, EM, Och) {
             $scope.currentPage = 1;
         else
             $scope.currentPage = page;
-        if($scope.item_name)
-            query.name__icontains = $scope.item_name;
+        if($scope.itemName)
+            query.name__icontains = $scope.itemName;
         if($scope.category)
-            query.category = $scope.category.value;
+            query.item_category = $scope.category.id;
         if($scope.rarity)
             query.rarity = $scope.rarity.value;
-        if($scope.level_start)
-            query.level__gte = $scope.level_start;
-        if($scope.level_stop)
-            query.level__lte = $scope.level_stop;
-        if($scope.cost_start)
-            query.cost__gte = $scope.cost_start;
-        if($scope.cost_stop)
-            query.cost__lte = $scope.cost_stop;
+        if($scope.levelStart)
+            query.level__gte = $scope.levelStart;
+        if($scope.levelStop)
+            query.level__lte = $scope.levelStop;
+        if($scope.costStart)
+            query.cost__gte = $scope.costStart;
+        if($scope.costStop)
+            query.cost__lte = $scope.costStop;
         query.page = $scope.currentPage;
-        EM.just_fetch_list('item_page',query).then(got_item_finder);
+        EM.just_fetch_list('item_decorator_page',query).then(got_item_finder);
         $scope.current_query = query;
     };
 
     $scope.goto_page = function(page) {
         $scope.current_query.page = page;
-        EM.just_fetch_list('item_page',$scope.current_query).then(got_item_finder);
+        EM.just_fetch_list('item_decorator_page',$scope.current_query).then(got_item_finder);
     }
 
     $scope.predicate = 'level';
@@ -177,11 +161,11 @@ function($scope, EM, Och) {
     };
 
     $scope.item_drop = function(hi) {
-        if(!hi.character)
+        if(!hi.container)
             return;
 
         var cost = hi._item.cost * $scope.sell_adjustment.value;
-        var c = EM.by_key('character', hi.character);
+        var c = EM.by_key('container', hi.container);
         Och.remove_item(c, hi, cost);
     };
 }]);

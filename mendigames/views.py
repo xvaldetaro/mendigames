@@ -115,9 +115,9 @@ class IndexView(TemplateView):
     template_name = 'mendigames/index.html'
 
 
-class ItemPage(RevListView):
+class ItemDecoratorPage(RevListView):
     queryset = models.ItemDecorator.objects.all()
-    serializer_class = serializers.ItemSerializer
+    serializer_class = serializers.ItemDecoratorSerializer
     paginate_by = 100
     paginate_by_param = 'page_size'
 
@@ -192,6 +192,15 @@ class MonsterList(RevListView):
 class MonsterDetail(RevDetailView):
     queryset = models.Monster.objects.all()
     serializer_class = serializers.MonsterSerializer
+
+
+# Container Views
+class ContainerList(RevListView):
+    queryset = models.Container.objects.all()
+    serializer_class = serializers.ContainerSerializer
+class ContainerDetail(RevDetailView):
+    queryset = models.Container.objects.all()
+    serializer_class = serializers.ContainerSerializer
 
 
 # ItemCategory Views
