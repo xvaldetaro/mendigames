@@ -1,6 +1,5 @@
 import xmltodict
-from mendigames.models import (Power, Item, TraitSource, Monster, Condition,
-    ItemGroup)
+from mendigames import models
 from string import capwords
 from fixtures import *
 
@@ -20,15 +19,15 @@ class wizards():
         self.traitSources = {}
         self.book_length = 0
         try:
-            self.blankSource = TraitSource.objects.get(name='No Source')
+            self.blankSource = models.TraitSource.objects.get(name='No Source')
         except:
-            self.blankSource = TraitSource(name='No Source')
+            self.blankSource = models.TraitSource(name='No Source')
             self.blankSource.save()
 
-        #for book in Book.objects.all():
+        #for book in models.Book.objects.all():
             #self.books[book.name] = book
 
-        for ts in TraitSource.objects.all():
+        for ts in models.TraitSource.objects.all():
             self.traitSources[ts.name] = ts
 
     def get_level(self, entry):
@@ -57,7 +56,7 @@ class wizards():
         #     book = self.books.get(bookname)
         #     if not book:
         #         try:
-        #             book = Book.objects.get(name=bookname)
+        #             book = models.Book.objects.get(name=bookname)
         #         except:
         #             book = self.create_book(bookname)
         #     ret_books.append(book)
@@ -70,7 +69,7 @@ class wizards():
             #object.books.add(book)
 
     def create_trait_source(self, type_abbr, entry):
-        ts = TraitSource(
+        ts = models.TraitSource(
             name=entry['Name'],
             wizards_id=entry['ID'],
             source_type=type_abbr
@@ -84,7 +83,7 @@ class wizards():
         ts = self.traitSources.get(entry['Name'])
         if not ts:
             try:
-                ts = TraitSource.objects.get(name=entry['Name'])
+                ts = models.TraitSource.objects.get(name=entry['Name'])
             except:
                 ts = self.create_trait_source(type_abbr, entry)
             self.traitSources[entry['Name']] = ts
@@ -103,7 +102,7 @@ class wizards():
     def create_power(self, type_abbr, entry):
         ts = self.traitSources.get(entry['ClassName'], self.blankSource)
 
-        p = Power(
+        p = models.Power(
             name=entry['Name'],
             wizards_id=entry['ID'],
             usage=type_abbr,
@@ -120,7 +119,7 @@ class wizards():
 
         for p_entry in p_list:
             try:
-                Power.objects.get(name=p_entry['Name'])
+                models.Power.objects.get(name=p_entry['Name'])
             except:
                 self.create_power(type_abbr, p_entry)
 
@@ -143,7 +142,7 @@ class wizards():
             level_plus = True
             level.replace('+', '')
 
-        i = Item(
+        i = models.Item(
             name=entry['Name'],
             wizards_id=entry['ID'],
             category=categories.get(entry['Category']),
@@ -161,13 +160,13 @@ class wizards():
 
         for i_entry in i_list:
             try:
-                Item.objects.get(name=i_entry['Name'])
+                models.Item.objects.get(name=i_entry['Name'])
             except:
                 self.create_item(i_entry)
 
     def create_monster(self, entry):
         croles = entry['CombatRole'].split(', ')
-        m = Monster(
+        m = models.Monster(
             name=entry['Name'][0:60],
             wizards_id=entry['ID'],
             level=self.get_level(entry),
@@ -185,12 +184,12 @@ class wizards():
 
         for m_entry in m_list:
             try:
-                Monster.objects.get(name=m_entry['Name'])
+                models.Monster.objects.get(name=m_entry['Name'])
             except:
                 self.create_monster(m_entry)
 
     def create_condition(self, entry):
-        m = Condition(
+        m = models.Condition(
             name=entry['Name'][0:60],
             wizards_id=entry['ID'],
         )
@@ -204,7 +203,7 @@ class wizards():
         for m_entry in m_list:
             if m_entry['Type'] == "Rules Condition":
                 try:
-                    Condition.objects.get(name=m_entry['Name'])
+                    models.Condition.objects.get(name=m_entry['Name'])
                 except:
                     self.create_condition(m_entry)
 
@@ -213,7 +212,7 @@ class wizards():
         rar = self.get_rarity(entry)
         if not ((cat == 'ARMO' or cat == 'WEAP') and rar == 'A'):
             return
-        i = TemplateItem(
+        i = models.TemplateItem(
             id=entry['Name'],
             category=categories.get(entry['Category']),
         )
@@ -227,7 +226,7 @@ class wizards():
             books = self.goc_books(i_entry['SourceBook'])
             if "Player's Handbook" in books:
                 try:
-                    TemplateItem.objects.get(id=i_entry['Name'])
+                    models.TemplateItem.objects.get(id=i_entry['Name'])
                 except:
                     self.create_baseitem(i_entry)
 
@@ -258,9 +257,9 @@ class wizards():
     def create_templates(self, t_list, cat_abbr):
         for t in t_list:
             try:
-                TemplateItem.objects.get(id=t)
+                models.TemplateItem.objects.get(id=t)
             except:
-                i = TemplateItem(
+                i = models.TemplateItem(
                     id=categories.get(v),
                     category=categories.get(v),
                 )
@@ -270,14 +269,14 @@ class wizards():
 
     def create_item_group(self, name, cat_abbr, addit_tags=None):
         try:
-            ItemGroup.objects.get(name=name)
+            models.ItemGroup.objects.get(name=name)
             print 'got', name
         except:
             tags = name
             if addit_tags:
                 tags = tags+' '+addit_tags
 
-            ig = ItemGroup(
+            ig = models.ItemGroup(
                 name=name,
                 category=cat_abbr,
                 tags=tags,
@@ -285,31 +284,29 @@ class wizards():
             ig.save()
             print "Created ItemGroup %s" % ig.name
 
-    def persist_item_groups(self):
-        for name, abbr in categories.iteritems():
-            print 'Groups for %s' % abbr
-            # get groups of each type (WEAP, ARMO...)
-            groups = ITEM_GROUPS.get(abbr, None)
-            # create a generic group if there are no groups for the type
-            if not groups:
-                self.create_item_group(name, abbr)
-                continue
-            # Iterate over the groups of the type
-            if type(groups) == list:
-                for group in groups:
-                    if type(group) != str:
-                        self.create_item_group(group['name'], abbr, group['tags'])
-                    else:
-                        self.create_item_group(group, abbr)
-            elif type(groups) == dict:
-                for group_name, group in groups:
-                    if type(group) == dict:
-                        self.create_item_group(group_name, abbr, group['tags'])
-                        create_templates(group['templates'])
-                    else:
-                        self.create_item_group(group_name, abbr)
-                        create_templates(group)
+    def create_from_dict(self, obj_class, obj_dict, **kwargs):
+        filter_dict = dict(kwargs)
+        for k,v in obj_dict.iteritems():
+            if type(v) != list and type(v) != dict:
+                filter_dict[k] = v
+        obj = None
 
+        try:
+            obj = obj_class.objects.get(name=obj_dict['name'])
+        except obj_class.DoesNotExist:
+            obj = obj_class(**filter_dict)
+            obj.save()
+            print 'saved object: %s' % obj.name
+        return obj
+
+    def persist_item_categories(self, cat_list):
+        for cat_dict in cat_list:
+            cat = self.create_from_dict(models.ItemCategory, cat_dict)
+            groups = cat_dict['groups']
+            for group_dict in groups:
+                group = self.create_from_dict(models.ItemGroup, group_dict, category=cat)
+                for template_dict in group_dict['templates']:
+                    self.create_from_dict(models.ItemTemplate, template_dict, group=group)
 
 w = wizards("/home/xande/Documents")
 # w.persist_all_trait_sources()
@@ -318,8 +315,8 @@ w = wizards("/home/xande/Documents")
 # w.persist_monsters()
 # w.persist_baseitems()
 # w.persist_templateitems_base('item', 'item', 'Category')
-w.persist_conditions()
-# w.persist_item_groups()
+# w.persist_conditions()
+w.persist_item_categories(categories)
 
 
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')

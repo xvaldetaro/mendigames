@@ -127,7 +127,7 @@ class HasPower(models.Model):
 
 class ItemCategory(models.Model):
     name = models.CharField(max_length=20)
-    abbr = models.CharField(max_length=4)
+    abbr = models.CharField(max_length=4, unique=True)
     drop = models.IntegerField(default=100)
 
     def __unicode__(self):
@@ -137,9 +137,9 @@ class ItemCategory(models.Model):
 class ItemGroup(models.Model):
     name = models.CharField(max_length=30)
     category = models.ForeignKey(ItemCategory, related_name='item_groups')
-    tags = models.TextField(blank=True)
+    tags = models.CharField(max_length=30, blank=True)
     drop = models.IntegerField(default=100)
-    on_empty = models.BooleanField(default=True)
+    on_empty = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -150,7 +150,7 @@ class ItemTemplate(models.Model):
     weight = models.IntegerField(default=0)
     group = models.ForeignKey(ItemGroup, related_name='item_templates')
     drop = models.IntegerField(default=100)
-    tags = models.TextField(blank=True)
+    tags = models.CharField(max_length=30, blank=True)
     core = models.BooleanField(default=True)
     cost = models.IntegerField(default=0)
 

@@ -46,13 +46,17 @@ admin.site.register(models.Condition, ConditionAdmin)
 admin.site.register(models.TraitSource, TraitSourceAdmin)
 
 
+class ItemGroupInline(admin.TabularInline):
+    model = models.ItemGroup
 class ItemCategoryAdmin(admin.ModelAdmin):
-    pass
+    inlines = [ItemGroupInline]
 admin.site.register(models.ItemCategory, ItemCategoryAdmin)
 
 
+class ItemTemplateInline(admin.TabularInline):
+    model = models.ItemTemplate
 class ItemGroupAdmin(admin.ModelAdmin):
-    pass
+    inlines = [ItemTemplateInline]
 admin.site.register(models.ItemGroup, ItemGroupAdmin)
 
 
