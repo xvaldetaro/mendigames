@@ -36,9 +36,10 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     EM.start(entitiesMetadata, syncEntities);
 
     $scope.fetch_from_compendium = function(item) {
-        if(item.item !== undefined)
-            item = item._item;
-        WizardsService.fetch(item.wizards_id, 'item', 'item',item);
+        var entity = 'item_decorator';
+        if(item.rarity === undefined)
+            entity = 'item_template'
+        WizardsService.fetch(item.wizards_id, 'item', entity,item);
     };
 
     $scope.prices = [

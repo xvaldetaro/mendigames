@@ -120,7 +120,7 @@ class ContainerSerializer(RevSerializer):
 
 class ItemGroupSerializer(RevSerializer):
     item_decorators = M2MItemDecoratorItemGroupSerializer(many=True,
-        through='item_decorator')
+        through='item_decorator', required=False, read_only=True)
     item_templates = serializers.PrimaryKeyRelatedField(many=True)
     revision_key = 'item_group'
     class Meta:
@@ -134,7 +134,8 @@ class ItemTemplateSerializer(RevSerializer):
 
 
 class ItemDecoratorSerializer(RevSerializer):
-    item_groups = M2MItemDecoratorItemGroupSerializer(many=True, through='item_group')
+    item_groups = M2MItemDecoratorItemGroupSerializer(many=True, through='item_group', 
+        required=False, read_only=True)
     revision_key = 'item_decorator'
     class Meta:
         model = models.ItemDecorator

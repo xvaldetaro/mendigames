@@ -174,7 +174,11 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
     }
     function update(entity, instance) {
         $log.log('Requesting Update '+entity);
-        return async_request(function(){ return instance.put(); });
+        return async_request(function(){ 
+            if(!instance.put)
+                Restangular.restangularizeElement('', instance, entity);
+            return instance.put(); 
+        });
     }
     function remove_list(entity, query) {
         return async_request(function(){

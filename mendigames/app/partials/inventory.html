@@ -79,7 +79,7 @@
             </div>
             <div class="inventory-table-body" btf-dragon="itemDecorator in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
                 <div class="row-fluid inventory-row">
-                    <div class="span4 inventory-cell" ng-click="fetch_from_compendium(item)">{{itemDecorator.name}}</div>
+                    <div class="span4 inventory-cell" ng-click="fetch_from_compendium(itemDecorator)">{{itemDecorator.name}}</div>
                     <div class="span3 inventory-cell">{{get_category(itemDecorator).name}}</div>
                     <div class="span1 inventory-cell">{{itemDecorator.level}}</div>
                     <div class="span1 inventory-cell">{{itemDecorator.rarity}}</div>
