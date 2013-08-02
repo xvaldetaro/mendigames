@@ -127,43 +127,6 @@ class wizards():
         for fullname, abbr in power_types.iteritems():
             self.persist_powers(fullname, abbr)
 
-    def get_rarity(self, entry):
-        rarity = entry.get('Rarity', 'Mundane')
-        try:
-            rarity = rarity_types[rarity]
-        except:
-            rarity = 'A'
-        return rarity
-
-    def create_item(self, entry):
-        level = self.get_level(entry)
-        level_plus = False
-        if '+' in level:
-            level_plus = True
-            level.replace('+', '')
-
-        i = models.Item(
-            name=entry['Name'],
-            wizards_id=entry['ID'],
-            category=categories.get(entry['Category']),
-            cost=entry['CostSort'],
-            rarity=self.get_rarity(entry),
-            level=entry['LevelSort'],
-            level_cost_plus=level_plus,
-        )
-        i.save()
-        print "Created Item %s" % i.name
-        self.add_books(entry, i)
-
-    def persist_items(self):
-        i_list = self.get_list_from_xml('item', 'item')
-
-        for i_entry in i_list:
-            try:
-                models.Item.objects.get(name=i_entry['Name'])
-            except:
-                self.create_item(i_entry)
-
     def create_monster(self, entry):
         croles = entry['CombatRole'].split(', ')
         m = models.Monster(
@@ -207,28 +170,6 @@ class wizards():
                 except:
                     self.create_condition(m_entry)
 
-    def create_baseitem(self, entry):
-        cat = categories.get(entry['Category'])
-        rar = self.get_rarity(entry)
-        if not ((cat == 'ARMO' or cat == 'WEAP') and rar == 'A'):
-            return
-        i = models.TemplateItem(
-            id=entry['Name'],
-            category=categories.get(entry['Category']),
-        )
-        i.save()
-        print "Created TemplateItem %s" % i.id
-
-    def persist_baseitems(self):
-        i_list = self.get_list_from_xml('item', 'item')
-
-        for i_entry in i_list:
-            books = self.goc_books(i_entry['SourceBook'])
-            if "Player's Handbook" in books:
-                try:
-                    models.TemplateItem.objects.get(id=i_entry['Name'])
-                except:
-                    self.create_baseitem(i_entry)
 
     def print_dict_choices(self, xmlfile, tag, subtag, defaults_to):
         il = self.get_list_from_xml(tag, xmlfile)
@@ -254,35 +195,6 @@ class wizards():
         tuples += "}"
         print tuples
 
-    def create_templates(self, t_list, cat_abbr):
-        for t in t_list:
-            try:
-                models.TemplateItem.objects.get(id=t)
-            except:
-                i = models.TemplateItem(
-                    id=categories.get(v),
-                    category=categories.get(v),
-                )
-                i.save()
-                print "Created TemplateItem %s" % i.id
-
-
-    def create_item_group(self, name, cat_abbr, addit_tags=None):
-        try:
-            models.ItemGroup.objects.get(name=name)
-            print 'got', name
-        except:
-            tags = name
-            if addit_tags:
-                tags = tags+' '+addit_tags
-
-            ig = models.ItemGroup(
-                name=name,
-                category=cat_abbr,
-                tags=tags,
-            )
-            ig.save()
-            print "Created ItemGroup %s" % ig.name
 
     def create_from_dict(self, obj_class, obj_dict, **kwargs):
         filter_dict = dict(kwargs)
@@ -308,15 +220,78 @@ class wizards():
                 for template_dict in group_dict['templates']:
                     self.create_from_dict(models.ItemTemplate, template_dict, group=group)
 
+    def get_rarity(self, entry):
+        rarity = entry.get('Rarity', 'Mundane')
+        try:
+            rarity = rarity_types[rarity]
+        except:
+            rarity = 'A'
+        return rarity
+
+    def create_item_decorator(self, entry):
+        try:
+            models.ItemDecorator.objects.get(name=entry['Name'])
+        except models.ItemDecorator.DoesNotExist:
+            cat = models.ItemCategory.objects.get(name=entry['Category'])
+            level = self.get_level(entry)
+            level_plus = False
+            if '+' in level:
+                level_plus = True
+                level.replace('+', '')
+
+            i = models.ItemDecorator(
+                name=entry['Name'],
+                wizards_id=entry['ID'],
+                category=cat,
+                cost=entry['CostSort'],
+                rarity=self.get_rarity(entry),
+                level=entry['LevelSort'],
+                level_cost_plus=level_plus,
+            )
+            i.save()
+            print "Created Item ItemDecorator %s" % i.name
+
+    def create_mundane_item(self, entry, group):
+        try:
+            q = models.ItemTemplate.objects.get(name__iexact=entry['Name'])
+            print 'Found template %s for entry %s' % (q.name, entry['Name'])
+            q.cost = entry['CostSort']
+            q.wizards_id = entry['ID']
+            q.save()
+            print 'Updated id and cost of %s to %s,%s' % (q.name, q.wizards_id, q.cost)
+        except models.ItemTemplate.DoesNotExist:
+            if entry['Category']=='Equipment':
+                it = models.ItemTemplate(
+                    name=entry['Name'],
+                    wizards_id=entry['ID'],
+                    drop=100,
+                    cost=entry['CostSort'],
+                    core=True,
+                    group=group
+                )
+                it.save()
+                print "Created ItemTemplate %s" % it.name
+
+    def persist_items(self):
+        i_list = self.get_list_from_xml('item', 'item')
+
+        equip_group = models.ItemGroup.objects.get(name='Equipment')
+        for i_entry in i_list:
+            if(self.get_rarity(i_entry) == 'A'):
+                self.create_mundane_item(i_entry, equip_group)
+            else:
+                self.create_item_decorator(i_entry)
+
+        models.ItemTemplate.objects.get(group__category__name='Equipment', 
+                name__exact='Equipment').delete()
+
 w = wizards("/home/xande/Documents")
 # w.persist_all_trait_sources()
 # w.persist_all_powers()
-# w.persist_items()
 # w.persist_monsters()
-# w.persist_baseitems()
-# w.persist_templateitems_base('item', 'item', 'Category')
-# w.persist_conditions()
+w.persist_conditions()
 w.persist_item_categories(categories)
+w.persist_items()
 
 
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')

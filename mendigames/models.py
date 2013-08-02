@@ -12,7 +12,7 @@ class Campaign(models.Model):
 
 
 class BookEntry(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
     wizards_id = models.IntegerField(default=1)
     html_description = models.TextField(blank=True)
     class Meta:
@@ -133,6 +133,9 @@ class ItemCategory(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class ItemGroup(models.Model):
     name = models.CharField(max_length=30)
@@ -144,9 +147,11 @@ class ItemGroup(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
 
-class ItemTemplate(models.Model):
-    name = models.CharField(max_length=30)
+
+class ItemTemplate(BookEntry):
     weight = models.IntegerField(default=0)
     group = models.ForeignKey(ItemGroup, related_name='item_templates')
     drop = models.IntegerField(default=100)
@@ -154,6 +159,11 @@ class ItemTemplate(models.Model):
     core = models.BooleanField(default=True)
     cost = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class ItemDecorator(BookEntry):
     RARITY = (

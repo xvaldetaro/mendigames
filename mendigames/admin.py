@@ -55,6 +55,7 @@ admin.site.register(models.ItemCategory, ItemCategoryAdmin)
 
 class ItemTemplateInline(admin.TabularInline):
     model = models.ItemTemplate
+    fields = ['name', 'weight', 'drop', 'cost', 'core']
 class ItemGroupAdmin(admin.ModelAdmin):
     inlines = [ItemTemplateInline]
 admin.site.register(models.ItemGroup, ItemGroupAdmin)
