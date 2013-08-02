@@ -6,14 +6,14 @@ angular.module('mendigames')
 'Ocam','$dialog',
 function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
     var entitiesMetadata = {
-        'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
-        'condition': {pk: 'id', related: [], query: {}},
-        'power': {pk: 'id', related: [], query: {haspower__isnull: false}},
-        'has_condition': {pk: 'id', related: ['condition'],
+        'campaign': { related: [], query: {id: $routeParams.campaignId}},
+        'condition': { related: [], query: {}},
+        'power': { related: [], query: {haspower__isnull: false}},
+        'has_condition': { related: ['condition'],
             query: {character__campaign: $routeParams.campaignId}},
-        'has_power': {pk: 'id', related: ['power'],
+        'has_power': { related: ['power'],
             query: {character__campaign: $routeParams.campaignId}},
-        'character': {pk: 'id', related: ['has_condition','has_power'],
+        'character': { related: ['has_condition','has_power'],
             query: {campaign: $routeParams.campaignId}}
     };
     var syncEntities = [

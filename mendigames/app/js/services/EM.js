@@ -73,7 +73,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
         });
     }
     function fill_related(entityInstance, related) {
-        entityInstance['_'+related] = by_key(related, entityInstance[related]);
+        if(entityInstance[related])
+            entityInstance['_'+related] = by_key(related, entityInstance[related]);
     }
     function fill_related_array(entityInstance, related) {
         var pkList = entityInstance[related+'s'], relatedList = [];
@@ -212,6 +213,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
     function set_all_entity_metadata(metadata, syncEntities) {
         emmd = metadata, syncE = syncEntities;
         for(var entity in emmd){
+            emmd[entity].pk = emmd[entity].pk || 'id';
             all[entity] = {};
             emmd[entity].reverse = [];
         }

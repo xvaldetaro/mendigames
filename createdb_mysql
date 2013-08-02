@@ -1,0 +1,3 @@
+create database mendigames;
+grant all on mendigames.* to 'mendigames'@'%';
+set password for 'mendigames'@'%' = PASSWORD('1234');

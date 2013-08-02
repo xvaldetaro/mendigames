@@ -5,18 +5,16 @@ angular.module('mendigames')
 .controller('InventoryCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
 function($scope, $routeParams, EM, WizardsService,$dialog) {
     var entitiesMetadata = {
-        'item': {pk: 'id', related: [], query: {hasitem__isnull: false}},
-        'template_item': {pk: 'id', related: [], query: {}},
-        'campaign': {pk: 'id', related: [], query: {id: $routeParams.campaignId}},
-        'character': {pk: 'id', related: ['has_item'],
+        'campaign': { related: [], query: {id: $routeParams.campaignId}},
+        'character': { related: ['item'],
             query: {campaign: $routeParams.campaignId, type: 'Player'}},
-        'has_item': {pk: 'id', related: ['item','template_item'],
-            query: {character__campaign: $routeParams.campaignId}}
+        'item': { related: ['item_decorator','item_template', 'container'], 
+            query: {campaign: $routeParams.campaignId}}
+        'item_decorator': {pk: ''}
     };
     var syncEntities = [
         'character',
         'campaign',
-        'has_item'
     ];
 
     $scope.campaignId = $routeParams.campaignId;

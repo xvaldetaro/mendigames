@@ -43,9 +43,16 @@ class Monster(BookEntry):
     combat_role2 = models.CharField(max_length=2, blank=True, choices=COMBAT_ROLE, default='NO')
 
 
+class Container(models.Model):
+    name = models.CharField(max_length=60, blank=True)
+    campaign = models.ForeignKey(Campaign, null=True)
+    gold = models.IntegerField(default=0)
+
+
 class Character(models.Model):
     TYPES = (('Player', 'Player'), ('Enemy', 'Enemy'), ('Neutral', 'Neutral'))
     campaign = models.ForeignKey(Campaign)
+    container = models.ForeignKey(Container, blank=True)
 
     type = models.CharField(max_length=7, choices=TYPES, default='Player')
     name = models.CharField(max_length=20, default='Unnamed')
@@ -53,7 +60,6 @@ class Character(models.Model):
     hit_points = models.IntegerField(default=30)
 
     experience_points = models.IntegerField(default=0)
-    gold = models.IntegerField(default=0)
 
     used_action_points = models.IntegerField(default=0)
     milestones = models.IntegerField(default=0)
@@ -190,7 +196,8 @@ class M2MItemDecoratorItemGroup(models.Model):
 
 
 class Item(models.Model):
-    character = models.ForeignKey(Character, related_name="items")
+    campaign = models.ForeignKey(Campaign, null=True)
+    container = models.ForeignKey(Container, related_name="items")
     item_decorator = models.ForeignKey(ItemDecorator, null=True, related_name='items')
     item_template = models.ForeignKey(ItemTemplate, null=True, related_name='items')
     weight = models.IntegerField(default=0)
