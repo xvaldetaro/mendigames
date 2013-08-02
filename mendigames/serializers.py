@@ -51,49 +51,49 @@ class CharacterSerializer(RevSerializer):
     has_powers = serializers.PrimaryKeyRelatedField(many=True)
     has_conditions = serializers.PrimaryKeyRelatedField(many=True)
     #has_items = serializers.PrimaryKeyRelatedField(many=True)
-    revision_key = 'Character'
+    revision_key = 'character'
     class Meta:
         model = models.Character
 
 
 class CampaignSerializer(RevSerializer):
-    revision_key = 'Campaign'
+    revision_key = 'campaign'
     class Meta:
         model = models.Campaign
 
 
 class PowerSerializer(RevSerializer):
-    revision_key = 'Power'
+    revision_key = 'power'
     class Meta:
         model = models.Power
 
 
 class HasPowerSerializer(RevSerializer):
-    revision_key = 'HasPower'
+    revision_key = 'has_power'
     class Meta:
         model = models.HasPower
 
 
 class ConditionSerializer(RevSerializer):
-    revision_key = 'Condition'
+    revision_key = 'condition'
     class Meta:
         model = models.Condition
 
 
 class HasConditionSerializer(RevSerializer):
-    revision_key = 'HasCondition'
+    revision_key = 'has_condition'
     class Meta:
         model = models.HasCondition
 
 
 class TraitSourceSerializer(RevSerializer):
-    revision_key = 'TraitSource'
+    revision_key = 'trait_source'
     class Meta:
         model = models.TraitSource
 
 
 class MonsterSerializer(RevSerializer):
-    revision_key = 'Monster'
+    revision_key = 'monster'
     class Meta:
         model = models.Monster
 
@@ -101,13 +101,13 @@ class MonsterSerializer(RevSerializer):
 class ItemCategorySerializer(RevSerializer):
     item_groups = serializers.PrimaryKeyRelatedField(many=True)
     item_decorators = serializers.PrimaryKeyRelatedField(many=True)
-    revision_key = 'ItemCategory'
+    revision_key = 'item_category'
     class Meta:
         model = models.ItemCategory
 
 
 class M2MItemDecoratorItemGroupSerializer(ThroughSerializer):
-    revision_key = 'M2MItemDecoratorItemGroup'
+    revision_key = 'm2m_item_decorator_item_group'
     class Meta:
         model = models.M2MItemDecoratorItemGroup
 
@@ -116,25 +116,25 @@ class ItemGroupSerializer(RevSerializer):
     item_decorators = M2MItemDecoratorItemGroupSerializer(many=True,
         through='item_decorator')
     item_templates = serializers.PrimaryKeyRelatedField(many=True)
-    revision_key = 'ItemGroup'
+    revision_key = 'item_group'
     class Meta:
         model = models.ItemGroup
 
 
 class ItemTemplateSerializer(RevSerializer):
-    revision_key = 'ItemTemplate'
+    revision_key = 'item_template'
     class Meta:
         model = models.ItemTemplate
 
 
 class ItemDecoratorSerializer(RevSerializer):
     item_groups = M2MItemDecoratorItemGroupSerializer(many=True, through='item_group')
-    revision_key = 'ItemDecorator'
+    revision_key = 'item_decorator'
     class Meta:
         model = models.ItemDecorator
 
 
 class ItemSerializer(RevSerializer):
-    revision_key = 'Item'
+    revision_key = 'item'
     class Meta:
         model = models.Item
