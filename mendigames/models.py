@@ -125,57 +125,46 @@ class HasPower(models.Model):
         return self.power
 
 
-CATEGORY = (
-    ('ARMO', 'Armor'),
-    ('ARMS', 'Arms'),
-    ('ITEM', 'Item Set'),
-    ('WOND', 'Wondrous'),
-    ('AMMU', 'Ammunition'),
-    ('WAIS', 'Waist'),
-    ('ALTE', 'Alternative Reward'),
-    ('HEAD', 'Head'),
-    ('FAMI', 'Familiar'),
-    ('ARTI', 'Artifact'),
-    ('COMP', 'Companion'),
-    ('HAND', 'Hands'),
-    ('CONS', 'Consumable'),
-    ('MOUN', 'Mount'),
-    ('NECK', 'Neck'),
-    ('WEAP', 'Weapon'),
-    ('IMPL', 'Implement'),
-    ('EQUI', 'Equipment'),
-    ('ALCH', 'Alchemical Item'),
-    ('FEET', 'Feet'),
-    ('HEAD', 'Head and Neck'),
-    ('RING', 'Ring'),
-)
-
-
-class TemplateItem(models.Model):
-    id = models.CharField(max_length=30, primary_key=True)
-    group = models.CharField(max_length=15, default='Ungrouped')
-    category = models.CharField(max_length=4, choices=CATEGORY, default='ARMO')
-    weight = models.IntegerField(default=0)
-    find_chance = models.IntegerField(default=100)
+class ItemCategory(models.Model):
+    name = models.CharField(max_length=20)
+    abbr = models.CharField(max_length=4)
+    drop = models.IntegerField(default=100)
 
     def __unicode__(self):
-        return self.id
-
-    class Meta:
-        ordering = ['id']
+        return self.name
 
 
-class Item(BookEntry):
+class ItemGroup(models.Model):
+    name = models.CharField(max_length=30)
+    category = models.ForeignKey(ItemCategory, related_name='item_groups')
+    tags = models.TextField(blank=True)
+    drop = models.IntegerField(default=100)
+    on_empty = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class ItemTemplate(models.Model):
+    name = models.CharField(max_length=30)
+    weight = models.IntegerField(default=0)
+    group = models.ForeignKey(ItemGroup, related_name='item_templates')
+    drop = models.IntegerField(default=100)
+    tags = models.TextField(blank=True)
+    core = models.BooleanField(default=True)
+    cost = models.IntegerField(default=0)
+
+
+class ItemDecorator(BookEntry):
     RARITY = (
-        ('A', 'Mundane'),
         ('C', 'Common'),
         ('U', 'Uncommon'),
         ('R', 'Rare')
     )
-    category = models.CharField(max_length=4, choices=CATEGORY, default='ARMO')
+    category = models.ForeignKey(ItemCategory, related_name='item_decorators')
     level = models.IntegerField(default=1, blank=True)
     level_cost_plus = models.BooleanField(default=False)
-    rarity = models.CharField(max_length=1, choices=RARITY, default='A')
+    rarity = models.CharField(max_length=1, choices=RARITY, default='C')
     cost = models.IntegerField(default=0, blank=True)
 
     def __unicode__(self):
@@ -185,14 +174,22 @@ class Item(BookEntry):
         ordering = ['level', 'rarity', 'name']
 
 
-class HasItem(models.Model):
-    character = models.ForeignKey(Character, related_name="has_items")
-    item = models.ForeignKey(Item, related_name='hasitem')
-    template_item = models.ForeignKey(TemplateItem, null=True, related_name='templateitem')
-    weight = models.IntegerField(default=0, blank=True)
+class M2MItemDecoratorItemGroup(models.Model):
+    item_decorator = models.ForeignKey(ItemDecorator, related_name="item_groups")
+    item_group = models.ForeignKey(ItemGroup, related_name="item_decorators")
+
+
+class Item(models.Model):
+    character = models.ForeignKey(Character, related_name="items")
+    item_decorator = models.ForeignKey(ItemDecorator, null=True, related_name='items')
+    item_template = models.ForeignKey(ItemTemplate, null=True, related_name='items')
+    weight = models.IntegerField(default=0)
+    name = models.CharField(max_length=10)
+    cost = models.IntegerField(default=0)
+    level = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return self.info + self.item
+        return self.name
 
 
 class Condition(BookEntry):

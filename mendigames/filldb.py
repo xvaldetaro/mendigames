@@ -1,85 +1,8 @@
 import xmltodict
 from mendigames.models import (Power, Item, TraitSource, Monster, Condition,
-    TemplateItem)
+    ItemGroup)
 from string import capwords
-
-action_types = {
-    'Free': "FR",
-    "Immediate Interrupt": 'II',
-    'Immediate Reaction': 'IR',
-    'Minor': 'MI',
-    'Move': 'MO',
-    'No Action': 'NA',
-    'Opportunity': 'OP',
-    'Standard': 'ST',
-}
-
-ts_types = {
-    'Background': 'BA',
-    'Theme': 'TH',
-    'Class': 'CL',
-    'Epic Destiny': 'ED',
-    'Paragon Path': 'PP',
-    'Race': 'RA'
-}
-
-power_types = {
-    'Daily': 'D',
-    'Encounter': 'E',
-    'At-Will': 'W'
-}
-
-categories = {
-    'Armor': 'ARMO',
-    'Arms': 'ARMS',
-    'Item Set': 'ITEM',
-    'Wondrous': 'WOND',
-    'Ammunition': 'AMMU',
-    'Waist': 'WAIS',
-    'Alternative Reward': 'ALTE',
-    'Head': 'HEAD',
-    'Familiar': 'FAMI',
-    'Artifact': 'ARTI',
-    'Companion': 'COMP',
-    'Hands': 'HAND',
-    'Consumable': 'CONS',
-    'Mount': 'MOUN',
-    'Neck': 'NECK',
-    'Weapon': 'WEAP',
-    'Implement': 'IMPL',
-    'Equipment': 'EQUI',
-    'Alchemical Item': 'ALCH',
-    'Feet': 'FEET',
-    'Head and Neck': 'HEAD',
-    'Ring': 'RING',
-}
-
-rarity_types = {
-    'Rare': 'R',
-    'Uncommon': 'U',
-    'Mundane': 'A',
-    'Common': 'C',
-}
-
-group_roles = {
-    'Minion': 'MI',
-    'Solo': 'SO',
-    'Conjured': 'CO',
-    'Elite': 'EL',
-    'Standard': 'ST',
-}
-
-combat_roles = {
-    'Lurker': 'LU',
-    'Skirmisher': 'SK',
-    'No role': 'NO',
-    'Artillery': 'AR',
-    'No Role': 'NO',
-    'Brute': 'BR',
-    'Soldier': 'SO',
-    'Controller': 'CO',
-    'Leader': 'LE',
-}
+from fixtures import *
 
 
 def lowerdash(str):
@@ -332,16 +255,10 @@ class wizards():
         tuples += "}"
         print tuples
 
-    def persist_templateitems_base(self, xmlfile, tag, subtag):
-        il = self.get_list_from_xml(tag, xmlfile)
-        values = {}
-        for i in il:
-            value = i.get(subtag)
-            values[value] = True
-        for v, _ in values.iteritems():
-            print v
+    def create_templates(self, t_list, cat_abbr):
+        for t in t_list:
             try:
-                TemplateItem.objects.get(id=v)
+                TemplateItem.objects.get(id=t)
             except:
                 i = TemplateItem(
                     id=categories.get(v),
@@ -351,13 +268,59 @@ class wizards():
                 print "Created TemplateItem %s" % i.id
 
 
+    def create_item_group(self, name, cat_abbr, addit_tags=None):
+        try:
+            ItemGroup.objects.get(name=name)
+            print 'got', name
+        except:
+            tags = name
+            if addit_tags:
+                tags = tags+' '+addit_tags
+
+            ig = ItemGroup(
+                name=name,
+                category=cat_abbr,
+                tags=tags,
+            )
+            ig.save()
+            print "Created ItemGroup %s" % ig.name
+
+    def persist_item_groups(self):
+        for name, abbr in categories.iteritems():
+            print 'Groups for %s' % abbr
+            # get groups of each type (WEAP, ARMO...)
+            groups = ITEM_GROUPS.get(abbr, None)
+            # create a generic group if there are no groups for the type
+            if not groups:
+                self.create_item_group(name, abbr)
+                continue
+            # Iterate over the groups of the type
+            if type(groups) == list:
+                for group in groups:
+                    if type(group) != str:
+                        self.create_item_group(group['name'], abbr, group['tags'])
+                    else:
+                        self.create_item_group(group, abbr)
+            elif type(groups) == dict:
+                for group_name, group in groups:
+                    if type(group) == dict:
+                        self.create_item_group(group_name, abbr, group['tags'])
+                        create_templates(group['templates'])
+                    else:
+                        self.create_item_group(group_name, abbr)
+                        create_templates(group)
+
+
 w = wizards("/home/xande/Documents")
-w.persist_all_trait_sources()
-w.persist_all_powers()
-w.persist_items()
-w.persist_monsters()
-w.persist_baseitems()
-#w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')
-w.persist_templateitems_base('item', 'item', 'Category')
+# w.persist_all_trait_sources()
+# w.persist_all_powers()
+# w.persist_items()
+# w.persist_monsters()
+# w.persist_baseitems()
+# w.persist_templateitems_base('item', 'item', 'Category')
 w.persist_conditions()
+# w.persist_item_groups()
+
+
+#w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')
 1/0

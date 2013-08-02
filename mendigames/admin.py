@@ -1,31 +1,26 @@
 from django.contrib import admin
-from mendigames.models import (Character, Power, HasPower, TraitSource, TemplateItem,
-                               Condition, HasCondition, Campaign, Item, HasItem)
+from mendigames import models
 
 
 class HasPowerInline(admin.TabularInline):
-    model = HasPower
+    model = models.HasPower
 
 
 class PowerInline(admin.TabularInline):
-    model = Power
+    model = models.Power
     fields = ['name','usage','action','level']
 
 
-class HasItemInline(admin.TabularInline):
-    model = HasItem
-
-
 class HasConditionInline(admin.TabularInline):
-    model = HasCondition
+    model = models.HasCondition
 
 
 class CharacterAdmin(admin.ModelAdmin):
-    inlines = [HasConditionInline, HasPowerInline, HasItemInline]
+    inlines = [HasConditionInline, HasPowerInline]
 
 
 class CharacterInline(admin.TabularInline):
-    model = Character
+    model = models.Character
 
 
 class CampaignAdmin(admin.ModelAdmin):
@@ -40,22 +35,39 @@ class ConditionAdmin(admin.ModelAdmin):
     pass
 
 
-class ItemAdmin(admin.ModelAdmin):
-    pass
-
-
-class TemplateItemAdmin(admin.ModelAdmin):
-    pass
-
-
 class TraitSourceAdmin(admin.ModelAdmin):
     inlines = [PowerInline]
 
 
-admin.site.register(Character, CharacterAdmin)
-admin.site.register(Campaign, CampaignAdmin)
-admin.site.register(Power, PowerAdmin)
-admin.site.register(Item, ItemAdmin)
-admin.site.register(TemplateItem, TemplateItemAdmin)
-admin.site.register(Condition, ConditionAdmin)
-admin.site.register(TraitSource, TraitSourceAdmin)
+admin.site.register(models.Character, CharacterAdmin)
+admin.site.register(models.Campaign, CampaignAdmin)
+admin.site.register(models.Power, PowerAdmin)
+admin.site.register(models.Condition, ConditionAdmin)
+admin.site.register(models.TraitSource, TraitSourceAdmin)
+
+
+class ItemCategoryAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(models.ItemCategory, ItemCategoryAdmin)
+
+
+class ItemGroupAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(models.ItemGroup, ItemGroupAdmin)
+
+
+class ItemTemplateAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(models.ItemTemplate, ItemTemplateAdmin)
+
+
+class M2MItemDecoratorItemGroupInline(admin.TabularInline):
+    model = models.M2MItemDecoratorItemGroup
+class ItemDecoratorAdmin(admin.ModelAdmin):
+    inlines = [M2MItemDecoratorItemGroupInline]
+admin.site.register(models.ItemDecorator, ItemDecoratorAdmin)
+
+
+class ItemAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(models.Item, ItemAdmin)

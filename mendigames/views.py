@@ -4,12 +4,8 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, renderers, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from mendigames.models import (Campaign, Character, Condition, HasPower, Power,
-    HasCondition, Item, HasItem, TemplateItem)
-from mendigames.serializers import (UserSerializer, GroupSerializer, CharacterSerializer,
-                                CampaignSerializer, PowerSerializer, HasPowerSerializer,
-                                ConditionSerializer, HasConditionSerializer,
-                                ItemSerializer, HasItemSerializer, TemplateItemSerializer)
+from mendigames import models
+from mendigames import serializers
 from django.core.cache import cache
 
 
@@ -20,26 +16,6 @@ class RevJSONRenderer(renderers.JSONRenderer):
         response_data['revision'] = cache.get('revision', 0)
         response = super(RevJSONRenderer, self).render(response_data, accepted_media_type, renderer_context)
         return response
-
-
-class IndexView(TemplateView):
-    template_name = 'mendigames/index.html'
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
 
 
 class RevListView(generics.ListCreateAPIView):
@@ -117,99 +93,156 @@ class RevView(APIView):
             'revisionUpdate': cache.get(revision, ''),
         })
 
-
-class CharacterList(RevListView):
-    queryset = Character.objects.all()
-    serializer_class = CharacterSerializer
-
-
-class CharacterDetail(RevDetailView):
-    queryset = Character.objects.all()
-    serializer_class = CharacterSerializer
+#### DRF Views
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
 
 
-class CampaignList(RevListView):
-    queryset = Campaign.objects.all()
-    serializer_class = CampaignSerializer
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = serializers.GroupSerializer
 
 
-class CampaignDetail(RevDetailView):
-    queryset = Campaign.objects.all()
-    serializer_class = CampaignSerializer
-
-
-class PowerList(RevListView):
-    queryset = Power.objects.all()
-    serializer_class = PowerSerializer
-
-
-class PowerDetail(RevDetailView):
-    queryset = Power.objects.all()
-    serializer_class = PowerSerializer
-
-
-class HasPowerList(RevListView):
-    queryset = HasPower.objects.all()
-    serializer_class = HasPowerSerializer
-
-
-class HasPowerDetail(RevDetailView):
-    queryset = HasPower.objects.all()
-    serializer_class = HasPowerSerializer
-
-
-class ConditionList(RevListView):
-    queryset = Condition.objects.all()
-    serializer_class = ConditionSerializer
-
-
-class ConditionDetail(RevDetailView):
-    queryset = Condition.objects.all()
-    serializer_class = ConditionSerializer
-
-
-class HasConditionList(RevListView):
-    queryset = HasCondition.objects.all()
-    serializer_class = HasConditionSerializer
-
-
-class HasConditionDetail(RevDetailView):
-    queryset = HasCondition.objects.all()
-    serializer_class = HasConditionSerializer
-
-
-class ItemList(RevListView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
-
-
-class ItemDetail(RevDetailView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
-
-
-class TemplateItemList(RevListView):
-    queryset = TemplateItem.objects.all()
-    serializer_class = TemplateItemSerializer
-
-
-class TemplateItemDetail(RevDetailView):
-    queryset = TemplateItem.objects.all()
-    serializer_class = TemplateItemSerializer
+#### Mendigames views #######
+class IndexView(TemplateView):
+    template_name = 'mendigames/index.html'
 
 
 class ItemPage(RevListView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    queryset = models.ItemDecorator.objects.all()
+    serializer_class = serializers.ItemSerializer
     paginate_by = 100
     paginate_by_param = 'page_size'
 
 
-class HasItemList(RevListView):
-    queryset = HasItem.objects.all()
-    serializer_class = HasItemSerializer
+# Character Views
+class CharacterList(RevListView):
+    queryset = models.Character.objects.all()
+    serializer_class = serializers.CharacterSerializer
+class CharacterDetail(RevDetailView):
+    queryset = models.Character.objects.all()
+    serializer_class = serializers.CharacterSerializer
 
 
-class HasItemDetail(RevDetailView):
-    queryset = HasItem.objects.all()
-    serializer_class = HasItemSerializer
+# Campaign Views
+class CampaignList(RevListView):
+    queryset = models.Campaign.objects.all()
+    serializer_class = serializers.CampaignSerializer
+class CampaignDetail(RevDetailView):
+    queryset = models.Campaign.objects.all()
+    serializer_class = serializers.CampaignSerializer
+
+
+# Power Views
+class PowerList(RevListView):
+    queryset = models.Power.objects.all()
+    serializer_class = serializers.PowerSerializer
+class PowerDetail(RevDetailView):
+    queryset = models.Power.objects.all()
+    serializer_class = serializers.PowerSerializer
+
+
+# HasPower Views
+class HasPowerList(RevListView):
+    queryset = models.HasPower.objects.all()
+    serializer_class = serializers.HasPowerSerializer
+class HasPowerDetail(RevDetailView):
+    queryset = models.HasPower.objects.all()
+    serializer_class = serializers.HasPowerSerializer
+
+
+# Condition Views
+class ConditionList(RevListView):
+    queryset = models.Condition.objects.all()
+    serializer_class = serializers.ConditionSerializer
+class ConditionDetail(RevDetailView):
+    queryset = models.Condition.objects.all()
+    serializer_class = serializers.ConditionSerializer
+
+
+# HasCondition Views
+class HasConditionList(RevListView):
+    queryset = models.HasCondition.objects.all()
+    serializer_class = serializers.HasConditionSerializer
+class HasConditionDetail(RevDetailView):
+    queryset = models.HasCondition.objects.all()
+    serializer_class = serializers.HasConditionSerializer
+
+
+# TraitSource Views
+class TraitSourceList(RevListView):
+    queryset = models.TraitSource.objects.all()
+    serializer_class = serializers.TraitSourceSerializer
+class TraitSourceDetail(RevDetailView):
+    queryset = models.TraitSource.objects.all()
+    serializer_class = serializers.TraitSourceSerializer
+
+
+# Monster Views
+class MonsterList(RevListView):
+    queryset = models.Monster.objects.all()
+    serializer_class = serializers.MonsterSerializer
+class MonsterDetail(RevDetailView):
+    queryset = models.Monster.objects.all()
+    serializer_class = serializers.MonsterSerializer
+
+
+# ItemCategory Views
+class ItemCategoryList(RevListView):
+    queryset = models.ItemCategory.objects.all()
+    serializer_class = serializers.ItemCategorySerializer
+class ItemCategoryDetail(RevDetailView):
+    queryset = models.ItemCategory.objects.all()
+    serializer_class = serializers.ItemCategorySerializer
+
+
+# ItemGroup Views
+class ItemGroupList(RevListView):
+    queryset = models.ItemGroup.objects.all()
+    serializer_class = serializers.ItemGroupSerializer
+class ItemGroupDetail(RevDetailView):
+    queryset = models.ItemGroup.objects.all()
+    serializer_class = serializers.ItemGroupSerializer
+
+
+# ItemTemplate Views
+class ItemTemplateList(RevListView):
+    queryset = models.ItemTemplate.objects.all()
+    serializer_class = serializers.ItemTemplateSerializer
+class ItemTemplateDetail(RevDetailView):
+    queryset = models.ItemTemplate.objects.all()
+    serializer_class = serializers.ItemTemplateSerializer
+
+
+# ItemDecorator Views
+class ItemDecoratorList(RevListView):
+    queryset = models.ItemDecorator.objects.all()
+    serializer_class = serializers.ItemDecoratorSerializer
+class ItemDecoratorDetail(RevDetailView):
+    queryset = models.ItemDecorator.objects.all()
+    serializer_class = serializers.ItemDecoratorSerializer
+
+
+# M2MItemDecoratorItemGroup Views
+class M2MItemDecoratorItemGroupList(RevListView):
+    queryset = models.M2MItemDecoratorItemGroup.objects.all()
+    serializer_class = serializers.M2MItemDecoratorItemGroupSerializer
+class M2MItemDecoratorItemGroupDetail(RevDetailView):
+    queryset = models.M2MItemDecoratorItemGroup.objects.all()
+    serializer_class = serializers.M2MItemDecoratorItemGroupSerializer
+
+
+# Item Views
+class ItemList(RevListView):
+    queryset = models.Item.objects.all()
+    serializer_class = serializers.ItemSerializer
+class ItemDetail(RevDetailView):
+    queryset = models.Item.objects.all()
+    serializer_class = serializers.ItemSerializer

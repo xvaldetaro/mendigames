@@ -31,10 +31,6 @@ urlpatterns = patterns('',
 
     url(r'^item_page/?$', views.ItemPage.as_view()),
 
-    url(r'^template_item/?$', views.TemplateItemList.as_view()),
-
-    url(r'^template_item/(?P<pk>[0-9]+)/?$', views.TemplateItemDetail.as_view()),
-
     url(r'^item/(?P<pk>[0-9]+)/?$', views.ItemDetail.as_view()),
 
     url(r'^power/(?P<pk>[0-9]+)/?$', views.PowerDetail.as_view()),
@@ -42,10 +38,6 @@ urlpatterns = patterns('',
     url(r'^has_power/?$', views.HasPowerList.as_view()),
 
     url(r'^has_power/(?P<pk>[0-9]+)/?$', views.HasPowerDetail.as_view()),
-
-    url(r'^has_item/?$', views.HasItemList.as_view()),
-
-    url(r'^has_item/(?P<pk>[0-9]+)/?$', views.HasItemDetail.as_view()),
 
     url(r'^condition/?$', views.ConditionList.as_view()),
 
