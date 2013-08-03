@@ -113,6 +113,7 @@ class M2MItemDecoratorItemGroupSerializer(ThroughSerializer):
 
 
 class ContainerSerializer(RevSerializer):
+    items = serializers.PrimaryKeyRelatedField(many=True)
     revision_key = 'container'
     class Meta:
         model = models.Container

@@ -9,12 +9,12 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
         'campaign': { related: [], query: { id: campaign } },
         'container': { related: ['item', 'campaign'], query: { campaign: campaign} },
         'item': { related: ['item_decorator','item_template', 'container'], 
-            query: {campaign: campaign}},
+            query: {container__campaign: campaign}},
         'item_decorator': { related: ['item_category', 'item_group'], query: {
             items__isnull: false } },
         'item_category': { related: ['item_group'] },
         'item_group': { related: ['item_template', 'item_category', 'item_decorator'] },
-        'item_template': { related: ['item_group'], query: { items__isnull: false } }
+        'item_template': { related: ['item_group'] }
     };
     var syncEntities = [
         'container',
@@ -61,44 +61,27 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     })
 }])
 
-.controller('InventoryCtrl', ['$scope','Och','EM',
-function($scope, Och, EM) {
+.controller('InventoryCtrl', ['$scope','Ocont', 'Oit', 'EM',
+function($scope, Ocont, Oit, EM) {
     $scope.change_gold = function () {
         $scope.inputDialog.open().then(function(result){
             if(!result)
                 return;
-            Och.change_gold($scope.c, result);
+            Ocont.change_gold($scope.cont, result);
         });
     };
-    $scope.item_drop = function(item) {
-        var cost = item.cost * $scope.buy_adjustment.value;
-        if($scope.c.gold < cost) {
-            window.alert($scope.c.name+' has insufficient gold');
-            return;
+    // itemBase can be decorator, template or item
+    $scope.item_drop = function(itemBase) {
+        var cost_adjustment = $scope.buy_adjustment.value;
+        var item = itemBase;
+        if(itemBase.rarity) { // is decorator
+            item = Oit.item_from_decorator(itemBase);
+        } else {
+            item = Oit.item_from_template(itemBase);
         }
-        if(item.rarity!=='A' && (item.category==='ARMO' || item.category==='WEAP')) {
-            $scope.createItemDialog.options.resolve['item'] = function(){ 
-                return item; 
-            };
-            $scope.createItemDialog.open().then(function(result){
-                if(!result)
-                    result = EM.by_key('template_item',item.category);
-                Och.add_item($scope.c, item, cost, result);
-            });
-            return;
-        } 
-
-        Och.add_item($scope.c, item, cost, EM.by_key('template_item',item.category));
-    };
-    $scope.accept_item = function(item) {
-        return item.item === undefined;
-    };
-    $scope.predicate = '_item.cost';
-    $scope.set_predicate = function(predicate) {
-        predicate = '_item.'+predicate;
-        if($scope.predicate == predicate)
-            $scope.predicate_reverse = !$scope.predicate_reverse;
-        $scope.predicate = predicate;
+        Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
+            $scope.$apply();
+        });
     };
 }])
 
@@ -167,6 +150,6 @@ function($scope, EM, Och) {
 
         var cost = hi._item.cost * $scope.sell_adjustment.value;
         var c = EM.by_key('container', hi.container);
-        Och.remove_item(c, hi, cost);
+        Ocont.remove_item(c, hi, cost);
     };
 }]);

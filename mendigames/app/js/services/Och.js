@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Och', ['EM', 'roll',
-function(EM, roll) {
+.factory('Och', ['EM', 'roll','U',
+function(EM, roll, U) {
     function save(c) {
         return EM.update('character', c);
     }
@@ -33,10 +33,6 @@ function(EM, roll) {
     }
     function change_xp(c, value){
         c.experience_points = c.experience_points+parseInt(value);
-        return save(c);
-    }
-    function change_gold(c, value){
-        c.gold = c.gold+parseInt(value);
         return save(c);
     }
     function _short_rest_stats(c){
@@ -119,9 +115,8 @@ function(EM, roll) {
         };
 
         ch._has_conditions.push(hasCondition);
-        var i = ch._has_conditions.length-1;
         return EM.add('has_condition', hasCondition).then(function(newE){
-            ch._has_conditions[i] = newE;
+            U.replace(ch._has_conditions, hasCondition, newE);
         });
     }
     function remove_item(ch, hi, cost) {
@@ -161,7 +156,6 @@ function(EM, roll) {
         set_init: set_init,
         roll_init: roll_init,
         change_xp: change_xp,
-        change_gold: change_gold,
         short_rest: short_rest,
         extended_rest: extended_rest,
         _short_rest_stats: _short_rest_stats,

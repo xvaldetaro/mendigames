@@ -2,8 +2,8 @@
 
 angular.module('mendigames').
 
-factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$log',
-function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
+factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$log','U',
+function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     var all = {}, polling = false, revision, emmd, pollPromise, syncE;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_related(entity) { return emmd[entity].related; }
@@ -130,15 +130,13 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
     function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
-        var i = entData.list.length-1;
 
         $log.log('Requesting add '+entity);
         return async_request(function() {
             return Restangular.all(entity).post(e)
             .then(function(newE) {
                 $log.log('Received Add '+entity+' response');
-                entData.list[i] = newE;
-                entData.edict[newE[get_pk(entity)]] = newE;
+                U.replace(entData.list, e, newE);
 
                 var relatedList = get_related(entity);
                 for(var j = relatedList.length - 1; j >= 0; j--) {
@@ -150,9 +148,9 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log) {
             });
         });
     }
-    function remove(entity, instance, i) {
+    function remove(entity, instance) {
         var entData = all[entity], pk = get_pk(entity);
-        entData.list.splice(i, 1);
+        entData.list.splice(entData.list.indexOf(instance), 1);
         delete entData.edict[instance[pk]];
         $log.log('Requesting Remove '+entity);
         return async_request(function(){

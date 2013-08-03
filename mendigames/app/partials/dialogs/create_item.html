@@ -2,23 +2,5 @@
     <h3>Select the Kind of Item:</h3>
 </div>
 <div class="modal-body">
-    <div ng-show="!new_form" >
-        <form class="form-inline">
-            <select class="input-small" ng-model="ti" ng-options="ti.id for ti in tis"></select>
-            <button class="btn btn-default" ng-click="new_template()">New</button>
-        <div class="control-group">
-        <div class="controls">
-          <button class="btn btn-danger" ng-click="close()">Ok</button>
-          <button class="btn btn-danger" ng-click="cancel()">No template</button>
-        </div>
-        </div>
-        </form>
-    </div>
-    <div ng-show="new_form">
-        <form>
-            <label>Template Name<input type="text" class="input-medium" ng-model="template_id"></label>
-            <label>Template Weight<input type="text" class="input-nano" ng-model="template_weight"></label>
-            <button class="btn btn-default" ng-click="save()">Save</button>
-        </form>
-    </div>
+    
 </div>

@@ -196,14 +196,14 @@ class M2MItemDecoratorItemGroup(models.Model):
 
 
 class Item(models.Model):
-    campaign = models.ForeignKey(Campaign, null=True)
     container = models.ForeignKey(Container, related_name="items")
     item_decorator = models.ForeignKey(ItemDecorator, null=True, related_name='items')
     item_template = models.ForeignKey(ItemTemplate, null=True, related_name='items')
     weight = models.IntegerField(default=0)
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=60)
     cost = models.IntegerField(default=0)
     level = models.IntegerField(default=0)
+    amount = models.IntegerField(default=1)
 
     def __unicode__(self):
         return self.name

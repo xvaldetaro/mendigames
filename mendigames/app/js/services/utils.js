@@ -1,3 +1,5 @@
+"use strict";
+
 angular.module('mendigames')
 
 .factory('roll', function(){ return function(mod, dice){
@@ -50,5 +52,18 @@ function($rootScope) {
             line = line + " " + arguments[i];
         }
         $rootScope.log.push(line);
+    };
+}])
+
+.factory('U', [
+function() {
+    function replace(items, oldValue, newValue) {
+        var index = items.indexOf(oldValue);
+        if (index !== -1) {
+            items[index] = newValue;
+        }
+    }
+    return {
+        replace: replace
     };
 }]);
