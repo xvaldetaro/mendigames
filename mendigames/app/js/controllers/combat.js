@@ -6,14 +6,14 @@ angular.module('mendigames')
 'Ocam','$dialog',
 function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
     var entitiesMetadata = {
-        'campaign': { related: [], query: {id: $routeParams.campaignId}},
-        'condition': { related: [], query: {}},
-        'power': { related: [], query: {haspower__isnull: false}},
-        'has_condition': { related: ['condition'],
+        'campaign': { _2o: [], _2m: [], query: {id: $routeParams.campaignId}},
+        'condition': { _2o: [], _2m: [], query: {}},
+        'power': { _2o: [], _2m: [], query: {haspower__isnull: false}},
+        'has_condition': { _2o: ['condition'], _2m: [],
             query: {character__campaign: $routeParams.campaignId}},
-        'has_power': { related: ['power'],
+        'has_power': { _2o: ['power'], _2m: [],
             query: {character__campaign: $routeParams.campaignId}},
-        'character': { related: ['has_condition','has_power'],
+        'character': { _2o: [], _2m: ['has_condition','has_power'],
             query: {campaign: $routeParams.campaignId}}
     };
     var syncEntities = [
@@ -150,7 +150,7 @@ function($scope, $rootScope, $dialog, Och, Log) {
         });
     };
     $scope.remove_condition = function(hci){
-        var name = $scope.ch._has_conditions[hci]._condition.name;
+        var name = $scope.ch._2m.has_conditions[hci]._2o.condition.name;
         Och.remove_condition($scope.ch, hci)
 
         Log($scope.ch.name+' is not: '+name+' anymore');
@@ -174,9 +174,9 @@ function($scope, EM, Ohpo, Log) {
     $scope.use_power = function(){
         Ohpo.use_power($scope.hasPower);
         if($scope.hasPower.used)
-            Log($scope.ch.name+' used: '+$scope.hasPower._power.name);
+            Log($scope.ch.name+' used: '+$scope.hasPower._2o.power.name);
         else
-            Log($scope.ch.name+' recharged: '+$scope.hasPower._power.name);
+            Log($scope.ch.name+' recharged: '+$scope.hasPower._2o.power.name);
     };
 }])
 

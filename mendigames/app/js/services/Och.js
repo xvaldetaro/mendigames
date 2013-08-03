@@ -79,27 +79,27 @@ function(EM, roll, U) {
         return false;
     }
     function recharge_encounters(c) {
-        for (var i = c._has_powers.length - 1; i >= 0; i--) {
-            if(c._has_powers[i]._power.usage == 'E')
-                c._has_powers[i].used = false;
+        for (var i = c._2m.has_powers.length - 1; i >= 0; i--) {
+            if(c._2m.has_powers[i]._power.usage == 'E')
+                c._2m.has_powers[i].used = false;
         }
         return EM.update_list('has_power', {character: c.id, power__usage: 'E'},
          {used: false});
     }
     function recharge_powers(c) {
-        for (var i = c._has_powers.length - 1; i >= 0; i--) {
-            c._has_powers[i].used = false;
+        for (var i = c._2m.has_powers.length - 1; i >= 0; i--) {
+            c._2m.has_powers[i].used = false;
         }
         return EM.update_list('has_power', {character: c.id}, {used: false});
     }
     function clear_conditions(c) {
         c.has_conditions = [];
-        c._has_conditions = [];
+        c._2m.has_conditions = [];
         return EM.remove_list('has_condition', {character: c.id});
     }
     function remove_condition(c, hci) {
-        var hco = c._has_conditions[hci];
-        c._has_conditions.splice(hci,1);
+        var hco = c._2m.has_conditions[hci];
+        c._2m.has_conditions.splice(hci,1);
         c.has_conditions.splice(hci,1);
 
         return EM.remove('has_condition', hco);
@@ -114,9 +114,9 @@ function(EM, roll, U) {
             _condition: co
         };
 
-        ch._has_conditions.push(hasCondition);
+        ch._2m.has_conditions.push(hasCondition);
         return EM.add('has_condition', hasCondition).then(function(newE){
-            U.replace(ch._has_conditions, hasCondition, newE);
+            U.replace(ch._2m.has_conditions, hasCondition, newE);
         });
     }
     function remove_item(ch, hi, cost) {
@@ -136,17 +136,17 @@ function(EM, roll, U) {
         if(cost > 0)
             change_gold(ch, -1*cost);
         EM.add_local('item', i);
-        ch._has_items.push(hasItem);
-        var i = ch._has_items.length-1;
+        ch._2m.has_items.push(hasItem);
+        var i = ch._2m.has_items.length-1;
         return EM.add('has_item', hasItem).then(function(newE){
-            ch._has_items[i] = newE;
+            ch._2m.has_items[i] = newE;
         });
     }
     function delete_character(chi, c) {
         return EM.remove('character', c, chi);
     }
     function switch_condition(ch, hasCondition){
-        ch._has_conditions.push(hasCondition);
+        ch._2m.has_conditions.push(hasCondition);
         hasCondition.character = ch.id;
         EM.update('has_condition', hasCondition);
     }
@@ -186,7 +186,7 @@ function(EM, WizardsService) {
             EM.update('has_power', h);
         },
         fetch_from_compendium: function(h){
-            WizardsService.fetch(h._power.wizards_id, 'power');
+            WizardsService.fetch(h._2o.power.wizards_id, 'power');
         }
     };
 }]);

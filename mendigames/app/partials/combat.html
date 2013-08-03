@@ -172,16 +172,16 @@
                         </div>
                     </div>
                     <div class="span3">
-                        <div class="row-fluid has-conditions-box" btf-dragon="(hci, hco) in ch._has_conditions" btf-dragon-drop-function="drop_condition">
-                            <div class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._condition.name}} I:{{hco.started_init}} R:{{hco.started_round}} ">
-                                <i class="{{hco._condition|condition_icon}} icon-white"></i>
+                        <div class="row-fluid has-conditions-box" btf-dragon="(hci, hco) in ch._2m.has_conditions" btf-dragon-drop-function="drop_condition">
+                            <div class="condition-box" ng-click="remove_condition(hci)" tooltip-popup-delay='400' tooltip="{{hco._2o.condition.name}} I:{{hco.started_init}} R:{{hco.started_round}} ">
+                                <i class="{{hco._2o.condition|condition_icon}} icon-white"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="power-container">
-                    <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._has_powers" ng-click="use_power()" class="power-use-button {{hasPower._power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._power.name}} - {{hasPower._power.action}}">
-                        {{hasPower._power.level}}
+                    <div ng-controller="HasPowerController" ng-repeat="hasPower in ch._2m.has_powers" ng-click="use_power()" class="power-use-button {{hasPower._2o.power|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._2o.power.name}} - {{hasPower._2o.power.action}}">
+                        {{hasPower._2o.power.level}}
                     </div>
                 </div>
             </div>

@@ -52,7 +52,7 @@ class Container(models.Model):
 class Character(models.Model):
     TYPES = (('Player', 'Player'), ('Enemy', 'Enemy'), ('Neutral', 'Neutral'))
     campaign = models.ForeignKey(Campaign)
-    container = models.ForeignKey(Container, blank=True)
+    container = models.ForeignKey(Container, null=True, blank=True)
 
     type = models.CharField(max_length=7, choices=TYPES, default='Player')
     name = models.CharField(max_length=20, default='Unnamed')

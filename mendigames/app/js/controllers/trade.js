@@ -6,15 +6,15 @@ angular.module('mendigames')
 function($scope, $routeParams, EM, WizardsService,$dialog) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
-        'campaign': { related: [], query: { id: campaign } },
-        'container': { related: ['item', 'campaign'], query: { campaign: campaign} },
-        'item': { related: ['item_decorator','item_template', 'container'], 
+        'campaign': { _2o: [], _2m: [], query: { id: campaign } },
+        'container': { _2o: ['campaign'], _2m: ['item'], query: { campaign: campaign} },
+        'item': { _2o: ['item_decorator','item_template', 'container'], _2m: [], 
             query: {container__campaign: campaign}},
-        'item_decorator': { related: ['item_category', 'item_group'], query: {
+        'item_decorator': { _2o: ['item_category'], _2m: ['item_group'], query: {
             items__isnull: false } },
-        'item_category': { related: ['item_group'] },
-        'item_group': { related: ['item_template', 'item_category', 'item_decorator'] },
-        'item_template': { related: ['item_group'] }
+        'item_category': { _2o: [], _2m: ['item_group'] },
+        'item_group': { _2o: ['item_category'], _2m: ['item_template', 'item_decorator'] },
+        'item_template': { _2o: ['item_group'], _2m: [] }
     };
     var syncEntities = [
         'container',
@@ -75,6 +75,7 @@ function($scope, Ocont, Oit, EM) {
         var cost_adjustment = $scope.buy_adjustment.value;
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
+            EM.merge_related('item_decorator', [itemBase]);
             item = Oit.item_from_decorator(itemBase);
         } else {
             item = Oit.item_from_template(itemBase);

@@ -6,7 +6,8 @@ factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$lo
 function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     var all = {}, polling = false, revision, emmd, pollPromise, syncE;
     function get_pk(entity) { return emmd[entity].pk; }
-    function get_related(entity) { return emmd[entity].related; }
+    function get_2o_list(entity) { return emmd[entity]._2o; }
+    function get_2m_list(entity) { return emmd[entity]._2m; }
     function by_key(entity, key) { return all[entity].edict[key]; }
     function list(entity) { return all[entity].list; }
     function listSlice(entity) { return all[entity].list.slice(); }
@@ -74,33 +75,45 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     }
     function fill_related(entityInstance, related) {
         if(entityInstance[related])
-            entityInstance['_'+related] = by_key(related, entityInstance[related]);
+            entityInstance._2o[related] = by_key(related, entityInstance[related]);
     }
     function fill_related_array(entityInstance, related) {
         var pkList = entityInstance[related+'s'], relatedList = [];
         for(var i=0, len=pkList.length; i<len; i++) {
             relatedList.push(by_key(related, pkList[i]));
         }
-        entityInstance['_'+related+'s'] = relatedList;
+        entityInstance._2m[related+'s'] = relatedList;
     }
     function fill_related_type(instanceList, related) {
         if(instanceList[0][related+'s'] instanceof Array)
-            for (var i = instanceList.length - 1; i >= 0; i--)
+            for (var i = instanceList.length - 1; i >= 0; i--) {
+                if(!instanceList[i]._2m)
+                    instanceList[i]._2m = [];
                 fill_related_array(instanceList[i], related);
+            }
         else
-            for(var i = instanceList.length - 1; i >= 0; i--)
+            for(var i = instanceList.length - 1; i >= 0; i--) {
+                if(!instanceList[i]._2o)
+                    instanceList[i]._2o = [];
                 fill_related(instanceList[i], related);
+            }
+    }
+    function merge_related(entity, instanceList) {
+        var relatedList = get_2o_list(entity);
+        for(var j = relatedList.length - 1; j >= 0; j--) {
+            fill_related_type(instanceList, relatedList[j]);
+        }
+        relatedList = get_2m_list(entity);
+        for(var j = relatedList.length - 1; j >= 0; j--) {
+            fill_related_type(instanceList, relatedList[j]);
+        }
     }
     function merge_related_multiple(eList) {
         for(var i = eList.length - 1; i >= 0; i--) {
             var entity = eList[i];
             var instanceList = list(entity);
-            if(instanceList.length != 0) {
-                var relatedList = get_related(entity);
-                for(var j = relatedList.length - 1; j >= 0; j--) {
-                    fill_related_type(instanceList, relatedList[j]);
-                }
-            }
+            if(instanceList.length > 0)
+                merge_related(entity, instanceList);
         }
     }
     function on_response(response) {
@@ -138,7 +151,11 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
                 $log.log('Received Add '+entity+' response');
                 U.replace(entData.list, e, newE);
 
-                var relatedList = get_related(entity);
+                var relatedList = get_2o_list(entity);
+                for(var j = relatedList.length - 1; j >= 0; j--) {
+                    fill_related_type([newE], relatedList[j]);
+                }
+                relatedList = get_2m_list(entity);
                 for(var j = relatedList.length - 1; j >= 0; j--) {
                     fill_related_type([newE], relatedList[j]);
                 }
@@ -220,7 +237,10 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
             emmd[entity].reverse = [];
         }
         for(var entity in emmd){
-            var relateds = emmd[entity].related;
+            var relateds = emmd[entity]._2o;
+            for(var i=0, len=relateds.length; i<len; i++)
+                emmd[relateds[i]].reverse.push(entity);
+            relateds = emmd[entity]._2m;
             for(var i=0, len=relateds.length; i<len; i++)
                 emmd[relateds[i]].reverse.push(entity);
         }
@@ -288,6 +308,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
 
         set_all_entity_metadata: set_all_entity_metadata,
         start_poll_timeout: start_poll_timeout,
+
+        merge_related: merge_related,
 
         start: start
     };

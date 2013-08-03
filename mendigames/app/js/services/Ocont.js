@@ -5,7 +5,7 @@ angular.module('mendigames')
 .factory('Ocont', ['EM', 'U','Oit',
 function(EM, U, Oit) {
     function save(cont) {
-        return EM.update('character', cont);
+        return EM.update('container', cont);
     }
     function change_gold(cont, value){
         if(value <  1 && value > -1)
@@ -14,8 +14,8 @@ function(EM, U, Oit) {
         return save(cont);
     }
     function sell_item(item, cost_adjustment) {
-        change_gold(item._container, item.cost*cost_adjustment);
-        U.pluck(item._container._items, item);
+        change_gold(item._2o.container, item.cost*cost_adjustment);
+        U.pluck(item._2o.container._2m.items, item);
         return Oit.destroy_item(item);
     }
     function buy_item(to_cont, item, cost_adjustment) {
@@ -24,13 +24,13 @@ function(EM, U, Oit) {
     }
     // Handles item instances and item dicts
     function put_item(to_cont, item) {
-        to_cont._items.push(item);
+        to_cont._2m.items.push(item);
         item.container = to_cont.id;
         if(item.id)
             return EM.update('item', item);
         else
             return Oit.new_item(item).then(function(newE) {
-                U.replace(to_cont._items, item, newE);
+                U.replace(to_cont._2m.items, item, newE);
             })
     }
     return {
@@ -99,10 +99,10 @@ function(EM, Restangular) {
         return item;
     }
     function template_from_decorator(itemDecorator) {
-        var category = itemDecorator._item_category;
+        var category = itemDecorator._2o.item_category;
         if(!category) //decorators are searched outside the EM, thus there are no relateds
             category = EM.by_key('item_category', itemDecorator.item_category);
-        return category._item_groups[0]._item_templates[0];
+        return category._2m.item_groups[0]._2m.item_templates[0];
     }
     function item_from_decorator(itemDecorator) {
         var itemTemplate = template_from_decorator(itemDecorator);
@@ -112,9 +112,9 @@ function(EM, Restangular) {
         return get_item_dict(itemTemplate);
     }
     function destroy_item(item) {
-        item._container = null;
-        item._item_template = null;
-        item._item_decorator = null;
+        item._2o.container = null;
+        item._2o.item_template = null;
+        item._2o.item_decorator = null;
         return EM.remove('item', item);
     }
     function new_item(item_dict) {
