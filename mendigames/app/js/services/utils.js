@@ -63,7 +63,14 @@ function() {
             items[index] = newValue;
         }
     }
+    function pluck(items, value) {
+        var index = items.indexOf(value);
+        if (index !== -1) {
+            items.splice(index, 1);
+        }
+    }
     return {
-        replace: replace
+        replace: replace,
+        pluck: pluck
     };
 }]);

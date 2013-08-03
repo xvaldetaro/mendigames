@@ -85,8 +85,8 @@ function($scope, Ocont, Oit, EM) {
     };
 }])
 
-.controller('ItemFinderCtrl', ['$scope','EM','Och',
-function($scope, EM, Och) {
+.controller('ItemFinderCtrl', ['$scope','EM','Ocont',
+function($scope, EM, Ocont) {
     $scope.$on('EM.new_list.item_category', function(){
         $scope.categoryList = EM.list('item_category');
         $scope.$apply();
@@ -144,12 +144,7 @@ function($scope, EM, Och) {
         $scope.predicate = predicate;
     };
 
-    $scope.item_drop = function(hi) {
-        if(!hi.container)
-            return;
-
-        var cost = hi._item.cost * $scope.sell_adjustment.value;
-        var c = EM.by_key('container', hi.container);
-        Ocont.remove_item(c, hi, cost);
+    $scope.item_drop = function(item) {
+        Ocont.sell_item(item, $scope.sell_adjustment.value);
     };
 }]);

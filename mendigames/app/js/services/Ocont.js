@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocont', ['EM', 'U',
-function(EM, U) {
+.factory('Ocont', ['EM', 'U','Oit',
+function(EM, U, Oit) {
     function save(cont) {
         return EM.update('character', cont);
     }
@@ -12,6 +12,11 @@ function(EM, U) {
             return;
         cont.gold = cont.gold+parseInt(value);
         return save(cont);
+    }
+    function sell_item(item, cost_adjustment) {
+        change_gold(item._container, item.cost*cost_adjustment);
+        U.pluck(item._container._items, item);
+        return Oit.destroy_item(item);
     }
     function buy_item(to_cont, item, cost_adjustment) {
         change_gold(to_cont, -1*(item.cost*cost_adjustment));
@@ -24,12 +29,13 @@ function(EM, U) {
         if(item.id)
             return EM.update('item', item);
         else
-            return EM.add('item', item).then(function(newE) {
+            return Oit.new_item(item).then(function(newE) {
                 U.replace(to_cont._items, item, newE);
-            });
+            })
     }
     return {
-        buy_item: buy_item
+        buy_item: buy_item,
+        sell_item: sell_item
     };
 }])
 
@@ -106,20 +112,14 @@ function(EM, Restangular) {
         return get_item_dict(itemTemplate);
     }
     function destroy_item(item) {
-        EM.remove('item', item);
+        item._container = null;
+        item._item_template = null;
+        item._item_decorator = null;
+        return EM.remove('item', item);
     }
-    /*function on_error(error) {
-        window.alert(error.message);
+    function new_item(item_dict) {
+        return EM.add('item', item_dict);
     }
-    function attach_groups(itemDecorator, groups) {
-        for(var i=0, len=groups.length; i<len; i++) {
-            itemDecorator._groups.push(groups[i]);
-            Restangular.all('M2MItemDecoratorItemGroup').post({
-                item_decorator: itemDecorator.id,
-                item_group: groups[i].id
-            }).then(,on_error);
-        }
-    }*/
     function get_price(itemDecorator, level, adjustment) {
         if(level) {
             return prices[level] * adjustment;
@@ -129,6 +129,9 @@ function(EM, Restangular) {
     }
     return {
         item_from_decorator: item_from_decorator,
-        item_from_template: item_from_template
+        item_from_template: item_from_template,
+
+        new_item: new_item,
+        destroy_item: destroy_item
     };
 }]);
