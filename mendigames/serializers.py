@@ -98,18 +98,18 @@ class MonsterSerializer(RevSerializer):
         model = models.Monster
 
 
-class ItemCategorySerializer(RevSerializer):
-    item_groups = serializers.PrimaryKeyRelatedField(many=True)
-    item_decorators = serializers.PrimaryKeyRelatedField(many=True)
-    revision_key = 'item_category'
+class CategorySerializer(RevSerializer):
+    subtypes = serializers.PrimaryKeyRelatedField(many=True)
+    magics = serializers.PrimaryKeyRelatedField(many=True)
+    revision_key = 'category'
     class Meta:
-        model = models.ItemCategory
+        model = models.Category
 
 
-class M2MItemDecoratorItemGroupSerializer(ThroughSerializer):
-    revision_key = 'm2m_item_decorator_item_group'
+class M2MMagicSubtypeSerializer(ThroughSerializer):
+    revision_key = 'm2m_magic_subtype'
     class Meta:
-        model = models.M2MItemDecoratorItemGroup
+        model = models.M2MMagicSubtype
 
 
 class ContainerSerializer(RevSerializer):
@@ -119,27 +119,27 @@ class ContainerSerializer(RevSerializer):
         model = models.Container
 
 
-class ItemGroupSerializer(RevSerializer):
-    item_decorators = M2MItemDecoratorItemGroupSerializer(many=True,
-        through='item_decorator', required=False, read_only=True)
-    item_templates = serializers.PrimaryKeyRelatedField(many=True)
-    revision_key = 'item_group'
+class SubtypeSerializer(RevSerializer):
+    magics = M2MMagicSubtypeSerializer(many=True,
+        through='magic', required=False, read_only=True)
+    mundanes = serializers.PrimaryKeyRelatedField(many=True)
+    revision_key = 'subtype'
     class Meta:
-        model = models.ItemGroup
+        model = models.Subtype
 
 
-class ItemTemplateSerializer(RevSerializer):
-    revision_key = 'item_template'
+class MundaneSerializer(RevSerializer):
+    revision_key = 'mundane'
     class Meta:
-        model = models.ItemTemplate
+        model = models.Mundane
 
 
-class ItemDecoratorSerializer(RevSerializer):
-    item_groups = M2MItemDecoratorItemGroupSerializer(many=True, through='item_group', 
+class MagicSerializer(RevSerializer):
+    subtypes = M2MMagicSubtypeSerializer(many=True, through='subtype', 
         required=False, read_only=True)
-    revision_key = 'item_decorator'
+    revision_key = 'magic'
     class Meta:
-        model = models.ItemDecorator
+        model = models.Magic
 
 
 class ItemSerializer(RevSerializer):

@@ -46,31 +46,31 @@ admin.site.register(models.Condition, ConditionAdmin)
 admin.site.register(models.TraitSource, TraitSourceAdmin)
 
 
-class ItemGroupInline(admin.TabularInline):
-    model = models.ItemGroup
-class ItemCategoryAdmin(admin.ModelAdmin):
-    inlines = [ItemGroupInline]
-admin.site.register(models.ItemCategory, ItemCategoryAdmin)
+class SubtypeInline(admin.TabularInline):
+    model = models.Subtype
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = [SubtypeInline]
+admin.site.register(models.Category, CategoryAdmin)
 
 
-class ItemTemplateInline(admin.TabularInline):
-    model = models.ItemTemplate
+class MundaneInline(admin.TabularInline):
+    model = models.Mundane
     fields = ['name', 'weight', 'drop', 'cost', 'core']
-class ItemGroupAdmin(admin.ModelAdmin):
-    inlines = [ItemTemplateInline]
-admin.site.register(models.ItemGroup, ItemGroupAdmin)
+class SubtypeAdmin(admin.ModelAdmin):
+    inlines = [MundaneInline]
+admin.site.register(models.Subtype, SubtypeAdmin)
 
 
-class ItemTemplateAdmin(admin.ModelAdmin):
+class MundaneAdmin(admin.ModelAdmin):
     pass
-admin.site.register(models.ItemTemplate, ItemTemplateAdmin)
+admin.site.register(models.Mundane, MundaneAdmin)
 
 
-class M2MItemDecoratorItemGroupInline(admin.TabularInline):
-    model = models.M2MItemDecoratorItemGroup
-class ItemDecoratorAdmin(admin.ModelAdmin):
-    inlines = [M2MItemDecoratorItemGroupInline]
-admin.site.register(models.ItemDecorator, ItemDecoratorAdmin)
+class M2MMagicSubtypeInline(admin.TabularInline):
+    model = models.M2MMagicSubtype
+class MagicAdmin(admin.ModelAdmin):
+    inlines = [M2MMagicSubtypeInline]
+admin.site.register(models.Magic, MagicAdmin)
 
 
 class ItemAdmin(admin.ModelAdmin):

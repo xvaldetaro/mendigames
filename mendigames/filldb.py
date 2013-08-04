@@ -213,12 +213,12 @@ class wizards():
 
     def persist_item_categories(self, cat_list):
         for cat_dict in cat_list:
-            cat = self.create_from_dict(models.ItemCategory, cat_dict)
+            cat = self.create_from_dict(models.Category, cat_dict)
             groups = cat_dict['groups']
             for group_dict in groups:
-                group = self.create_from_dict(models.ItemGroup, group_dict, item_category=cat)
+                group = self.create_from_dict(models.Subtype, group_dict, category=cat)
                 for template_dict in group_dict['templates']:
-                    self.create_from_dict(models.ItemTemplate, template_dict, item_group=group)
+                    self.create_from_dict(models.Mundane, template_dict, subtype=group)
 
     def get_rarity(self, entry):
         rarity = entry.get('Rarity', 'Mundane')
@@ -228,61 +228,61 @@ class wizards():
             rarity = 'A'
         return rarity
 
-    def create_item_decorator(self, entry):
+    def create_magic(self, entry):
         try:
-            models.ItemDecorator.objects.get(name=entry['Name'])
-        except models.ItemDecorator.DoesNotExist:
-            cat = models.ItemCategory.objects.get(name=entry['Category'])
+            models.Magic.objects.get(name=entry['Name'])
+        except models.Magic.DoesNotExist:
+            cat = models.Category.objects.get(name=entry['Category'])
             level = self.get_level(entry)
             level_plus = False
             if '+' in level:
                 level_plus = True
                 level.replace('+', '')
 
-            i = models.ItemDecorator(
+            i = models.Magic(
                 name=entry['Name'],
                 wizards_id=entry['ID'],
-                item_category=cat,
+                category=cat,
                 cost=entry['CostSort'],
                 rarity=self.get_rarity(entry),
                 level=entry['LevelSort'],
                 level_cost_plus=level_plus,
             )
             i.save()
-            print "Created Item ItemDecorator %s" % i.name
+            print "Created Item Magic %s" % i.name
 
     def create_mundane_item(self, entry, group):
         try:
-            q = models.ItemTemplate.objects.get(name__iexact=entry['Name'])
+            q = models.Mundane.objects.get(name__iexact=entry['Name'])
             print 'Found template %s for entry %s' % (q.name, entry['Name'])
             q.cost = entry['CostSort']
             q.wizards_id = entry['ID']
             q.save()
             print 'Updated id and cost of %s to %s,%s' % (q.name, q.wizards_id, q.cost)
-        except models.ItemTemplate.DoesNotExist:
+        except models.Mundane.DoesNotExist:
             if entry['Category']=='Equipment':
-                it = models.ItemTemplate(
+                it = models.Mundane(
                     name=entry['Name'],
                     wizards_id=entry['ID'],
                     drop=100,
                     cost=entry['CostSort'],
                     core=True,
-                    item_group=group
+                    subtype=group
                 )
                 it.save()
-                print "Created ItemTemplate %s" % it.name
+                print "Created Mundane %s" % it.name
 
     def persist_items(self):
         i_list = self.get_list_from_xml('item', 'item')
 
-        equip_group = models.ItemGroup.objects.get(name='Equipment')
+        equip_group = models.Subtype.objects.get(name='Equipment')
         for i_entry in i_list:
             if(self.get_rarity(i_entry) == 'A'):
                 self.create_mundane_item(i_entry, equip_group)
             else:
-                self.create_item_decorator(i_entry)
+                self.create_magic(i_entry)
 
-        models.ItemTemplate.objects.get(item_group__item_category__name='Equipment', 
+        models.Mundane.objects.get(subtype__category__name='Equipment', 
                 name__exact='Equipment').delete()
 
 w = wizards("/home/xande/Documents")

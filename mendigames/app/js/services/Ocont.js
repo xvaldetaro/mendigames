@@ -50,7 +50,7 @@ function(EM, Restangular) {
         25000, 45000,65000,85000,105000,125000,225000,325000,425000,525000,625000,1125000,
         1625000,2125000,2625000,3125000];
     // Options are: level(decorator with level+), cost_addition, weight_addition, name
-    function get_item_dict(itemTemplate, itemDecorator, opts) {
+    function get_item_dict(mundane, magic, opts) {
         var weight_addition = 0, cost_addition = 0, level;
         var item = { cost: 0, weight: 0, level: 0 };
         if(opts) {
@@ -62,60 +62,60 @@ function(EM, Restangular) {
 
         // Name
         if(!item.name) {
-            if(itemDecorator)
-                item.name = itemDecorator.name;
-            else if(itemTemplate)
-                item.name = itemTemplate.name;
+            if(magic)
+                item.name = magic.name;
+            else if(mundane)
+                item.name = mundane.name;
             else
                 item.name = 'Unnamed Item';
         }
         // Cost
         if(level) {
             item.cost = prices[level] + cost_addition;
-        } else if(itemDecorator) {
-            item.cost = itemDecorator.cost + cost_addition;
-        } else if(itemTemplate) {
-            item.cost = itemTemplate.cost + cost_addition;
+        } else if(magic) {
+            item.cost = magic.cost + cost_addition;
+        } else if(mundane) {
+            item.cost = mundane.cost + cost_addition;
         } else {
             item.cost = cost_addition;
         }
 
         // Weight
-        if(itemTemplate) {
-            item.weight = itemTemplate.weight + weight_addition;
+        if(mundane) {
+            item.weight = mundane.weight + weight_addition;
         } else {
             item.weight = weight_addition; 
         }
 
         // Level
         if(!level)
-            level = itemDecorator.level;
+            level = magic.level;
         item.level = level;
 
         // Put the relateds inside the EM list
-        if(itemDecorator) {
-            if(!EM.by_key('item_decorator', itemDecorator.id))
-                EM.add_local('item_decorator', itemDecorator);
+        if(magic) {
+            if(!EM.by_key('magic', magic.id))
+                EM.add_local('magic', magic);
         }
 
-        item.item_decorator = itemDecorator.id;
-        item.item_template = itemTemplate.id;
-        item._2o = { item_decorator: itemDecorator, item_template: itemTemplate };
+        item.magic = magic.id;
+        item.mundane = mundane.id;
+        item._2o = { magic: magic, mundane: mundane };
 
         return item;
     }
-    function template_from_decorator(itemDecorator) {
-        var category = itemDecorator._2o.item_category;
+    function template_from_decorator(magic) {
+        var category = magic._2o.category;
         if(!category) //decorators are searched outside the EM, thus there are no relateds
-            category = EM.by_key('item_category', itemDecorator.item_category);
-        return category._2m.item_groups[0]._2m.item_templates[0];
+            category = EM.by_key('category', magic.category);
+        return category._2m.subtypes[0]._2m.mundanes[0];
     }
-    function item_from_decorator(itemDecorator) {
-        var itemTemplate = template_from_decorator(itemDecorator);
-        return get_item_dict(itemTemplate, itemDecorator);
+    function item_from_decorator(magic) {
+        var mundane = template_from_decorator(magic);
+        return get_item_dict(mundane, magic);
     }
-    function item_from_template(itemTemplate) {
-        return get_item_dict(itemTemplate);
+    function item_from_template(mundane) {
+        return get_item_dict(mundane);
     }
     function destroy_item(item) {
         return EM.remove('item', item);
@@ -123,11 +123,11 @@ function(EM, Restangular) {
     function new_item(item_dict) {
         return EM.add('item', item_dict);
     }
-    function get_price(itemDecorator, level, adjustment) {
+    function get_price(magic, level, adjustment) {
         if(level) {
             return prices[level] * adjustment;
-        } else if(itemDecorator) {
-            return itemDecorator.cost * adjustment;
+        } else if(magic) {
+            return magic.cost * adjustment;
         } 
     }
     return {

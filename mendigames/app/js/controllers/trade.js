@@ -8,13 +8,13 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
         'container': { _2o: ['campaign'], _2m: ['item'], query: { campaign: campaign} },
-        'item': { _2o: ['item_decorator','item_template', 'container'], _2m: [], 
+        'item': { _2o: ['magic','mundane', 'container'], _2m: [], 
             query: {container__campaign: campaign}},
-        'item_decorator': { _2o: ['item_category'], _2m: ['item_group'], query: {
+        'magic': { _2o: ['category'], _2m: ['subtype'], query: {
             items__isnull: false } },
-        'item_category': { _2o: [], _2m: ['item_group'] },
-        'item_group': { _2o: ['item_category'], _2m: ['item_template', 'item_decorator'] },
-        'item_template': { _2o: ['item_group'], _2m: [] }
+        'category': { _2o: [], _2m: ['subtype'] },
+        'subtype': { _2o: ['category'], _2m: ['mundane', 'magic'] },
+        'mundane': { _2o: ['subtype'], _2m: [] }
     };
     var syncEntities = [
         'container',
@@ -36,9 +36,9 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     EM.start(entitiesMetadata, syncEntities);
 
     $scope.fetch_from_compendium = function(item) {
-        var entity = 'item_decorator';
+        var entity = 'magic';
         if(item.rarity === undefined)
-            entity = 'item_template'
+            entity = 'mundane'
         WizardsService.fetch(item.wizards_id, 'item', entity,item);
     };
 
@@ -75,7 +75,7 @@ function($scope, Ocont, Oit, EM) {
         var cost_adjustment = $scope.buy_adjustment.value;
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
-            EM.merge_related('item_decorator', [itemBase]);
+            EM.merge_related('magic', [itemBase]);
             item = Oit.item_from_decorator(itemBase);
         } else {
             item = Oit.item_from_template(itemBase);
@@ -88,13 +88,13 @@ function($scope, Ocont, Oit, EM) {
 
 .controller('ItemFinderCtrl', ['$scope','EM','Ocont','$http',
 function($scope, EM, Ocont, $http) {
-    $scope.$on('EM.new_list.item_category', function(){
-        $scope.categoryList = EM.list('item_category');
+    $scope.$on('EM.new_list.category', function(){
+        $scope.categoryList = EM.list('category');
         
     });
 
-    $scope.get_category = function(itemDecorator) {
-        return EM.by_key('item_category', itemDecorator.item_category)
+    $scope.get_category = function(magic) {
+        return EM.by_key('category', magic.category)
     };
     $scope.rarityList = [
         {name: 'Common', value: 'C'},
@@ -108,7 +108,7 @@ function($scope, EM, Ocont, $http) {
         
     }
     function item_page_REST(query) {
-        return $http.get('/item_decorator_page', {params: query});
+        return $http.get('/magic_page', {params: query});
     }
     $scope.item_finder_search = function(page) {
         var query = {};
@@ -119,7 +119,7 @@ function($scope, EM, Ocont, $http) {
         if($scope.itemName)
             query.name__icontains = $scope.itemName;
         if($scope.category)
-            query.item_category = $scope.category.id;
+            query.category = $scope.category.id;
         if($scope.rarity)
             query.rarity = $scope.rarity.value;
         if($scope.levelStart)

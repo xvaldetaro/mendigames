@@ -131,7 +131,7 @@ class HasPower(models.Model):
         return self.power
 
 
-class ItemCategory(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=20)
     abbr = models.CharField(max_length=4, unique=True)
     drop = models.IntegerField(default=100)
@@ -143,9 +143,9 @@ class ItemCategory(models.Model):
         ordering = ['name']
 
 
-class ItemGroup(models.Model):
+class Subtype(models.Model):
     name = models.CharField(max_length=30)
-    item_category = models.ForeignKey(ItemCategory, related_name='item_groups')
+    category = models.ForeignKey(Category, related_name='subtypes')
     tags = models.CharField(max_length=30, blank=True)
     drop = models.IntegerField(default=100)
     on_empty = models.BooleanField(default=False)
@@ -157,9 +157,9 @@ class ItemGroup(models.Model):
         ordering = ['name']
 
 
-class ItemTemplate(BookEntry):
+class Mundane(BookEntry):
     weight = models.IntegerField(default=0)
-    item_group = models.ForeignKey(ItemGroup, related_name='item_templates')
+    subtype = models.ForeignKey(Subtype, related_name='mundanes')
     drop = models.IntegerField(default=100)
     tags = models.CharField(max_length=30, blank=True)
     core = models.BooleanField(default=True)
@@ -171,13 +171,13 @@ class ItemTemplate(BookEntry):
     class Meta:
         ordering = ['name']
 
-class ItemDecorator(BookEntry):
+class Magic(BookEntry):
     RARITY = (
         ('C', 'Common'),
         ('U', 'Uncommon'),
         ('R', 'Rare')
     )
-    item_category = models.ForeignKey(ItemCategory, related_name='item_decorators')
+    category = models.ForeignKey(Category, related_name='magics')
     level = models.IntegerField(default=1, blank=True)
     level_cost_plus = models.BooleanField(default=False)
     rarity = models.CharField(max_length=1, choices=RARITY, default='C')
@@ -190,15 +190,15 @@ class ItemDecorator(BookEntry):
         ordering = ['level', 'rarity', 'name']
 
 
-class M2MItemDecoratorItemGroup(models.Model):
-    item_decorator = models.ForeignKey(ItemDecorator, related_name="item_groups")
-    item_group = models.ForeignKey(ItemGroup, related_name="item_decorators")
+class M2MMagicSubtype(models.Model):
+    magic = models.ForeignKey(Magic, related_name="subtypes")
+    subtype = models.ForeignKey(Subtype, related_name="magics")
 
 
 class Item(models.Model):
     container = models.ForeignKey(Container, related_name="items")
-    item_decorator = models.ForeignKey(ItemDecorator, null=True, related_name='items')
-    item_template = models.ForeignKey(ItemTemplate, null=True, related_name='items')
+    magic = models.ForeignKey(Magic, null=True, related_name='items')
+    mundane = models.ForeignKey(Mundane, null=True, related_name='items')
     weight = models.IntegerField(default=0)
     name = models.CharField(max_length=60)
     cost = models.IntegerField(default=0)

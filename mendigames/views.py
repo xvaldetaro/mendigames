@@ -115,9 +115,9 @@ class IndexView(TemplateView):
     template_name = 'mendigames/index.html'
 
 
-class ItemDecoratorPage(RevListView):
-    queryset = models.ItemDecorator.objects.all()
-    serializer_class = serializers.ItemDecoratorSerializer
+class MagicPage(RevListView):
+    queryset = models.Magic.objects.all()
+    serializer_class = serializers.MagicSerializer
     paginate_by = 100
     paginate_by_param = 'page_size'
 
@@ -203,49 +203,49 @@ class ContainerDetail(RevDetailView):
     serializer_class = serializers.ContainerSerializer
 
 
-# ItemCategory Views
-class ItemCategoryList(RevListView):
-    queryset = models.ItemCategory.objects.all()
-    serializer_class = serializers.ItemCategorySerializer
-class ItemCategoryDetail(RevDetailView):
-    queryset = models.ItemCategory.objects.all()
-    serializer_class = serializers.ItemCategorySerializer
+# Category Views
+class CategoryList(RevListView):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+class CategoryDetail(RevDetailView):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
 
 
-# ItemGroup Views
-class ItemGroupList(RevListView):
-    queryset = models.ItemGroup.objects.all()
-    serializer_class = serializers.ItemGroupSerializer
-class ItemGroupDetail(RevDetailView):
-    queryset = models.ItemGroup.objects.all()
-    serializer_class = serializers.ItemGroupSerializer
+# Subtype Views
+class SubtypeList(RevListView):
+    queryset = models.Subtype.objects.all()
+    serializer_class = serializers.SubtypeSerializer
+class SubtypeDetail(RevDetailView):
+    queryset = models.Subtype.objects.all()
+    serializer_class = serializers.SubtypeSerializer
 
 
-# ItemTemplate Views
-class ItemTemplateList(RevListView):
-    queryset = models.ItemTemplate.objects.all()
-    serializer_class = serializers.ItemTemplateSerializer
-class ItemTemplateDetail(RevDetailView):
-    queryset = models.ItemTemplate.objects.all()
-    serializer_class = serializers.ItemTemplateSerializer
+# Mundane Views
+class MundaneList(RevListView):
+    queryset = models.Mundane.objects.all()
+    serializer_class = serializers.MundaneSerializer
+class MundaneDetail(RevDetailView):
+    queryset = models.Mundane.objects.all()
+    serializer_class = serializers.MundaneSerializer
 
 
-# ItemDecorator Views
-class ItemDecoratorList(RevListView):
-    queryset = models.ItemDecorator.objects.all()
-    serializer_class = serializers.ItemDecoratorSerializer
-class ItemDecoratorDetail(RevDetailView):
-    queryset = models.ItemDecorator.objects.all()
-    serializer_class = serializers.ItemDecoratorSerializer
+# Magic Views
+class MagicList(RevListView):
+    queryset = models.Magic.objects.all()
+    serializer_class = serializers.MagicSerializer
+class MagicDetail(RevDetailView):
+    queryset = models.Magic.objects.all()
+    serializer_class = serializers.MagicSerializer
 
 
-# M2MItemDecoratorItemGroup Views
-class M2MItemDecoratorItemGroupList(RevListView):
-    queryset = models.M2MItemDecoratorItemGroup.objects.all()
-    serializer_class = serializers.M2MItemDecoratorItemGroupSerializer
-class M2MItemDecoratorItemGroupDetail(RevDetailView):
-    queryset = models.M2MItemDecoratorItemGroup.objects.all()
-    serializer_class = serializers.M2MItemDecoratorItemGroupSerializer
+# M2MMagicSubtype Views
+class M2MMagicSubtypeList(RevListView):
+    queryset = models.M2MMagicSubtype.objects.all()
+    serializer_class = serializers.M2MMagicSubtypeSerializer
+class M2MMagicSubtypeDetail(RevDetailView):
+    queryset = models.M2MMagicSubtype.objects.all()
+    serializer_class = serializers.M2MMagicSubtypeSerializer
 
 
 # Item Views
