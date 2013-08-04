@@ -1,17 +1,19 @@
 <div class="modal-header">
-    <h3>Value:</h3>
+    <h3>{{title}}</h3>
 </div>
 <div class="modal-body">
     <form class="form-horizontal">
-    <div class="control-group">
-        <div class="controls">
-            <input type="text" class="span2" ng-model="input">
+        <div class="control-group">
+            <label class="control-label">{{label}}</label>
+            <div class="controls">
+            <input type="text" class='input-{{size}}' ng-model="form" maxlength="" placeholder="{{label}}">
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-    <div class="controls">
-      <button class="btn btn-danger" ng-click="close()">Ok</button>
-    </div>
-    </div>
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-primary" ng-click="confirm()">Confirm</button>
+                <button class="btn" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
     </form>
 </div>

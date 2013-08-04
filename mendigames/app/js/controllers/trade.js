@@ -42,14 +42,16 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
     };
 
     $scope.split_gold = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Split Gold', label: 'Split how much?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Ocam.split_gold($scope.campaign, $scope.plContList, result);
         });
     };
     $scope.mass_give_gold = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Give Gold', label: 'Give how much?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Ocam.mass_give_gold($scope.campaign, $scope.plContList, result);
@@ -71,10 +73,11 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
     $scope.sell_adjustment = $scope.prices[0];
 }])
 
-.controller('InventoryCtrl', ['$scope','Ocont', 'Oit', 'EM',
-function($scope, Ocont, Oit, EM) {
+.controller('InventoryCtrl', ['$scope','Ocont', 'Oit', 'EM','InputDialog',
+function($scope, Ocont, Oit, EM, InputDialog) {
     $scope.change_gold = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Change Gold', label: 'How much?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Ocont.change_gold($scope.cont, result);
