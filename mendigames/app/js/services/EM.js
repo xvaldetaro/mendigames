@@ -38,48 +38,36 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             return data;
         })
     }
-    function fill_related(entityInstance, related) {
+    function fill_2o(entityInstance, related) {
         if(entityInstance[related])
             entityInstance._2o[related] = by_key(related, entityInstance[related]);
     }
-    function fill_related_array(entityInstance, related) {
+    function fill_2m(entityInstance, related) {
         var pkList = entityInstance[related+'s'], relatedList = [];
         for(var i=0, len=pkList.length; i<len; i++) {
             relatedList.push(by_key(related, pkList[i]));
         }
         entityInstance._2m[related+'s'] = relatedList;
     }
-    function fill_related_type(instanceList, related) {
-        if(instanceList[0][related+'s'] instanceof Array)
-            for (var i = instanceList.length - 1; i >= 0; i--) {
-                if(!instanceList[i]._2m)
-                    instanceList[i]._2m = {};
-                fill_related_array(instanceList[i], related);
-            }
-        else
-            for(var i = instanceList.length - 1; i >= 0; i--) {
-                if(!instanceList[i]._2o)
-                    instanceList[i]._2o = {};
-                fill_related(instanceList[i], related);
-            }
-    }
     function merge_related(entity, instanceList) {
-        var relatedList = get_2o_list(entity);
-        for(var j = relatedList.length - 1; j >= 0; j--) {
-            fill_related_type(instanceList, relatedList[j]);
-        }
-        relatedList = get_2m_list(entity);
-        for(var j = relatedList.length - 1; j >= 0; j--) {
-            fill_related_type(instanceList, relatedList[j]);
+        for(var i = instanceList.length - 1; i >= 0; i--) {
+            instanceList[i]._2o = {};
+            instanceList[i]._2m = {};
+            var relatedList = get_2o_list(entity);
+            for(var j = relatedList.length - 1; j >= 0; j--) {
+                fill_2o(instanceList[i], relatedList[j]);
+            }
+            relatedList = get_2m_list(entity);
+            for(var j = relatedList.length - 1; j >= 0; j--) {
+                fill_2m(instanceList[i], relatedList[j]);
+            }
         }
     }
     function merge_related_multiple(eList) {
-        _.each
         for(var i = eList.length - 1; i >= 0; i--) {
             var entity = eList[i];
             var instanceList = list(entity);
-            if(instanceList.length > 0)
-                merge_related(entity, instanceList);
+            merge_related(entity, instanceList);
         }
     }
     function on_response_err(error){
@@ -115,6 +103,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             }
         });
     }
+    // Fetch the entity and its reverse related entities
     function fetch_with_reverse(entity){
         var eList = [entity], reverses = emmd[entity].reverse;
         for (var i = reverses.length - 1; i >= 0; i--) {
@@ -131,16 +120,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         .then(function(newE) {
             $log.log('Received Add '+entity+' response');
             U.replace(entData.list, e, newE);
-
-            var relatedList = get_2o_list(entity);
-            for(var j = relatedList.length - 1; j >= 0; j--) {
-                fill_related_type([newE], relatedList[j]);
-            }
-            relatedList = get_2m_list(entity);
-            for(var j = relatedList.length - 1; j >= 0; j--) {
-                fill_related_type([newE], relatedList[j]);
-            }
-            $log.log('Added '+entity+' with proper response');
+            merge_related(entity, [newE]);
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
         }));

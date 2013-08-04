@@ -108,11 +108,10 @@ function($scope, EM, Ocont, $http) {
         
     }
     function item_page_REST(query) {
-        return $http.get('/'+item_decorator_page, {params: query});
+        return $http.get('/item_decorator_page', {params: query});
     }
     $scope.item_finder_search = function(page) {
         var query = {};
-
         if(!page)
             $scope.currentPage = 1;
         else
