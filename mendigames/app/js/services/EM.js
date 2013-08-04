@@ -130,9 +130,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         entData.list.push(e);
         var restore = safe_REST(e);
         $log.log('Requesting add '+entity);
-        return rev_REST(Restangular.all(entity).post(e)
+        var promise = rev_REST(Restangular.all(entity).post(e)
         .then(function(newE) {
-            restore.resolve();
             $log.log('Received Add '+entity+' response');
             U.replace(entData.list, e, newE);
 
@@ -148,6 +147,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
         }));
+        restore.resolve();
+        return promise;
     }
     function remove(entity, instance) {
         var entData = all[entity], pk = get_pk(entity);
@@ -155,22 +156,24 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         delete entData.edict[instance[pk]];
         var restore = safe_REST(instance);
         $log.log('Requesting Remove '+entity);
-        return rev_REST(instance.remove()
+        var promise = rev_REST(instance.remove()
         .then(function(response){
-            restore.resolve();
             $rootScope.$broadcast('EM.new_list.'+entity);
             return response;
-        }))
+        }));
+        restore.resolve();
+        return promise;
     }
     function update(entity, instance) {
         $log.log('Requesting Update '+entity);
         var restore = safe_REST(instance);
         if(!instance.put)
             Restangular.restangularizeElement('', instance, entity);
-        return rev_REST(instance.put().then(function(response) {
-            restore.resolve();
+        var promise = rev_REST(instance.put().then(function(response) {
             return response;
-        })); 
+        }));
+        restore.resolve();
+        return promise;
     }
     // used when a relation is needed to an entity not from the EM local database
     function add_local(entity, instance) {
