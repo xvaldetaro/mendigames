@@ -121,10 +121,6 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         }
         return fetch_multiple(eList);
     }
-    function just_fetch_list(entity, query) {
-        $log.log('Requesting just '+entity+' list');
-        return $http.get('/'+entity, {params: query});
-    }
     function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
@@ -288,7 +284,6 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         fetch: fetch,
         fetch_multiple: fetch_multiple,
         fetch_with_reverse: fetch_with_reverse,
-        just_fetch_list: just_fetch_list,
 
         set_all_entity_metadata: set_all_entity_metadata,
         start_poll_timeout: start_poll_timeout,

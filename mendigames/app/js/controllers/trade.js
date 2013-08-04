@@ -86,8 +86,8 @@ function($scope, Ocont, Oit, EM) {
     };
 }])
 
-.controller('ItemFinderCtrl', ['$scope','EM','Ocont',
-function($scope, EM, Ocont) {
+.controller('ItemFinderCtrl', ['$scope','EM','Ocont','$http',
+function($scope, EM, Ocont, $http) {
     $scope.$on('EM.new_list.item_category', function(){
         $scope.categoryList = EM.list('item_category');
         
@@ -106,6 +106,9 @@ function($scope, EM, Ocont) {
         $scope.itemFinder = list.data.data;
         $scope.pageCount = Math.ceil($scope.itemFinder.count/100)
         
+    }
+    function item_page_REST(query) {
+        return $http.get('/'+item_decorator_page, {params: query});
     }
     $scope.item_finder_search = function(page) {
         var query = {};
@@ -129,14 +132,14 @@ function($scope, EM, Ocont) {
         if($scope.costStop)
             query.cost__lte = $scope.costStop;
         query.page = $scope.currentPage;
-        EM.just_fetch_list('item_decorator_page',query).then(got_item_finder);
+        item_page_REST(query).then(got_item_finder);
         $scope.current_query = query;
     };
 
     $scope.goto_page = function(page) {
         $scope.current_query.page = page;
-        EM.just_fetch_list('item_decorator_page',$scope.current_query).then(got_item_finder);
-    }
+        item_page_REST($scope.current_query).then(got_item_finder);
+    };
 
     $scope.predicate = 'level';
     $scope.set_predicate = function(predicate) {
