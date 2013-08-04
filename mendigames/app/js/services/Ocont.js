@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocont', ['EM', 'U','Oit',
-function(EM, U, Oit) {
+.factory('Ocont', ['EM', 'U','Oit','$q',
+function(EM, U, Oit, $q) {
     function save(cont) {
         return EM.update('container', cont);
     }
@@ -14,13 +14,17 @@ function(EM, U, Oit) {
         return save(cont);
     }
     function sell_item(item, cost_adjustment) {
-        change_gold(item._2o.container, item.cost*cost_adjustment);
         U.pluck(item._2o.container._2m.items, item);
-        return Oit.destroy_item(item);
+        return $q.all([
+            change_gold(item._2o.container, item.cost*cost_adjustment),
+            Oit.destroy_item(item)
+        ]);
     }
     function buy_item(to_cont, item, cost_adjustment) {
-        change_gold(to_cont, -1*(item.cost*cost_adjustment));
-        return put_item(to_cont, item);
+        return $q.all([
+            put_item(to_cont, item),
+            change_gold(to_cont, -1*(item.cost*cost_adjustment)),
+        ]);
     }
     // Handles item instances and item dicts
     function put_item(to_cont, item) {

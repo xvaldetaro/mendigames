@@ -5,7 +5,7 @@ angular.module('mendigames')
 .factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$log','U',
 '$q',
 function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
-    var all = {}, polling = false, revision, emmd, pollPromise, syncE;
+    var all = {}, revision, emmd, syncE;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_2o_list(entity) { return emmd[entity]._2o; }
     function get_2m_list(entity) { return emmd[entity]._2m; }
@@ -19,53 +19,24 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         else
             revision = response.metadata.revision;
     }
-    function fetch(entity, _query) {
-        var query = _query || get_query(entity)
-        return Restangular.all(entity).getList(query)
-        .then(function(el) {
-            all[entity].list = el;
-            all[entity].edict = {};
-
-            var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
-            for (var i = 0, len=el.length; i < len; i++) {
-                var instance = el[i];
-                edict[instance[pk]] = instance;
-            }
-            return el;
+    function safe_REST(instance) {
+        var _2o = instance._2o, _2m = instance._2m;
+        instance._2o = null;instance._2m = null;
+        $log.log('plucked instance _2');
+        var deferred = $q.defer();
+        deferred.promise.then(function(data) {
+            instance._2o = _2o;
+            instance._2m = _2m;
+            $log.log('tucked back instance _2');
         });
+        return deferred;
     }
-    function fetch_multiple(eList) {
-        if(polling)
-            return pollPromise;
-        polling = true;
-        var promiseArray = [];
-        for (var i = eList.length - 1; i >= 0; i--) {
-            promiseArray.push(fetch(eList[i]));
-        }
-
-        $log.log('Requesting fetch multiple:'+eList);
-        pollPromise = $q.all(promiseArray);
-
-        return pollPromise.then(function(){
-            $log.log('Received FetchAll response');
-            merge_related_multiple(eList);
-            polling = false;
-            for(var i = eList.length - 1; i >= 0; i--) {
-                $rootScope.$broadcast('EM.new_list.'+eList[i]);
-            }
-            return {data: {revision: revision}};
-        });
-    }
-    function fetch_with_reverse(entity){
-        var eList = [entity], reverses = emmd[entity].reverse;
-        for (var i = reverses.length - 1; i >= 0; i--) {
-            eList.push(reverses[i]);
-        }
-        return fetch_multiple(eList);
-    }
-    function just_fetch_list(entity, query) {
-        $log.log('Requesting just '+entity+' list');
-        return $http.get('/'+entity, {params: query});
+    function rev_REST(promise) {
+        return promise.then(function(data) {
+            update_revision(data);
+            $log.log('-- Revision: '+revision);
+            return data;
+        })
     }
     function fill_related(entityInstance, related) {
         if(entityInstance[related])
@@ -82,13 +53,13 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         if(instanceList[0][related+'s'] instanceof Array)
             for (var i = instanceList.length - 1; i >= 0; i--) {
                 if(!instanceList[i]._2m)
-                    instanceList[i]._2m = [];
+                    instanceList[i]._2m = {};
                 fill_related_array(instanceList[i], related);
             }
         else
             for(var i = instanceList.length - 1; i >= 0; i--) {
                 if(!instanceList[i]._2o)
-                    instanceList[i]._2o = [];
+                    instanceList[i]._2o = {};
                 fill_related(instanceList[i], related);
             }
     }
@@ -110,34 +81,56 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
                 merge_related(entity, instanceList);
         }
     }
-    function on_response(response) {
-        update_revision(response);
-        $log.log('-- Revision: '+revision);
-        $log.log('Ok! finishing REST request, now delegating');
-        return response;
-    }
     function on_response_err(error){
         throw error;
     }
-    function all(route, query) {
-        return Restangular.all(route).getList(query).then(on_response, on_response_err);
-    }
-    function safe_REST(instance) {
-        var _2o = instance._2o, _2m = instance._2m;
-        instance._2o = null;instance._2m = null;
-        var deferred = $q.defer();
-        deferred.promise.then(function(data) {
-            instance._2o = _2o;
-            instance._2m = _2m;
+    function fetch(entity, _query) {
+        var query = _query || get_query(entity)
+        return Restangular.all(entity).getList(query)
+        .then(function(el) {
+            all[entity].list = el;
+            all[entity].edict = {};
+
+            var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
+            for (var i = 0, len=el.length; i < len; i++) {
+                var instance = el[i];
+                edict[instance[pk]] = instance;
+            }
+            return el;
         });
-        return deferred;
+    }
+    function fetch_multiple(eList) {
+        var promiseArray = [];
+        for (var i = eList.length - 1; i >= 0; i--) {
+            promiseArray.push(rev_REST(fetch(eList[i])));
+        }
+
+        $log.log('Requesting fetch multiple:'+eList);
+        return $q.all(promiseArray).then(function(){
+            $log.log('Received FetchAll response');
+            merge_related_multiple(eList);
+            for(var i = eList.length - 1; i >= 0; i--) {
+                $rootScope.$broadcast('EM.new_list.'+eList[i]);
+            }
+        });
+    }
+    function fetch_with_reverse(entity){
+        var eList = [entity], reverses = emmd[entity].reverse;
+        for (var i = reverses.length - 1; i >= 0; i--) {
+            eList.push(reverses[i]);
+        }
+        return fetch_multiple(eList);
+    }
+    function just_fetch_list(entity, query) {
+        $log.log('Requesting just '+entity+' list');
+        return $http.get('/'+entity, {params: query});
     }
     function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
         var restore = safe_REST(e);
         $log.log('Requesting add '+entity);
-        return Restangular.all(entity).post(e)
+        return rev_REST(Restangular.all(entity).post(e)
         .then(function(newE) {
             restore.resolve();
             $log.log('Received Add '+entity+' response');
@@ -154,7 +147,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             $log.log('Added '+entity+' with proper response');
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
-        });
+        }));
     }
     function remove(entity, instance) {
         var entData = all[entity], pk = get_pk(entity);
@@ -162,12 +155,22 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         delete entData.edict[instance[pk]];
         var restore = safe_REST(instance);
         $log.log('Requesting Remove '+entity);
-        return instance.remove()
+        return rev_REST(instance.remove()
         .then(function(response){
             restore.resolve();
             $rootScope.$broadcast('EM.new_list.'+entity);
             return response;
-        });
+        }))
+    }
+    function update(entity, instance) {
+        $log.log('Requesting Update '+entity);
+        var restore = safe_REST(instance);
+        if(!instance.put)
+            Restangular.restangularizeElement('', instance, entity);
+        return rev_REST(instance.put().then(function(response) {
+            restore.resolve();
+            return response;
+        })); 
     }
     // used when a relation is needed to an entity not from the EM local database
     function add_local(entity, instance) {
@@ -178,41 +181,32 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         var i = entData.list.length-1;
         entData.edict[instance[get_pk(entity)]] = instance;
     }
-    function update(entity, instance) {
-        $log.log('Requesting Update '+entity);
-        var restore = safe_REST(instance);
-        if(!instance.put)
-            Restangular.restangularizeElement('', instance, entity);
-        return instance.put().then(function(response) {
-            restore.resolve();
-        }); 
-    }
     function remove_list(entity, query) {
         $log.log('Requesting Remove '+entity+' list');
-        return $http.delete('/'+entity, {params: query})
+        return rev_REST($http.delete('/'+entity, {params: query})
         .then(function(response) {
             $log.log('Received Remove '+entity+' list response');
             fetch_multiple(syncE);
             return response;
-        });
+        }));
     }
     function update_list(entity, query, data) {
         $log.log('Requesting Update '+entity+' list');
-        return $http.put('/'+entity, data, {params: query})
+        return rev_REST($http.put('/'+entity, data, {params: query})
         .then(function(response) {
             $log.log('Received Update '+entity+' list response');
             fetch_multiple(syncE);
             return response;
-        });
+        }));
     }
     function add_list(entity, data){
         $log.log('Requesting Add '+entity+' list');
-        return $http.post('/'+entity, data, {params: {many: true}})
+        return rev_REST($http.post('/'+entity, data, {params: {many: true}})
         .then(function(response) {
             $log.log('Received add '+entity+' list response');
             fetch_multiple(syncE);
             return response;
-        });
+        }));
     }
     function set_all_entity_metadata(metadata, syncEntities) {
         emmd = metadata, syncE = syncEntities;
@@ -231,27 +225,29 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         }
     }
     function poll() {
-        $http.get('/rev').success(function(data,status,headers,config){
-            if(revision == data.revision) {
+        $rootScope.$apply(function() {
+            $http.get('/rev').success(function(data,status,headers,config){
+                if(revision == data.revision) {
+                    start_poll_timeout();
+                    return;
+                }
+                var localRev = revision, remoteRev = data.revision,
+                    prev = data.previous, changed = data.revisionUpdate;
+
+                if(localRev!=prev||!changed||changed===''){ // more than 1 revision behind or 0
+                    $log.log('revision changed, pulling all');
+                    return fetch_multiple(syncE).then(start_poll_timeout);
+                }
+                $log.log('revision changed, pulling '+changed);
+                if(_.contains(syncE, changed))
+                    return fetch_with_reverse(changed).then(start_poll_timeout);
+
+                // Other update that is not pertinent to this view
+                $log.log(changed+' is not relevant to this view. Only updated revision');
+                revision = data.revision;
                 start_poll_timeout();
-                return;
-            }
-            var localRev = revision, remoteRev = data.revision,
-                prev = data.previous, changed = data.revisionUpdate;
-
-            if(localRev!=prev||!changed||changed===''){ // more than 1 revision behind or 0
-                $log.log('revision changed, pulling all');
-                return fetch_multiple(syncE).then(start_poll_timeout);
-            }
-            $log.log('revision changed, pulling '+changed);
-            if(_.contains(syncE, changed))
-                return fetch_with_reverse(changed).then(start_poll_timeout);
-
-            // Other update that is not pertinent to this view
-            $log.log(changed+' is not relevant to this view. Only updated revision');
-            revision = data.revision;
-            start_poll_timeout();
-        });
+            });
+        })
     }
     function start_poll_timeout(){
         $timeout(poll, 2000);
@@ -271,7 +267,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         };
         return res;
     }
-    //start_poll_timeout();
+    start_poll_timeout();
     return {
         update: update,
         add: add,

@@ -170,11 +170,11 @@ function($scope, $rootScope, $dialog, Och, Log) {
 .controller('HasPowerController', ['$scope', 'EM', 'Ohpo', 'Log',
 function($scope, EM, Ohpo, Log) {
     $scope.use_power = function(){
-        Ohpo.use_power($scope.hasPower);
         if($scope.hasPower.used)
             Log($scope.ch.name+' used: '+$scope.hasPower._2o.power.name);
         else
             Log($scope.ch.name+' recharged: '+$scope.hasPower._2o.power.name);
+        Ohpo.use_power($scope.hasPower);
     };
 }])
 
