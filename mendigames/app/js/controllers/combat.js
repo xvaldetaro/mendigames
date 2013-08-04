@@ -252,21 +252,6 @@ function($scope, EM, U, Log, $dialog, Ocam, WizardsService) {
           }
         });
     };
-
-    $scope.split_gold = function () {
-        $scope.inputDialog.open().then(function(result){
-            if(!result)
-                return;
-            Ocam.split_gold($scope.campaign, $scope.characterList, result);
-        });
-    };
-    $scope.mass_give_gold = function () {
-        $scope.inputDialog.open().then(function(result){
-            if(!result)
-                return;
-            Ocam.mass_give_gold($scope.campaign, $scope.characterList, result);
-        });
-    };
     $scope.split_xp = function () {
         $scope.inputDialog.open().then(function(result){
             if(!result)

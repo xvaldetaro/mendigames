@@ -46,6 +46,12 @@ admin.site.register(models.Condition, ConditionAdmin)
 admin.site.register(models.TraitSource, TraitSourceAdmin)
 
 
+
+class ContainerAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(models.Container, ContainerAdmin)
+
+
 class SubtypeInline(admin.TabularInline):
     model = models.Subtype
 class CategoryAdmin(admin.ModelAdmin):

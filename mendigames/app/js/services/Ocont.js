@@ -39,6 +39,7 @@ function(EM, U, Oit, $q) {
             })
     }
     return {
+        change_gold: change_gold,
         buy_item: buy_item,
         sell_item: sell_item
     };

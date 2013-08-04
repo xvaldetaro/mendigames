@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocam', ['EM','Och','$q','U',
-function(EM, Och, $q, U) {
+.factory('Ocam', ['EM','Och','Ocont','$q','U',
+function(EM, Och, Ocont, $q, U) {
     function next_turn(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -67,33 +67,48 @@ function(EM, Och, $q, U) {
         }
         return playerList;
     }
-    function _call_foreach(list, fName, param){
+    function categorize_containers(containerList) {
+        var plContList = [], othContList = [];
+        for (var i = containerList.length - 1; i >= 0; i--) {
+            if(containerList[i].character)
+                plContList.push(containerList[i]);
+            else
+                othContList.push(containerList[i]);
+        }
+        return { player: plContList, other: othContList };
+    }
+    function _call_for_character(list, fName, param){
         var promises = []
         for (var i = list.length - 1; i >= 0; i--) {
             promises.push(Och[fName](list[i], param));
         }
         return $q.all(promises);
     }
-    function split_gold(cam, characterList, value) {
-        var playerList = _get_players(characterList);
-        var share = Math.floor(value/playerList.length);
-        var leftover = value%playerList.length;
-        var lucky = U.randint(0, playerList.length);
-        playerList[lucky].gold += leftover;
-        return _call_foreach(playerList, 'change_gold', share);
+    function _call_for_container(list, fName, param){
+        var promises = []
+        for (var i = list.length - 1; i >= 0; i--) {
+            promises.push(Ocont[fName](list[i], param));
+        }
+        return $q.all(promises);
+    }
+    function split_gold(cam, containerList, value) {
+        var share = Math.floor(value/containerList.length);
+        var leftover = value%containerList.length;
+        var lucky = U.randint(0, containerList.length);
+        pcList[lucky].gold += leftover;
+        return _call_for_container(containerList, 'change_gold', share);
     }
     function mass_give_gold(cam, characterList, value) {
-        var playerList = _get_players(characterList);
-        return _call_foreach(playerList, 'change_gold', value);
+        return _call_for_container(containerList, 'change_gold', value);
     }
     function split_xp(cam, characterList, value) {
         var playerList = _get_players(characterList);
         var share = Math.floor(value/playerList.length);
-        return _call_foreach(playerList, 'change_xp', share);
+        return _call_for_character(playerList, 'change_xp', share);
     }
     function mass_give_xp(cam, characterList, value) {
         var playerList = _get_players(characterList);
-        return _call_foreach(playerList, 'change_xp', value);
+        return _call_for_character(playerList, 'change_xp', value);
     }
     function mass_clear_conditions(cam, characterList) {
         for (var i = characterList.length - 1; i >= 0; i--) {
@@ -104,16 +119,16 @@ function(EM, Och, $q, U) {
         return EM.remove_list('has_condition', {character__campaign: cam.id});
     }
     function mass_milestone(characterList){
-        return _call_foreach(characterList, 'milestone');
+        return _call_for_character(characterList, 'milestone');
     }
     function mass_short_rest(cam, characterList){
-        return _call_foreach(characterList, '_short_rest_stats').then(function(){
+        return _call_for_character(characterList, '_short_rest_stats').then(function(){
             EM.update_list('has_power',
             {character__campaign: cam.id, power__usage: 'E'},{used: false});
         });
     }
     function mass_extended_rest(cam, characterList){
-        _call_foreach(characterList, '_extended_rest_stats').then(function(){
+        _call_for_character(characterList, '_extended_rest_stats').then(function(){
             EM.update_list('has_power',
             {character__campaign: cam.id},{used: false});
         });
@@ -134,6 +149,7 @@ function(EM, Och, $q, U) {
         mass_clear_conditions: mass_clear_conditions,
         mass_short_rest: mass_short_rest,
         mass_extended_rest: mass_extended_rest,
-        mass_milestone: mass_milestone
+        mass_milestone: mass_milestone,
+        categorize_containers: categorize_containers
     };
 }]);

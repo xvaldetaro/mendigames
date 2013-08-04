@@ -48,11 +48,14 @@ class Container(models.Model):
     campaign = models.ForeignKey(Campaign, null=True)
     gold = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return self.name
 
 class Character(models.Model):
     TYPES = (('Player', 'Player'), ('Enemy', 'Enemy'), ('Neutral', 'Neutral'))
     campaign = models.ForeignKey(Campaign)
-    container = models.ForeignKey(Container, null=True, blank=True)
+    container = models.OneToOneField(Container, null=True, blank=True, 
+        related_name='character')
 
     type = models.CharField(max_length=7, choices=TYPES, default='Player')
     name = models.CharField(max_length=20, default='Unnamed')

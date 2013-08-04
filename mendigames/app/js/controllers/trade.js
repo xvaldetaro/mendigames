@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog',
-function($scope, $routeParams, EM, WizardsService,$dialog) {
+.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog','Ocam',
+function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
@@ -24,13 +24,13 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
 
     $scope.campaignId = $routeParams.campaignId;
     $scope.$on('EM.new_list.container', function(){
-        $scope.containerList = EM.list('container');
-        $scope.container = $scope.containerList[0];
+        var containers = Ocam.categorize_containers(EM.list('container'));
+        $scope.plContList = containers.player;
+        $scope.othContList = containers.other;
         
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
-        
     });
     // Bootstrap the scope
     EM.start(entitiesMetadata, syncEntities);
@@ -40,6 +40,21 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
         if(item.rarity === undefined)
             entity = 'mundane'
         WizardsService.fetch(item.wizards_id, 'item', entity,item);
+    };
+
+    $scope.split_gold = function () {
+        $scope.inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.split_gold($scope.campaign, $scope.plContList, result);
+        });
+    };
+    $scope.mass_give_gold = function () {
+        $scope.inputDialog.open().then(function(result){
+            if(!result)
+                return;
+            Ocam.mass_give_gold($scope.campaign, $scope.plContList, result);
+        });
     };
 
     $scope.prices = [

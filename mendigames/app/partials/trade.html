@@ -31,8 +31,10 @@
                 <label class="checkbox">Buy Price: <select class="input-small" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select></label>
                 <label class="checkbox">Sell Price: <select class="input-small" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select></label>
             </form>
+            <button ng-click="split_gold()" class="btn">Split Gold</button>
+            <button ng-click="mass_give_gold()" class="btn">Mass Give Gold</button>
             <tabset vertical="false" type="'tabs'" >
-                <tab class="pointer" ng-repeat="cont in containerList" heading="{{cont.name}}" active="cont.active">
+                <tab class="pointer" ng-repeat="cont in plContList" heading="{{cont.name}}" active="cont.active">
                     <div ng-controller="InventoryCtrl">
                         <button ng-click="change_gold(0)" class="btn">Gold:{{cont.gold}}</button>
                         <div class="row-fluid inventory-table-header">

@@ -114,6 +114,7 @@ class M2MMagicSubtypeSerializer(ThroughSerializer):
 
 class ContainerSerializer(RevSerializer):
     items = serializers.PrimaryKeyRelatedField(many=True)
+    character = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     revision_key = 'container'
     class Meta:
         model = models.Container
