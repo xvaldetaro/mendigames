@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('mendigames').
+angular.module('mendigames')
 
-factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$log','U',
-function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
+.factory('EM', ['Restangular','$routeParams','$rootScope','$http','$timeout','$log','U',
+'$q',
+function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
     var all = {}, polling = false, revision, emmd, pollPromise, syncE;
     function get_pk(entity) { return emmd[entity].pk; }
     function get_2o_list(entity) { return emmd[entity]._2o; }
@@ -20,19 +21,17 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     }
     function fetch(entity, _query) {
         var query = _query || get_query(entity)
-        return async_request(function(){
-            return Restangular.all(entity).getList(query)
-            .then(function(el) {
-                all[entity].list = el;
-                all[entity].edict = {};
+        return Restangular.all(entity).getList(query)
+        .then(function(el) {
+            all[entity].list = el;
+            all[entity].edict = {};
 
-                var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
-                for (var i = 0, len=el.length; i < len; i++) {
-                    var instance = el[i];
-                    edict[instance[pk]] = instance;
-                }
-                return el;
-            });
+            var list=all[entity].list, pk = get_pk(entity), edict=all[entity].edict;
+            for (var i = 0, len=el.length; i < len; i++) {
+                var instance = el[i];
+                edict[instance[pk]] = instance;
+            }
+            return el;
         });
     }
     function fetch_multiple(eList) {
@@ -45,7 +44,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
         }
 
         $log.log('Requesting fetch multiple:'+eList);
-        pollPromise = Q.all(promiseArray);
+        pollPromise = $q.all(promiseArray);
 
         return pollPromise.then(function(){
             $log.log('Received FetchAll response');
@@ -65,13 +64,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
         return fetch_multiple(eList);
     }
     function just_fetch_list(entity, query) {
-        return async_request(function(){
-            $log.log('Requesting just '+entity+' list');
-            return Q($http.get('/'+entity, {params: query}))
-            .then(function(response) {
-                return response;
-            });
-        });
+        $log.log('Requesting just '+entity+' list');
+        return $http.get('/'+entity, {params: query});
     }
     function fill_related(entityInstance, related) {
         if(entityInstance[related])
@@ -119,63 +113,60 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     function on_response(response) {
         update_revision(response);
         $log.log('-- Revision: '+revision);
+        $log.log('Ok! finishing REST request, now delegating');
         return response;
     }
     function on_response_err(error){
-        window.alert(error.message);
+        throw error;
     }
-    function on_response_fin() {
-        $log.log('Ok! finishing request and applying');
+    function all(route, query) {
+        return Restangular.all(route).getList(query).then(on_response, on_response_err);
     }
-    // Expects a function that executes a request and returns a promise
-    function async_request(func) {
-        var defer = Q.defer();
-        setTimeout(function(){
-            func().then(function(response) {
-                $log.log('Resolved');
-                defer.resolve(response);
-            },function(error) {
-                defer.reject(error);
-            });
-        },0);
-        return defer.promise.then(on_response).fail(on_response_err).fin(on_response_fin);
+    function safe_REST(instance) {
+        var _2o = instance._2o, _2m = instance._2m;
+        instance._2o = null;instance._2m = null;
+        var deferred = $q.defer();
+        deferred.promise.then(function(data) {
+            instance._2o = _2o;
+            instance._2m = _2m;
+        });
+        return deferred;
     }
     function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
-
+        var restore = safe_REST(e);
         $log.log('Requesting add '+entity);
-        return async_request(function() {
-            return Restangular.all(entity).post(e)
-            .then(function(newE) {
-                $log.log('Received Add '+entity+' response');
-                U.replace(entData.list, e, newE);
+        return Restangular.all(entity).post(e)
+        .then(function(newE) {
+            restore.resolve();
+            $log.log('Received Add '+entity+' response');
+            U.replace(entData.list, e, newE);
 
-                var relatedList = get_2o_list(entity);
-                for(var j = relatedList.length - 1; j >= 0; j--) {
-                    fill_related_type([newE], relatedList[j]);
-                }
-                relatedList = get_2m_list(entity);
-                for(var j = relatedList.length - 1; j >= 0; j--) {
-                    fill_related_type([newE], relatedList[j]);
-                }
-                $log.log('Added '+entity+' with proper response');
-                $rootScope.$broadcast('EM.new_list.'+entity);
-                return newE;
-            });
+            var relatedList = get_2o_list(entity);
+            for(var j = relatedList.length - 1; j >= 0; j--) {
+                fill_related_type([newE], relatedList[j]);
+            }
+            relatedList = get_2m_list(entity);
+            for(var j = relatedList.length - 1; j >= 0; j--) {
+                fill_related_type([newE], relatedList[j]);
+            }
+            $log.log('Added '+entity+' with proper response');
+            $rootScope.$broadcast('EM.new_list.'+entity);
+            return newE;
         });
     }
     function remove(entity, instance) {
         var entData = all[entity], pk = get_pk(entity);
         entData.list.splice(entData.list.indexOf(instance), 1);
         delete entData.edict[instance[pk]];
+        var restore = safe_REST(instance);
         $log.log('Requesting Remove '+entity);
-        return async_request(function(){
-            return instance.remove()
-            .then(function(response){
-                $rootScope.$broadcast('EM.new_list.'+entity);
-                return response;
-            });
+        return instance.remove()
+        .then(function(response){
+            restore.resolve();
+            $rootScope.$broadcast('EM.new_list.'+entity);
+            return response;
         });
     }
     // used when a relation is needed to an entity not from the EM local database
@@ -189,44 +180,38 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U) {
     }
     function update(entity, instance) {
         $log.log('Requesting Update '+entity);
-        return async_request(function(){ 
-            if(!instance.put)
-                Restangular.restangularizeElement('', instance, entity);
-            return instance.put(); 
-        });
+        var restore = safe_REST(instance);
+        if(!instance.put)
+            Restangular.restangularizeElement('', instance, entity);
+        return instance.put().then(function(response) {
+            restore.resolve();
+        }); 
     }
     function remove_list(entity, query) {
-        return async_request(function(){
-            $log.log('Requesting Remove '+entity+' list');
-            return Q($http.delete('/'+entity, {params: query}))
-            .then(function(response) {
-                $log.log('Received Remove '+entity+' list response');
-                fetch_multiple(syncE);
-                return response;
-            });
+        $log.log('Requesting Remove '+entity+' list');
+        return $http.delete('/'+entity, {params: query})
+        .then(function(response) {
+            $log.log('Received Remove '+entity+' list response');
+            fetch_multiple(syncE);
+            return response;
         });
     }
     function update_list(entity, query, data) {
-        return async_request(function(){
-            $log.log('Requesting Update '+entity+' list');
-            return Q($http.put('/'+entity, data, {params: query}))
-            .then(function(response) {
-                $log.log('Received Update '+entity+' list response');
-                return response;
-            });
-        }).then(function(){
+        $log.log('Requesting Update '+entity+' list');
+        return $http.put('/'+entity, data, {params: query})
+        .then(function(response) {
+            $log.log('Received Update '+entity+' list response');
             fetch_multiple(syncE);
+            return response;
         });
     }
     function add_list(entity, data){
-        return async_request(function(){
-            $log.log('Requesting Add '+entity+' list');
-            return Q($http.post('/'+entity, data, {params: {many: true}}))
-            .then(function(response) {
-                $log.log('Received add '+entity+' list response');
-                fetch_multiple(syncE);
-                return response;
-            });
+        $log.log('Requesting Add '+entity+' list');
+        return $http.post('/'+entity, data, {params: {many: true}})
+        .then(function(response) {
+            $log.log('Received add '+entity+' list response');
+            fetch_multiple(syncE);
+            return response;
         });
     }
     function set_all_entity_metadata(metadata, syncEntities) {

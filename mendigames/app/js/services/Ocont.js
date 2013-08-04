@@ -26,6 +26,7 @@ function(EM, U, Oit) {
     function put_item(to_cont, item) {
         to_cont._2m.items.push(item);
         item.container = to_cont.id;
+        item._2o.container = to_cont;
         if(item.id)
             return EM.update('item', item);
         else
@@ -95,6 +96,7 @@ function(EM, Restangular) {
 
         item.item_decorator = itemDecorator.id;
         item.item_template = itemTemplate.id;
+        item._2o = { item_decorator: itemDecorator, item_template: itemTemplate };
 
         return item;
     }
@@ -112,9 +114,6 @@ function(EM, Restangular) {
         return get_item_dict(itemTemplate);
     }
     function destroy_item(item) {
-        item._2o.container = null;
-        item._2o.item_template = null;
-        item._2o.item_decorator = null;
         return EM.remove('item', item);
     }
     function new_item(item_dict) {

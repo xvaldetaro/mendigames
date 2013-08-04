@@ -26,11 +26,11 @@ function($scope, $routeParams, EM, WizardsService,$dialog) {
     $scope.$on('EM.new_list.container', function(){
         $scope.containerList = EM.list('container');
         $scope.container = $scope.containerList[0];
-        $scope.$apply();
+        
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
-        $scope.$apply();
+        
     });
     // Bootstrap the scope
     EM.start(entitiesMetadata, syncEntities);
@@ -81,7 +81,7 @@ function($scope, Ocont, Oit, EM) {
             item = Oit.item_from_template(itemBase);
         }
         Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
-            $scope.$apply();
+            
         });
     };
 }])
@@ -90,7 +90,7 @@ function($scope, Ocont, Oit, EM) {
 function($scope, EM, Ocont) {
     $scope.$on('EM.new_list.item_category', function(){
         $scope.categoryList = EM.list('item_category');
-        $scope.$apply();
+        
     });
 
     $scope.get_category = function(itemDecorator) {
@@ -105,7 +105,7 @@ function($scope, EM, Ocont) {
     function got_item_finder(list){
         $scope.itemFinder = list.data.data;
         $scope.pageCount = Math.ceil($scope.itemFinder.count/100)
-        $scope.$apply();
+        
     }
     $scope.item_finder_search = function(page) {
         var query = {};

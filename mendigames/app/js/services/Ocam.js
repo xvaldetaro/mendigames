@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocam', ['EM','Och',
-function(EM, Och) {
+.factory('Ocam', ['EM','Och','$q',
+function(EM, Och, $q) {
     function next_turn(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -72,7 +72,7 @@ function(EM, Och) {
         for (var i = list.length - 1; i >= 0; i--) {
             promises.push(Och[fName](list[i], param));
         }
-        return Q.all(promises);
+        return $q.all(promises);
     }
     function split_gold(cam, characterList, value) {
         var playerList = _get_players(characterList);

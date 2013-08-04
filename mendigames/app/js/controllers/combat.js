@@ -31,14 +31,12 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
             Ocam.find_turn($scope.campaign, newList, init);
         }
         $scope.characterList = newList;
-        $scope.$apply();
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
         $scope.title = $scope.campaign.name;
         if($scope.characterList)
             Ocam.normalize_turn($scope.campaign, $scope.characterList);
-        $scope.$apply();
     });
 
     // Bootstrap the scope
