@@ -125,13 +125,6 @@ function($scope, dialog, U) {
     $scope.input = "";
 }])
 
-.controller('InputDialogController', ['$scope', 'dialog',
-function($scope, dialog) {
-    $scope.close = function() {
-        dialog.close($scope.input);
-    };
-}])
-
 .controller('ModalController', ['$scope', 'WizardsService',
 function($scope, WizardsService) {
     $scope.wizardsModal = false;

@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','$dialog','Ocam',
-function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
+.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','InputDialog','Ocam',
+function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
@@ -56,7 +56,9 @@ function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
         });
     };
     $scope.new_container = function() {
-        Ocam.add_container('new container', $scope.campaign, 1000);
+        InputDialog('create_container').then(function(result) {
+            Ocam.add_container(result.name, $scope.campaign, result.gold);
+        });
     };
     $scope.prices = [
         {text:'Free',value:0},
@@ -67,14 +69,6 @@ function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
     ];
     $scope.buy_adjustment = $scope.prices[0];
     $scope.sell_adjustment = $scope.prices[0];
-    $scope.inputDialog = $dialog.dialog({
-        templateUrl:  '/static/mendigames/partials/dialogs/input.html',
-        controller: 'InputDialogController'
-    });
-    $scope.createItemDialog = $dialog.dialog({
-        templateUrl:  '/static/mendigames/partials/dialogs/create_item.html',
-        controller: 'CreateItemDialogController'
-    })
 }])
 
 .controller('InventoryCtrl', ['$scope','Ocont', 'Oit', 'EM',
@@ -96,9 +90,7 @@ function($scope, Ocont, Oit, EM) {
         } else if(itemBase.core !== undefined) {
             item = Oit.item_from_mundane(itemBase);
         }
-        Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
-            
-        });
+        Ocont.buy_item($scope.cont, item, cost_adjustment)
     };
 }])
 
@@ -112,7 +104,7 @@ function($scope, Ocont, Oit, Ocam, EM) {
     };
     // itemBase can be decorator, template or item
     $scope.item_drop = function(itemBase) {
-        var cost_adjustment = $scope.buy_adjustment.value;
+        var cost_adjustment = $scope.sell_adjustment.value;
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
             EM.merge_related('magic', [itemBase]);
@@ -120,9 +112,7 @@ function($scope, Ocont, Oit, Ocam, EM) {
         } else if(itemBase.core !== undefined) {
             item = Oit.item_from_mundane(itemBase);
         }
-        Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
-            
-        });
+        Ocont.sell_item_transfer($scope.cont, item, cost_adjustment);
     };
 }])
 
@@ -188,6 +178,6 @@ function($scope, EM, Ocont, $http) {
     };
 
     $scope.item_drop = function(item) {
-        Ocont.sell_item(item, $scope.sell_adjustment.value);
+        Ocont.sell_item_destroy(item, $scope.sell_adjustment.value);
     };
 }]);

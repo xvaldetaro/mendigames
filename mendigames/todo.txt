@@ -1,1 +1,10 @@
+new container dialog
+buy mundane item
+mundane selection dialog for magic purchase
+random shop
+random treasure
+colorful entries for types background differ for munda/magic, color change for category
+
+
+
 revision sequence matching

@@ -13,17 +13,26 @@ function(EM, U, Oit, $q) {
         cont.gold = cont.gold+parseInt(value);
         return save(cont);
     }
-    function sell_item(item, cost_adjustment) {
-        U.pluck(item._2o.container._2m.items, item);
+    // Item owner gets money. Item transfer to \to_cont
+    function sell_item_transfer(to_cont, item, cost_adjustment) {
+        return $q.all([
+            put_item(to_cont, item),
+            change_gold(item._2o.container, item.cost*cost_adjustment)
+        ]);
+    }
+    // Item owner gets money. Item destroyed
+    function sell_item_destroy(item, cost_adjustment) {
+        //U.pluck(item._2o.container._2m.items, item);
         return $q.all([
             change_gold(item._2o.container, item.cost*cost_adjustment),
             Oit.destroy_item(item)
         ]);
     }
+    // \to_cont gets money and item
     function buy_item(to_cont, item, cost_adjustment) {
         return $q.all([
-            put_item(to_cont, item),
             change_gold(to_cont, -1*(item.cost*cost_adjustment)),
+            put_item(to_cont, item)
         ]);
     }
     // Handles item instances and item dicts
@@ -41,7 +50,8 @@ function(EM, U, Oit, $q) {
     return {
         change_gold: change_gold,
         buy_item: buy_item,
-        sell_item: sell_item
+        sell_item_destroy: sell_item_destroy,
+        sell_item_transfer: sell_item_transfer
     };
 }])
 
@@ -136,6 +146,6 @@ function(EM, Restangular) {
         item_from_mundane: item_from_mundane,
 
         new_item: new_item,
-        destroy_item: destroy_item
+        destroy_item: destroy_item,
     };
 }]);

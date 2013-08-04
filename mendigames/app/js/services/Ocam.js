@@ -107,7 +107,7 @@ function(EM, Och, Ocont, $q, U) {
         var share = Math.floor(value/containerList.length);
         var leftover = value%containerList.length;
         var lucky = U.randint(0, containerList.length);
-        pcList[lucky].gold += leftover;
+        containerList[lucky].gold += leftover;
         return _call_for_container(containerList, 'change_gold', share);
     }
     function mass_give_gold(cam, containerList, value) {

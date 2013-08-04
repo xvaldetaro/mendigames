@@ -23,13 +23,11 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         var _2o = instance._2o, _2m = instance._2m;
         instance._2o = null;instance._2m = null;
         $log.log('plucked instance _2');
-        var deferred = $q.defer();
-        deferred.promise.then(function(data) {
+        return function() { 
             instance._2o = _2o;
             instance._2m = _2m;
             $log.log('tucked back instance _2');
-        });
-        return deferred;
+        };
     }
     function rev_REST(promise) {
         return promise.then(function(data) {
@@ -124,7 +122,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
         }));
-        restore.resolve();
+        restore();
         return promise;
     }
     function remove(entity, instance) {
@@ -138,7 +136,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             $rootScope.$broadcast('EM.new_list.'+entity);
             return response;
         }));
-        restore.resolve();
+        restore();
         return promise;
     }
     function update(entity, instance) {
@@ -149,7 +147,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         var promise = rev_REST(instance.put().then(function(response) {
             return response;
         }));
-        restore.resolve();
+        restore();
         return promise;
     }
     // used when a relation is needed to an entity not from the EM local database

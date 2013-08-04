@@ -45,6 +45,29 @@ function($rootScope) {
     };
 }])
 
+.controller('InputDialogCtrl', ['$scope', 'dialog', 'params',
+function($scope, dialog, params) {
+    $scope.confirm = function() {
+        dialog.close($scope.form);
+    };
+    $scope.cancel = function() {
+        dialog.close();
+    };
+    for(var param in params) {
+        $scope[param] = params[param];
+    }
+}])
+
+.factory('InputDialog', ['$dialog',
+function($dialog) {
+    var baseUrl = '/static/mendigames/partials/dialogs/';
+    return function(partialName, scopeAugment) {
+        return $dialog.dialog({
+            resolve: { params: function(){ return scopeAugment || {}; } }
+        }).open(baseUrl+partialName+'.html', 'InputDialogCtrl');
+    };
+}])
+
 .factory('U', [
 function() {
     function replace(items, oldValue, newValue) {
