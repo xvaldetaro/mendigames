@@ -27,7 +27,6 @@ function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
         var containers = Ocam.categorize_containers(EM.list('container'));
         $scope.plContList = containers.player;
         $scope.othContList = containers.other;
-        
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
@@ -56,7 +55,9 @@ function($scope, $routeParams, EM, WizardsService,$dialog, Ocam) {
             Ocam.mass_give_gold($scope.campaign, $scope.plContList, result);
         });
     };
-
+    $scope.new_container = function() {
+        Ocam.add_container('new container', $scope.campaign, 1000);
+    };
     $scope.prices = [
         {text:'Free',value:0},
         {text:'25%',value:0.25},
@@ -91,9 +92,33 @@ function($scope, Ocont, Oit, EM) {
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
             EM.merge_related('magic', [itemBase]);
-            item = Oit.item_from_decorator(itemBase);
-        } else {
-            item = Oit.item_from_template(itemBase);
+            item = Oit.item_from_magic(itemBase);
+        } else if(itemBase.core !== undefined) {
+            item = Oit.item_from_mundane(itemBase);
+        }
+        Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
+            
+        });
+    };
+}])
+
+.controller('ContainerCtrl', ['$scope','Ocont', 'Oit', 'Ocam', 'EM',
+function($scope, Ocont, Oit, Ocam, EM) {
+    $scope.delete_container = function() {
+        Ocam.remove_container($scope.cont);
+    };
+    $scope.loot_gold = function() {
+
+    };
+    // itemBase can be decorator, template or item
+    $scope.item_drop = function(itemBase) {
+        var cost_adjustment = $scope.buy_adjustment.value;
+        var item = itemBase;
+        if(itemBase.rarity) { // is decorator
+            EM.merge_related('magic', [itemBase]);
+            item = Oit.item_from_magic(itemBase);
+        } else if(itemBase.core !== undefined) {
+            item = Oit.item_from_mundane(itemBase);
         }
         Ocont.buy_item($scope.cont, item, cost_adjustment).then(function(newE) {
             

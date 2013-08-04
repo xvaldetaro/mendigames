@@ -4,6 +4,18 @@ angular.module('mendigames')
 
 .factory('Ocam', ['EM','Och','Ocont','$q','U',
 function(EM, Och, Ocont, $q, U) {
+    function remove_container(container) {
+        return EM.remove('container', container);
+    }
+    function add_container(name, campaign, gold) {
+        var container = {
+            name: name,
+            campaign: campaign.id,
+            gold: gold
+        };
+
+        return EM.add('container', container);
+    }
     function next_turn(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -98,7 +110,7 @@ function(EM, Och, Ocont, $q, U) {
         pcList[lucky].gold += leftover;
         return _call_for_container(containerList, 'change_gold', share);
     }
-    function mass_give_gold(cam, characterList, value) {
+    function mass_give_gold(cam, containerList, value) {
         return _call_for_container(containerList, 'change_gold', value);
     }
     function split_xp(cam, characterList, value) {
@@ -150,6 +162,8 @@ function(EM, Och, Ocont, $q, U) {
         mass_short_rest: mass_short_rest,
         mass_extended_rest: mass_extended_rest,
         mass_milestone: mass_milestone,
-        categorize_containers: categorize_containers
+        categorize_containers: categorize_containers,
+        add_container: add_container,
+        remove_container: remove_container
     };
 }]);

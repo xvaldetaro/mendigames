@@ -111,11 +111,11 @@ function(EM, Restangular) {
             category = EM.by_key('category', magic.category);
         return category._2m.subtypes[0]._2m.mundanes[0];
     }
-    function item_from_decorator(magic) {
+    function item_from_magic(magic) {
         var mundane = template_from_decorator(magic);
         return get_item_dict(mundane, magic);
     }
-    function item_from_template(mundane) {
+    function item_from_mundane(mundane) {
         return get_item_dict(mundane);
     }
     function destroy_item(item) {
@@ -132,8 +132,8 @@ function(EM, Restangular) {
         } 
     }
     return {
-        item_from_decorator: item_from_decorator,
-        item_from_template: item_from_template,
+        item_from_magic: item_from_magic,
+        item_from_mundane: item_from_mundane,
 
         new_item: new_item,
         destroy_item: destroy_item

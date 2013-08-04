@@ -19,12 +19,34 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span4 trade-section">
-            <div class="inventory-config">
-                AAA
-            </div>
-            <div class="inventory-list">
-                AAAA
-            </div>
+            <button ng-click="new_container()" class="btn">New</button>
+            <tabset vertical="false" type="'tabs'" >
+                <tab class="pointer" ng-repeat="cont in othContList" heading="{{cont.name}}" active="cont.active">
+                    <div ng-controller="ContainerCtrl">
+                        <button ng-click="delete_container()" class="btn">Delete</button>
+                        <button ng-click="loot_gold(cont)" class="btn">Loot Gold:{{cont.gold}}</button>
+                        <button ng-click="loot_all()" class="btn">Loot All</button>
+                        <div class="row-fluid inventory-table-header">
+                            <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                            <div class="span3 inventory-cell" ng-click="set_predicate('category')">Template</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                            <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
+                            <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                        </div>
+                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items" btf-dragon-drop-function="item_drop">
+                            <div class="row-fluid inventory-row">
+                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item.name}}</div>
+                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item._2o.mundane.name}}</div>
+                                <div class="span1 inventory-cell">{{item.level}}</div>
+                                <div class="span1 inventory-cell">{{item._2o.magic.rarity}}</div>
+                                <div class="span1 inventory-cell">{{item.weight}}</div>
+                                <div class="span2 inventory-cell last-cell">{{item.cost}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
         </div>
         <div class="span4 trade-section">
             <form class="form-inline">
