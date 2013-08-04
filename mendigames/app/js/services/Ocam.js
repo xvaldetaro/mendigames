@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Ocam', ['EM','Och','$q',
-function(EM, Och, $q) {
+.factory('Ocam', ['EM','Och','$q','U',
+function(EM, Och, $q, U) {
     function next_turn(cam, characterList) {
         cam.turn++;
         if(cam.turn >= characterList.length) {
@@ -78,7 +78,7 @@ function(EM, Och, $q) {
         var playerList = _get_players(characterList);
         var share = Math.floor(value/playerList.length);
         var leftover = value%playerList.length;
-        var lucky = _.random(0, playerList.length-1);
+        var lucky = U.randint(0, playerList.length);
         playerList[lucky].gold += leftover;
         return _call_foreach(playerList, 'change_gold', share);
     }

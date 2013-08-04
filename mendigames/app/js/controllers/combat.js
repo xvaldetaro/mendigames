@@ -178,9 +178,9 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','roll','Log','$dialog','Ocam',
+.controller('MenuController', ['$scope', 'EM','U','Log','$dialog','Ocam',
 'WizardsService',
-function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
+function($scope, EM, U, Log, $dialog, Ocam, WizardsService) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -202,11 +202,11 @@ function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
     $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
 
     $scope.diceMult = 1;
-    $scope.diceMod = 1;
+    $scope.diceMod = 0;
     $scope.roll = function(dice) {
         var logStr = 'd'+dice+'x'+$scope.diceMult+'+'+$scope.diceMod+' : ', total = 0;
         for(var i = $scope.diceMult - 1; i >= 0; i--) {
-            var result = roll(0, dice).result;
+            var result = U.roll(0, dice).result;
             logStr = logStr+result+'+';
             total += result;
         }
@@ -231,7 +231,7 @@ function($scope, EM, roll, Log, $dialog, Ocam, WizardsService) {
         function make_enemy(dialogData, index) {
             return {
                     name: dialogData.name+index,
-                    init: roll(dialogData.init_mod, 20).result,
+                    init: U.roll(dialogData.init_mod, 20).result,
                     hit_points: dialogData.hit_points,
                     ap: -1*(dialogData.ap-1),
                     type: 'Enemy',

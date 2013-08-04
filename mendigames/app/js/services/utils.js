@@ -2,16 +2,6 @@
 
 angular.module('mendigames')
 
-.factory('roll', function(){ return function(mod, dice){
-    var roll = _.random(1,dice);
-    var result = parseInt(mod)+roll;
-    var log = " d"+dice+": "+roll+"+"+mod+"="+result+" ";
-    return {
-        result: result,
-        log: log
-    };
-};})
-
 .factory('WizardsService', ['$rootScope', '$http','EM',
 function($rootScope, $http, EM){
     return {
@@ -69,8 +59,23 @@ function() {
             items.splice(index, 1);
         }
     }
+    // inclusive min, exclusive max
+    function randint(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+    function roll(mod, dice){
+        var roll = randint(1,dice+1);
+        var result = parseInt(mod)+roll;
+        var log = " d"+dice+": "+roll+"+"+mod+"="+result+" ";
+        return {
+            result: result,
+            log: log
+        };
+    }
     return {
         replace: replace,
-        pluck: pluck
+        pluck: pluck,
+        randint: randint,
+        roll: roll
     };
 }]);

@@ -2,8 +2,8 @@
 
 angular.module('mendigames')
 
-.factory('Och', ['EM', 'roll','U',
-function(EM, roll, U) {
+.factory('Och', ['EM', 'U',
+function(EM, U) {
     function save(c) {
         return EM.update('character', c);
     }
@@ -28,7 +28,7 @@ function(EM, roll, U) {
         return save(c);
     }
     function roll_init(c, mod){
-        c.init = roll(mod, dice);
+        c.init = U.roll(mod, dice);
         return save(c);
     }
     function change_xp(c, value){

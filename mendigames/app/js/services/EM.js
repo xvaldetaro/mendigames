@@ -74,6 +74,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         }
     }
     function merge_related_multiple(eList) {
+        _.each
         for(var i = eList.length - 1; i >= 0; i--) {
             var entity = eList[i];
             var instanceList = list(entity);

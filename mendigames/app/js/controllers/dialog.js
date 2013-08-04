@@ -64,16 +64,16 @@ function($scope, dialog, EM, item) {
     };
 }])
 
-.controller('InitDialogController', ['$scope', 'dialog', 'roll',
-function($scope, dialog, roll) {
+.controller('InitDialogController', ['$scope', 'dialog', 'U',
+function($scope, dialog, U) {
     $scope.setClose = function(result){
         dialog.close({
             result: result,
             log: " "+result+" "});
     };
-    $scope.roll = roll;
+    $scope.U = U;
     $scope.rollClose = function(mod, dice) {
-        var roll = $scope.roll(mod, dice);
+        var roll = $scope.U.roll(mod, dice);
         dialog.close(roll);
     };
     var numbers = [];
@@ -91,8 +91,8 @@ function($scope, dialog, roll) {
     $scope.input = "";
 }])
 
-.controller('HpDialogController', ['$scope', 'dialog', 'roll',
-function($scope, dialog, roll) {
+.controller('HpDialogController', ['$scope', 'dialog', 'U',
+function($scope, dialog, U) {
     $scope.setClose = function(result){
         dialog.close(
         {
@@ -102,7 +102,7 @@ function($scope, dialog, roll) {
         });
     };
     $scope.rollClose = function(mod, dice) {
-        var roll = $scope.roll(mod, dice);
+        var roll = $scope.U.roll(mod, dice);
         roll.heal = $scope.heal;
         dialog.close(roll);
     };
@@ -117,7 +117,7 @@ function($scope, dialog, roll) {
         mods.push(j);
     }
 
-    $scope.roll = roll;
+    $scope.U = U;
     $scope.heal = 'damage';
     $scope.dice = 8;
     $scope.numbers = numbers;
