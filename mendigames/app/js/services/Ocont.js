@@ -99,7 +99,7 @@ function(EM, Restangular) {
         }
 
         // Level
-        if(!level)
+        if(!level && magic)
             level = magic.level;
         item.level = level;
 
@@ -107,10 +107,10 @@ function(EM, Restangular) {
         if(magic) {
             if(!EM.by_key('magic', magic.id))
                 EM.add_local('magic', magic);
+            item.magic = magic.id;
         }
-
-        item.magic = magic.id;
-        item.mundane = mundane.id;
+        if(mundane)
+            item.mundane = mundane.id;
         EM.merge_related('item', item);
 
         return item;

@@ -200,7 +200,7 @@ class M2MMagicSubtype(models.Model):
 
 class Item(models.Model):
     container = models.ForeignKey(Container, related_name="items")
-    magic = models.ForeignKey(Magic, null=True, related_name='items')
+    magic = models.ForeignKey(Magic, null=True, blank=True, related_name='items')
     mundane = models.ForeignKey(Mundane, null=True, related_name='items')
     weight = models.IntegerField(default=0)
     name = models.CharField(max_length=60)

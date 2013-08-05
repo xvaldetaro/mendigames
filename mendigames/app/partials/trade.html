@@ -124,9 +124,9 @@
                     <form class="form-inline">
                         <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
                         <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
+                        <select class="input-small" ng-model="subtype" ng-options="st.name for st in category._2m.subtypes()"><option value="">-Subtype-</option></select>
                         <button ng-click="item_finder_search()" class="btn">Search</button>
                     </form>
-                    <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
                 </div>
                 <div class="inventory-table-header minus-scrollbar">
                     <div class="row-fluid">
@@ -137,7 +137,7 @@
                         <div class="span1 inventory-cell" ng-click="set_predicate('cost')">G</div>
                     </div>
                 </div>
-                <div class="inventory-table-body" btf-dragon="mundane in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
+                <div class="inventory-table-body" btf-dragon="mundane in results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
                     <div class="row-fluid inventory-row">
                         <div class="span4 inventory-cell" ng-click="fetch_from_compendium(mundane)">{{mundane.name}}</div>
                         <div class="span3 inventory-cell">{{get_category(mundane).name}}</div>

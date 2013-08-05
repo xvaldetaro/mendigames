@@ -10,7 +10,7 @@ def fix():
     local('python manage.py loaddata fix.json')
 
 def dump():
-    local('python manage.py dumpdata >> fix.json')
+    local('python manage.py dumpdata mendigames >> fix.json')
 
 def sminit():
     local('python manage.py schemamigration mendigames --init')

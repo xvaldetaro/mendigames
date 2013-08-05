@@ -59,6 +59,8 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
     };
     $scope.new_container = function() {
         InputDialog('create_container').then(function(result) {
+            if(!result)
+                return;
             Ocam.add_container(result.name, $scope.campaign, result.gold);
         });
     };
@@ -134,10 +136,6 @@ function($scope, EM, Ocont) {
         $scope.categoryList = EM.list('category');
     });
 
-    $scope.get_category = function(mundane) {
-        return EM.by_key('category', mundane.category);
-    };
-
     $scope.item_drop = function(item) {
         Ocont.sell_item_destroy(item, $scope.sell_adjustment.value);
     };
@@ -150,6 +148,10 @@ function($scope, EM, Ocont, $http) {
         {name: 'Uncommon', value: 'U'},
         {name: 'Rare', value: 'R'},
     ];
+
+    $scope.get_category = function(magic) {
+        return EM.by_key('category', magic.category);
+    };
 
     function got_item_finder(list){
         $scope.itemFinder = list.data.data;
@@ -204,12 +206,16 @@ function($scope, EM, Ocont) {
         item_page_REST($scope.current_query).then(got_item_finder);
     };
 
+    $scope.get_category = function(mundane) {
+        return EM.by_key('subtype', mundane.subtype)._2o.category();
+    };
+
     $scope.get_subtype = function(mundane) {
         return EM.by_key('subtype', mundane.subtype);
     };
 
     $scope.item_finder_search = function(page) {
-        $scope.itemFinder = { results: EM.listSlice('mundane') };
+        $scope.results = EM.listSlice('mundane');
     };
 
     $scope.predicate = 'level';
