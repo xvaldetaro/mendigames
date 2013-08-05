@@ -19,16 +19,6 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         else
             revision = response.metadata.revision;
     }
-    function safe_REST(instance) {
-        var _2o = instance._2o, _2m = instance._2m;
-        instance._2o = null;instance._2m = null;
-        $log.log('plucked instance _2');
-        return function() { 
-            instance._2o = _2o;
-            instance._2m = _2m;
-            $log.log('tucked back instance _2');
-        };
-    }
     function rev_REST(promise) {
         return promise.then(function(data) {
             update_revision(data);
@@ -36,36 +26,41 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             return data;
         })
     }
-    function fill_2o(entityInstance, related) {
-        if(entityInstance[related])
-            entityInstance._2o[related] = by_key(related, entityInstance[related]);
+    function merge_related_2o(entity, instance, related) {
+        var relIntance = by_key(related, instance[related]);
+        instance._2o[related] = function() {
+            return relIntance;
+        }
     }
-    function fill_2m(entityInstance, related) {
-        var pkList = entityInstance[related+'s'], relatedList = [];
+    function merge_related_2m(entity, instance, related) {
+        var pkList = instance[related+'s'], relatedList = [];
         for(var i=0, len=pkList.length; i<len; i++) {
             relatedList.push(by_key(related, pkList[i]));
         }
-        entityInstance._2m[related+'s'] = relatedList;
+
+        instance._2m[related+'s'] = function() {
+            return relatedList;
+        }
     }
-    function merge_related(entity, instanceList) {
-        for(var i = instanceList.length - 1; i >= 0; i--) {
-            instanceList[i]._2o = {};
-            instanceList[i]._2m = {};
-            var relatedList = get_2o_list(entity);
-            for(var j = relatedList.length - 1; j >= 0; j--) {
-                fill_2o(instanceList[i], relatedList[j]);
-            }
-            relatedList = get_2m_list(entity);
-            for(var j = relatedList.length - 1; j >= 0; j--) {
-                fill_2m(instanceList[i], relatedList[j]);
-            }
+    function merge_related(entity,instance) {
+        instance._2o = {};
+        var relatedList = get_2o_list(entity);
+        for(var j = relatedList.length - 1; j >= 0; j--) {
+            merge_related_2o(entity, instance, relatedList[j]);
+        }
+        instance._2m = {};
+        relatedList = get_2m_list(entity);
+        for(var j = relatedList.length - 1; j >= 0; j--) {
+            merge_related_2m(entity, instance, relatedList[j]);
         }
     }
     function merge_related_multiple(eList) {
         for(var i = eList.length - 1; i >= 0; i--) {
             var entity = eList[i];
             var instanceList = list(entity);
-            merge_related(entity, instanceList);
+            for(var j = instanceList.length - 1; j >= 0; j--) {
+                merge_related(entity, instanceList[j]);
+            }
         }
     }
     function on_response_err(error){
@@ -112,42 +107,36 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
     function add(entity, e) {
         var entData = all[entity];
         entData.list.push(e);
-        var restore = safe_REST(e);
         $log.log('Requesting add '+entity);
         var promise = rev_REST(Restangular.all(entity).post(e)
         .then(function(newE) {
             $log.log('Received Add '+entity+' response');
             U.replace(entData.list, e, newE);
-            merge_related(entity, [newE]);
+            merge_related(entity, newE);
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
         }));
-        restore();
         return promise;
     }
     function remove(entity, instance) {
         var entData = all[entity], pk = get_pk(entity);
         entData.list.splice(entData.list.indexOf(instance), 1);
         delete entData.edict[instance[pk]];
-        var restore = safe_REST(instance);
         $log.log('Requesting Remove '+entity);
         var promise = rev_REST(instance.remove()
         .then(function(response){
             $rootScope.$broadcast('EM.new_list.'+entity);
             return response;
         }));
-        restore();
         return promise;
     }
     function update(entity, instance) {
         $log.log('Requesting Update '+entity);
-        var restore = safe_REST(instance);
         if(!instance.put)
             Restangular.restangularizeElement('', instance, entity);
         var promise = rev_REST(instance.put().then(function(response) {
             return response;
         }));
-        restore();
         return promise;
     }
     // used when a relation is needed to an entity not from the EM local database

@@ -48,8 +48,8 @@ class ThroughSerializer(RevSerializer):
 
 
 class CharacterSerializer(RevSerializer):
-    has_powers = serializers.PrimaryKeyRelatedField(many=True)
-    has_conditions = serializers.PrimaryKeyRelatedField(many=True)
+    has_powers = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    has_conditions = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     #has_items = serializers.PrimaryKeyRelatedField(many=True)
     revision_key = 'character'
     class Meta:
@@ -99,8 +99,8 @@ class MonsterSerializer(RevSerializer):
 
 
 class CategorySerializer(RevSerializer):
-    subtypes = serializers.PrimaryKeyRelatedField(many=True)
-    magics = serializers.PrimaryKeyRelatedField(many=True)
+    subtypes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    magics = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     revision_key = 'category'
     class Meta:
         model = models.Category
@@ -113,7 +113,7 @@ class M2MMagicSubtypeSerializer(ThroughSerializer):
 
 
 class ContainerSerializer(RevSerializer):
-    items = serializers.PrimaryKeyRelatedField(many=True)
+    items = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     character = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     revision_key = 'container'
     class Meta:

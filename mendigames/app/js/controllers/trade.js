@@ -88,7 +88,7 @@ function($scope, Ocont, Oit, EM, InputDialog) {
         var cost_adjustment = $scope.buy_adjustment.value;
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
-            EM.merge_related('magic', [itemBase]);
+            EM.merge_related('magic', itemBase);
             item = Oit.item_from_magic(itemBase);
         } else if(itemBase.core !== undefined) {
             item = Oit.item_from_mundane(itemBase);
@@ -119,7 +119,7 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
         var cost_adjustment = $scope.sell_adjustment.value;
         var item = itemBase;
         if(itemBase.rarity) { // is decorator
-            EM.merge_related('magic', [itemBase]);
+            EM.merge_related('magic', itemBase);
             item = Oit.item_from_magic(itemBase);
         } else if(itemBase.core !== undefined) {
             item = Oit.item_from_mundane(itemBase);

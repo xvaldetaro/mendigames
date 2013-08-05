@@ -34,12 +34,12 @@
                             <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
                             <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
                         </div>
-                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items" btf-dragon-drop-function="item_drop">
+                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items()" btf-dragon-drop-function="item_drop">
                             <div class="row-fluid inventory-row">
-                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item.name}}</div>
-                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item._2o.mundane.name}}</div>
+                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</div>
+                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.mundane().name}}</div>
                                 <div class="span1 inventory-cell">{{item.level}}</div>
-                                <div class="span1 inventory-cell">{{item._2o.magic.rarity}}</div>
+                                <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
                                 <div class="span1 inventory-cell">{{item.weight}}</div>
                                 <div class="span2 inventory-cell last-cell">{{item.cost}}</div>
                             </div>
@@ -67,12 +67,12 @@
                             <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
                             <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
                         </div>
-                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items" btf-dragon-drop-function="item_drop">
+                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items()" btf-dragon-drop-function="item_drop">
                             <div class="row-fluid inventory-row">
-                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item.name}}</div>
-                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item)">{{item._2o.mundane.name}}</div>
+                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</div>
+                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.mundane().name}}</div>
                                 <div class="span1 inventory-cell">{{item.level}}</div>
-                                <div class="span1 inventory-cell">{{item._2o.magic.rarity}}</div>
+                                <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
                                 <div class="span1 inventory-cell">{{item.weight}}</div>
                                 <div class="span2 inventory-cell last-cell">{{item.cost}}</div>
                             </div>

@@ -148,7 +148,7 @@ function($scope, $rootScope, $dialog, Och, Log) {
         });
     };
     $scope.remove_condition = function(hci){
-        var name = $scope.ch._2m.has_conditions[hci]._2o.condition.name;
+        var name = $scope.ch._2m.has_conditions()[hci]._2o.condition().name;
         Och.remove_condition($scope.ch, hci)
 
         Log($scope.ch.name+' is not: '+name+' anymore');
@@ -171,9 +171,9 @@ function($scope, $rootScope, $dialog, Och, Log) {
 function($scope, EM, Ohpo, Log) {
     $scope.use_power = function(){
         if($scope.hasPower.used)
-            Log($scope.ch.name+' used: '+$scope.hasPower._2o.power.name);
+            Log($scope.ch.name+' used: '+$scope.hasPower._2o.power().name);
         else
-            Log($scope.ch.name+' recharged: '+$scope.hasPower._2o.power.name);
+            Log($scope.ch.name+' recharged: '+$scope.hasPower._2o.power().name);
         Ohpo.use_power($scope.hasPower);
     };
 }])

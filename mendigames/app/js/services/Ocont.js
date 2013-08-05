@@ -17,14 +17,14 @@ function(EM, U, Oit, $q) {
     function sell_item_transfer(to_cont, item, cost_adjustment) {
         return $q.all([
             put_item(to_cont, item),
-            change_gold(item._2o.container, item.cost*cost_adjustment)
+            change_gold(item._2o.container(), item.cost*cost_adjustment)
         ]);
     }
     // Item owner gets money. Item destroyed
     function sell_item_destroy(item, cost_adjustment) {
-        //U.pluck(item._2o.container._2m.items, item);
+        //U.pluck(item._2o.container()._2m.items(), item);
         return $q.all([
-            change_gold(item._2o.container, item.cost*cost_adjustment),
+            change_gold(item._2o.container(), item.cost*cost_adjustment),
             Oit.destroy_item(item)
         ]);
     }
@@ -37,14 +37,14 @@ function(EM, U, Oit, $q) {
     }
     // Handles item instances and item dicts
     function put_item(to_cont, item) {
-        to_cont._2m.items.push(item);
+        to_cont._2m.items().push(item);
         item.container = to_cont.id;
-        item._2o.container = to_cont;
+        item._2o.container = function(){ return to_cont; };
         if(item.id)
             return EM.update('item', item);
         else
             return Oit.new_item(item).then(function(newE) {
-                U.replace(to_cont._2m.items, item, newE);
+                U.replace(to_cont._2m.items(), item, newE);
             })
     }
     return {
@@ -111,15 +111,15 @@ function(EM, Restangular) {
 
         item.magic = magic.id;
         item.mundane = mundane.id;
-        item._2o = { magic: magic, mundane: mundane };
+        EM.merge_related('item', item);
 
         return item;
     }
     function template_from_decorator(magic) {
-        var category = magic._2o.category;
+        var category = magic._2o.category();
         if(!category) //decorators are searched outside the EM, thus there are no relateds
             category = EM.by_key('category', magic.category);
-        return category._2m.subtypes[0]._2m.mundanes[0];
+        return category._2m.subtypes()[0]._2m.mundanes()[0];
     }
     function item_from_magic(magic) {
         var mundane = template_from_decorator(magic);
