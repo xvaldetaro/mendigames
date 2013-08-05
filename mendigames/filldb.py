@@ -218,7 +218,8 @@ class wizards():
             for group_dict in groups:
                 group = self.create_from_dict(models.Subtype, group_dict, category=cat)
                 for template_dict in group_dict['templates']:
-                    self.create_from_dict(models.Mundane, template_dict, subtype=group)
+                    self.create_from_dict(models.Mundane, template_dict, category=cat,
+                        subtype=group)
 
     def get_rarity(self, entry):
         rarity = entry.get('Rarity', 'Mundane')
@@ -252,6 +253,7 @@ class wizards():
             print "Created Item Magic %s" % i.name
 
     def create_mundane_item(self, entry, group):
+        category = models.Category.objects.get(name='Equipment')
         try:
             q = models.Mundane.objects.get(name__iexact=entry['Name'])
             print 'Found template %s for entry %s' % (q.name, entry['Name'])
@@ -267,7 +269,8 @@ class wizards():
                     drop=100,
                     cost=entry['CostSort'],
                     core=True,
-                    subtype=group
+                    subtype=group,
+                    category=category,
                 )
                 it.save()
                 print "Created Mundane %s" % it.name

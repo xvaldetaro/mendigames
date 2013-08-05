@@ -9,6 +9,9 @@ def redb():
 def fix():
     local('python manage.py loaddata fix.json')
 
+def fixvar():
+    local('python manage.py loaddata fixvar.json')
+
 def dump():
     local('python manage.py dumpdata mendigames >> fix.json')
 

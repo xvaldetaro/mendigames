@@ -161,6 +161,7 @@ class Subtype(models.Model):
 
 
 class Mundane(BookEntry):
+    category = models.ForeignKey(Category, related_name='mundanes')
     weight = models.IntegerField(default=0)
     subtype = models.ForeignKey(Subtype, related_name='mundanes')
     drop = models.IntegerField(default=100)

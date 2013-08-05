@@ -215,7 +215,14 @@ function($scope, EM, Ocont) {
     };
 
     $scope.item_finder_search = function(page) {
-        $scope.results = EM.listSlice('mundane');
+        var matchQuery = {}, exactQuery = {};
+        if($scope.itemName)
+            matchQuery.name = $scope.itemName;
+        if($scope.category)
+            exactQuery.category = $scope.category.id;
+        if($scope.subtype)
+            exactQuery.subtype = $scope.subtype.id;
+        $scope.results = EM.search('mundane', matchQuery, exactQuery);
     };
 
     $scope.predicate = 'level';

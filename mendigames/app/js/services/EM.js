@@ -227,14 +227,28 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             initEntities.push(eName);
         fetch_multiple(initEntities);
     }
-    function search(entity, key, value){
+    function match(instance, query) {
+        for(var key in query) {
+            if(instance[key].toLowerCase().indexOf(query[key]) == -1)
+                return false;
+        }
+        return true;
+    }
+    function exact(instance, query) {
+        for(var key in query) {
+            if(instance[key] !== query[key])
+                return false;
+        }
+        return true;
+    }
+    function search(entity, matchquery, exactquery){
         var l = list(entity), res = [];
         for (var i = 0, len = l.length; i < len; i++) {
-            l[i][key] == value && res.push(l[i]);
+            if(match(l[i], matchquery) && exact(l[i], exactquery))
+                res.push(l[i]);
         };
         return res;
     }
-    //start_poll_timeout();
     return {
         update: update,
         add: add,
