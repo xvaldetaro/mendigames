@@ -16,8 +16,8 @@ function(EM, U, Oit, $q) {
     // Item owner gets money. Item transfer to \to_cont
     function sell_item_transfer(to_cont, item, cost_adjustment) {
         return $q.all([
-            put_item(to_cont, item),
-            change_gold(item._2o.container(), item.cost*cost_adjustment)
+            change_gold(item._2o.container(), item.cost*cost_adjustment),
+            put_item(to_cont, item)
         ]);
     }
     // Item owner gets money. Item destroyed
