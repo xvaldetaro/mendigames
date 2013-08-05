@@ -82,33 +82,69 @@
             </tabset>
         </div>
         <div class="span4 trade-section" ng-controller="ItemFinderCtrl">
-            <div class="inventory-config">
-                <form class="form-inline">
-                    <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
-                    <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
-                    <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
-                    <label class="checkbox">Level: <input type="text" ng-model="levelStart" class="input-nano"></label><label>to<input type="text" ng-model="levelStop" class="input-nano"></label>
-                    <label class="checkbox">Cost: <input type="text" ng-model="costStart" class="input-nano"></label><label>to<input type="text" ng-model="costStop" class="input-nano"></label>
-                    <button ng-click="item_finder_search(1)" class="btn">Search</button>
-                </form>
-                <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+            <div class="btn-group" ng-init="magic = true;">
+                <button type="button" class="btn btn-primary" ng-model="magic" btn-radio="true">Magic</button>
+                <button type="button" class="btn btn-inverse" ng-model="magic" btn-radio="false">Mundane</button>
             </div>
-            <div class="row-fluid inventory-table-header">
-                <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                <div class="span3 inventory-cell" ng-click="set_predicate('category')">Type</div>
-                <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
-                <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
-                <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
-                <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+            <div class="magic-item-finder" ng-show='magic' ng-controller="MagicItemFinderCtrl">
+                <div class="inventory-config">
+                    <form class="form-inline">
+                        <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
+                        <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
+                        <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
+                        <label class="checkbox">Level: <input type="text" ng-model="levelStart" class="input-nano"></label><label>to<input type="text" ng-model="levelStop" class="input-nano"></label>
+                        <label class="checkbox">Cost: <input type="text" ng-model="costStart" class="input-nano"></label><label>to<input type="text" ng-model="costStop" class="input-nano"></label>
+                        <button ng-click="item_finder_search(1)" class="btn">Search</button>
+                    </form>
+                    <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+                </div>
+                <div class="inventory-table-header minus-scrollbar">
+                    <div class="row-fluid">
+                        <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Category</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
+                        <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                    </div>
+                </div>
+                <div class="inventory-table-body" btf-dragon="magic in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
+                    <div class="row-fluid inventory-row">
+                        <div class="span4 inventory-cell" ng-click="fetch_from_compendium(magic)">{{magic.name}}</div>
+                        <div class="span3 inventory-cell">{{get_category(magic).name}}</div>
+                        <div class="span1 inventory-cell">{{magic.level}}</div>
+                        <div class="span1 inventory-cell">{{magic.rarity}}</div>
+                        <div class="span1 inventory-cell">{{magic.weight}}</div>
+                        <div class="span2 inventory-cell last-cell">{{magic.cost}}</div>
+                    </div>
+                </div>
             </div>
-            <div class="inventory-table-body" btf-dragon="magic in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
-                <div class="row-fluid inventory-row">
-                    <div class="span4 inventory-cell" ng-click="fetch_from_compendium(magic)">{{magic.name}}</div>
-                    <div class="span3 inventory-cell">{{get_category(magic).name}}</div>
-                    <div class="span1 inventory-cell">{{magic.level}}</div>
-                    <div class="span1 inventory-cell">{{magic.rarity}}</div>
-                    <div class="span1 inventory-cell">{{magic.weight}}</div>
-                    <div class="span2 inventory-cell last-cell">{{magic.cost}}</div>
+            <div class="mundane-item-finder" ng-show='!magic' ng-controller="MundaneItemFinderCtrl">
+                <div class="inventory-config">
+                    <form class="form-inline">
+                        <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
+                        <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
+                        <button ng-click="item_finder_search()" class="btn">Search</button>
+                    </form>
+                    <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+                </div>
+                <div class="inventory-table-header minus-scrollbar">
+                    <div class="row-fluid">
+                        <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Category</div>
+                        <div class="span3 inventory-cell" ng-click="set_predicate('subtype')">Subtype</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                    </div>
+                </div>
+                <div class="inventory-table-body" btf-dragon="mundane in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
+                    <div class="row-fluid inventory-row">
+                        <div class="span4 inventory-cell" ng-click="fetch_from_compendium(mundane)">{{mundane.name}}</div>
+                        <div class="span3 inventory-cell">{{get_category(mundane).name}}</div>
+                        <div class="span3 inventory-cell">{{get_subtype(mundane).name}}</div>
+                        <div class="span1 inventory-cell">{{mundane.weight}}</div>
+                        <div class="span1 inventory-cell last-cell">{{mundane.cost}}</div>
+                    </div>
                 </div>
             </div>
         </div>

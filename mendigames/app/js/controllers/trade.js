@@ -46,7 +46,7 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
         .then(function(result){
             if(!result)
                 return;
-            Ocam.split_gold($scope.campaign, $scope.plContList, result);
+            Ocam.split_gold($scope.plContList, result);
         });
     };
     $scope.mass_give_gold = function () {
@@ -54,7 +54,7 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
         .then(function(result){
             if(!result)
                 return;
-            Ocam.mass_give_gold($scope.campaign, $scope.plContList, result);
+            Ocam.mass_give_gold($scope.plContList, result);
         });
     };
     $scope.new_container = function() {
@@ -97,13 +97,22 @@ function($scope, Ocont, Oit, EM, InputDialog) {
     };
 }])
 
-.controller('ContainerCtrl', ['$scope','Ocont', 'Oit', 'Ocam', 'EM',
-function($scope, Ocont, Oit, Ocam, EM) {
+.controller('ContainerCtrl', ['$scope','Ocont', 'Oit', 'Ocam', 'EM', 'InputDialog',
+function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
     $scope.delete_container = function() {
         Ocam.remove_container($scope.cont);
     };
     $scope.loot_gold = function() {
-
+        InputDialog('loot_gold',{containerList: $scope.plContList})
+        .then(function(result){
+            if(!result)
+                return;
+            if(result.all)
+                Ocam.split_gold($scope.plContList, $scope.cont.gold);
+            else
+                Ocont.change_gold(result.container, $scope.cont.gold);
+            Ocont.change_gold($scope.cont, -1*$scope.cont.gold);
+        });
     };
     // itemBase can be decorator, template or item
     $scope.item_drop = function(itemBase) {
@@ -119,16 +128,23 @@ function($scope, Ocont, Oit, Ocam, EM) {
     };
 }])
 
-.controller('ItemFinderCtrl', ['$scope','EM','Ocont','$http',
-function($scope, EM, Ocont, $http) {
+.controller('ItemFinderCtrl', ['$scope','EM','Ocont',
+function($scope, EM, Ocont) {
     $scope.$on('EM.new_list.category', function(){
         $scope.categoryList = EM.list('category');
-        
     });
 
-    $scope.get_category = function(magic) {
-        return EM.by_key('category', magic.category)
+    $scope.get_category = function(mundane) {
+        return EM.by_key('category', mundane.category);
     };
+
+    $scope.item_drop = function(item) {
+        Ocont.sell_item_destroy(item, $scope.sell_adjustment.value);
+    };
+}])
+
+.controller('MagicItemFinderCtrl', ['$scope','EM','Ocont','$http',
+function($scope, EM, Ocont, $http) {
     $scope.rarityList = [
         {name: 'Common', value: 'C'},
         {name: 'Uncommon', value: 'U'},
@@ -179,8 +195,27 @@ function($scope, EM, Ocont, $http) {
             $scope.predicate_reverse = !$scope.predicate_reverse;
         $scope.predicate = predicate;
     };
+}])
 
-    $scope.item_drop = function(item) {
-        Ocont.sell_item_destroy(item, $scope.sell_adjustment.value);
+.controller('MundaneItemFinderCtrl', ['$scope','EM','Ocont',
+function($scope, EM, Ocont) {
+    $scope.goto_page = function(page) {
+        $scope.current_query.page = page;
+        item_page_REST($scope.current_query).then(got_item_finder);
+    };
+
+    $scope.get_subtype = function(mundane) {
+        return EM.by_key('subtype', mundane.subtype);
+    };
+
+    $scope.item_finder_search = function(page) {
+        $scope.itemFinder = { results: EM.listSlice('mundane') };
+    };
+
+    $scope.predicate = 'level';
+    $scope.set_predicate = function(predicate) {
+        if($scope.predicate == predicate)
+            $scope.predicate_reverse = !$scope.predicate_reverse;
+        $scope.predicate = predicate;
     };
 }]);

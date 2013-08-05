@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h3>Looting Gold</h3>
+</div>
+<div class="modal-body" ng-init="result.all = true;">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Gold goes to?</label>
+            <div class="controls">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" ng-model="result.all" btn-radio="false">Someone</button>
+                <button type="button" class="btn btn-primary" ng-model="result.all" btn-radio="true">Everyone</button>
+            </div>
+            </div>
+        </div>
+        <div ng-show="!result.all" class="control-group">
+            <label class="control-label">Who?</label>
+            <div class="controls">
+            <select class="" ng-model="result.container" ng-options="cont.name for cont in containerList"></select>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-primary" ng-click="confirm()">Confirm</button>
+                <button class="btn" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>

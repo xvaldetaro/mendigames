@@ -48,7 +48,7 @@ function($rootScope) {
 .controller('InputDialogCtrl', ['$scope', 'dialog', 'params',
 function($scope, dialog, params) {
     $scope.confirm = function() {
-        dialog.close($scope.form);
+        dialog.close($scope.result);
     };
     $scope.cancel = function() {
         dialog.close();

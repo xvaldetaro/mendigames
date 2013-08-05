@@ -103,14 +103,14 @@ function(EM, Och, Ocont, $q, U) {
         }
         return $q.all(promises);
     }
-    function split_gold(cam, containerList, value) {
+    function split_gold(containerList, value) {
         var share = Math.floor(value/containerList.length);
         var leftover = value%containerList.length;
         var lucky = U.randint(0, containerList.length);
         containerList[lucky].gold += leftover;
         return _call_for_container(containerList, 'change_gold', share);
     }
-    function mass_give_gold(cam, containerList, value) {
+    function mass_give_gold(containerList, value) {
         return _call_for_container(containerList, 'change_gold', value);
     }
     function split_xp(cam, characterList, value) {
