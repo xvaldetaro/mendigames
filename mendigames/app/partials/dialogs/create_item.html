@@ -1,6 +1,67 @@
 <div class="modal-header">
-    <h3>Select the Kind of Item:</h3>
+    <h3>Creating a {{magic.name}}:</h3>
 </div>
 <div class="modal-body">
-    
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Item creation</label>
+            <div class="controls">
+                <div class="btn-group" ng-init="custom = false;">
+                    <button type="button" class="btn btn-primary" ng-model="custom" btn-radio="false">Default</button>
+                    <button type="button" class="btn btn-primary" ng-model="custom" btn-radio="true">Custom</button>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Subtype</label>
+            <div class="controls">
+                <select class="" ng-model="subtype" ng-options="st.name for st in magic._2o.category()._2m.subtypes()" ng-init="subtype = magic._2o.category()._2m.subtypes()[0]"></select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Mundane Items</label>
+                <div class="controls">
+                    <select class="" ng-model="result.mundane" ng-options="mundane.name for mundane in subtype._2m.mundanes()" ng-init="result.mundane = subtype._2m.mundanes()[0]"></select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Amount</label>
+                <div class="controls">
+                    <input type="text" class="input-nano" ng-model="result.amount" maxlength="" placeholder="" ng-init="result.amount = 1">
+                </div>
+            </div>
+            <div class="control-group" ng-show="magic.level_cost_plus">
+                <label class="control-label">Item Level</label>
+                <div class="controls">
+                    <input type="text" class="input-nano" ng-model="result.level" maxlength="" placeholder="" ng-init="result.level = magic.level">
+                </div>
+            </div>
+            <div ng-show="custom">
+                <legend >Custom Item</legend>
+                <div class="control-group">
+                    <label class="control-label">Custom Name</label>
+                    <div class="controls">
+                        <input type="text" class="input-large" ng-model="result.name" maxlength="" placeholder="Item custom name">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Custom Weight</label>
+                    <div class="controls">
+                        <input type="text" class="input-nano" ng-model="result.weight" maxlength="" placeholder="">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Custom Cost</label>
+                    <div class="controls">
+                        <input type="text" class="input-mini" ng-model="result.cost" maxlength="" placeholder="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-success" ng-click="confirm()">Ok</button>
+                <button class="btn" ng-click="cancel()">cancel</button>
+            </div>
+        </div>
+    </form>
 </div>

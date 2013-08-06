@@ -23,40 +23,57 @@ var condition_icons = {
 };
 
 angular.module('mendigames').
-  filter('total_hp', function(){
-    return function(character){
-        return character.hit_points-character.used_hit_points;
-    };
-  }).
-  filter('total_hs', function(){
-    return function(character){
-        return character.healing_surges-character.used_healing_surges;
-    };
-  }).
-  filter('total_ap', function(){
-    return function(character){
-        return 1-character.used_action_points+Math.floor(character.milestones/2);
-    };
-  }).
-  filter('condition_icon',function(){
-    return function(condition){
-        if(!condition)
-          return;
-        return condition_icons[condition.name];
-    };
-  }).
-  filter('power_type', function(){
-    return function(power){
-      if(!power)
+filter('total_hp', function(){
+  return function(character){
+      return character.hit_points-character.used_hit_points;
+  };
+}).
+filter('total_hs', function(){
+  return function(character){
+      return character.healing_surges-character.used_healing_surges;
+  };
+}).
+filter('total_ap', function(){
+  return function(character){
+      return 1-character.used_action_points+Math.floor(character.milestones/2);
+  };
+}).
+filter('condition_icon',function(){
+  return function(condition){
+      if(!condition)
         return;
-      if(power['usage']=='E')
-          return "encounter";
-      if(power['usage']=='D')
-          return "daily";
-      return 'at-will';
-    };
-  }).
-  filter('power_style', function(){
+      return condition_icons[condition.name];
+  };
+}).
+filter('power_type', function(){
+  return function(power){
+    if(!power)
+      return;
+    if(power['usage']=='E')
+        return "encounter";
+    if(power['usage']=='D')
+        return "daily";
+    return 'at-will';
+  };
+})
+
+.filter('level_plus', function(){
+  return function(magic){
+    if(!magic.level_cost_plus)
+      return magic.level;
+    return magic.level+'+';
+  };
+})
+
+.filter('cost_plus', function(){
+  return function(magic){
+    if(!magic.level_cost_plus)
+      return magic.cost;
+    return magic.cost+'+';
+  };
+})
+
+  .filter('power_style', function(){
     return function(power){
       if(!power)
         return;

@@ -2,17 +2,18 @@
 
 angular.module('mendigames')
 
-.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','InputDialog','Ocam',
-function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
+.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','InputDialog',
+'Ocam', 'Oit','$q',
+function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam, Oit, $q) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
         'container': { _2o: ['campaign'], _2m: ['item'], query: { campaign: campaign} },
-        'item': { _2o: ['magic','mundane', 'container'], _2m: [], 
+        'item': { _2o: ['magic','mundane', 'container'], _2m: [],
             query: {container__campaign: campaign}},
         'magic': { _2o: ['category'], _2m: ['subtype'], query: {
             items__isnull: false } },
-        'category': { _2o: [], _2m: ['subtype'] },
+        'category': { _2o: [], _2m: ['subtype', 'mundane'] },
         'subtype': { _2o: ['category'], _2m: ['mundane', 'magic'] },
         'mundane': { _2o: ['subtype'], _2m: [] }
     };
@@ -64,6 +65,30 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam) {
             Ocam.add_container(result.name, $scope.campaign, result.gold);
         });
     };
+    function create_magic_item(magic) {
+        var deferred = $q.defer();
+        EM.merge_related('magic', magic);
+        return InputDialog('create_item', { magic: magic }).then(function(result){
+            if(!result)
+                return;
+            result.magic = magic;
+            return Oit.get_item_dict(result);
+        });
+    }
+    $scope.create_item = function(something) {
+        var deferred = $q.defer();
+        if(something.rarity) { // is decorator
+            create_magic_item(something).then(function(item){
+                if(!item)
+                    deferred.reject();
+                else
+                    deferred.resolve(item);
+            });
+        } else if(something.core !== undefined) {
+            deferred.resolve(Oit.item_from_mundane(something));
+        }
+        return deferred.promise;
+    };
     $scope.prices = [
         {text:'Free',value:0},
         {text:'25%',value:0.25},
@@ -86,16 +111,13 @@ function($scope, Ocont, Oit, EM, InputDialog) {
         });
     };
     // itemBase can be decorator, template or item
-    $scope.item_drop = function(itemBase) {
+    $scope.item_drop = function(something) {
         var cost_adjustment = $scope.buy_adjustment.value;
-        var item = itemBase;
-        if(itemBase.rarity) { // is decorator
-            EM.merge_related('magic', itemBase);
-            item = Oit.item_from_magic(itemBase);
-        } else if(itemBase.core !== undefined) {
-            item = Oit.item_from_mundane(itemBase);
-        }
-        Ocont.buy_item($scope.cont, item, cost_adjustment)
+        if(something.container)
+            return Ocont.buy_item($scope.cont, something, cost_adjustment);
+        $scope.create_item(something).then(function(item) {
+            Ocont.buy_item($scope.cont, item, cost_adjustment);
+        });
     };
 }])
 
@@ -117,16 +139,13 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
         });
     };
     // itemBase can be decorator, template or item
-    $scope.item_drop = function(itemBase) {
-        var cost_adjustment = $scope.sell_adjustment.value;
-        var item = itemBase;
-        if(itemBase.rarity) { // is decorator
-            EM.merge_related('magic', itemBase);
-            item = Oit.item_from_magic(itemBase);
-        } else if(itemBase.core !== undefined) {
-            item = Oit.item_from_mundane(itemBase);
-        }
-        Ocont.sell_item_transfer($scope.cont, item, cost_adjustment);
+    $scope.item_drop = function(something) {
+        var cost_adjustment = $scope.buy_adjustment.value;
+        if(something.container)
+            return Ocont.sell_item_transfer($scope.cont, something, cost_adjustment);
+        $scope.create_item(something).then(function(item) {
+            Ocont.put_item($scope.cont, item, cost_adjustment);
+        });
     };
 }])
 

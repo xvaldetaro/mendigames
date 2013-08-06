@@ -1,6 +1,5 @@
-new container dialog
-buy mundane item
-mundane selection dialog for magic purchase
+fix compendium item searches
+table-scrollbar draggable directive
 random shop
 random treasure
 colorful entries for types background differ for munda/magic, color change for category

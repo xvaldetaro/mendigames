@@ -50,6 +50,7 @@ function(EM, U, Oit, $q) {
     return {
         change_gold: change_gold,
         buy_item: buy_item,
+        put_item: put_item,
         sell_item_destroy: sell_item_destroy,
         sell_item_transfer: sell_item_transfer
     };
@@ -60,15 +61,19 @@ function(EM, Restangular) {
     var prices = [0,360,520,680,840,1000,1800,2600,3400,4200,5000,9000,13000,17000,21000,
         25000, 45000,65000,85000,105000,125000,225000,325000,425000,525000,625000,1125000,
         1625000,2125000,2625000,3125000];
-    // Options are: level(decorator with level+), cost_addition, weight_addition, name
-    function get_item_dict(mundane, magic, opts) {
-        var weight_addition = 0, cost_addition = 0, level;
+    // Options are: level(decorator with level+), cost, weight, name
+    function get_item_dict(opts) {
+        var weight = 0, cost = 0, level, mundane, magic;
         var item = { cost: 0, weight: 0, level: 0 };
         if(opts) {
-            weight_addition = opts.weight_addition || 0;
-            cost_addition = opts.cost_addition || 0;
+            weight = opts.weight || 0;
+            cost = opts.cost || 0;
             item.name = opts.name;
             level = opts.level;
+            mundane = opts.mundane;
+            magic = opts.magic;
+            if(opts.amount)
+                item.amount = opts.amount;
         }
 
         // Name
@@ -81,22 +86,25 @@ function(EM, Restangular) {
                 item.name = 'Unnamed Item';
         }
         // Cost
-        if(level) {
-            item.cost = prices[level] + cost_addition;
+        if(cost) {
+            item.cost = cost;
+        } else if(level && level > magic.level) {
+            item.cost = prices[level];
         } else if(magic) {
-            item.cost = magic.cost + cost_addition;
+            item.cost = magic.cost;
         } else if(mundane) {
-            item.cost = mundane.cost + cost_addition;
-        } else {
-            item.cost = cost_addition;
+            item.cost = mundane.cost;
         }
 
         // Weight
-        if(mundane) {
-            item.weight = mundane.weight + weight_addition;
-        } else {
-            item.weight = weight_addition; 
+        if(weight) {
+            item.weight = weight;
+        } else if(mundane) {
+            item.weight = mundane.weight;
         }
+
+        item.cost *= item.amount;
+        item.weight *= item.amount;
 
         // Level
         if(!level && magic)
@@ -115,18 +123,8 @@ function(EM, Restangular) {
 
         return item;
     }
-    function template_from_decorator(magic) {
-        var category = magic._2o.category();
-        if(!category) //decorators are searched outside the EM, thus there are no relateds
-            category = EM.by_key('category', magic.category);
-        return category._2m.subtypes()[0]._2m.mundanes()[0];
-    }
-    function item_from_magic(magic) {
-        var mundane = template_from_decorator(magic);
-        return get_item_dict(mundane, magic);
-    }
     function item_from_mundane(mundane) {
-        return get_item_dict(mundane);
+        return get_item_dict({mundane: mundane});
     }
     function destroy_item(item) {
         return EM.remove('item', item);
@@ -139,11 +137,11 @@ function(EM, Restangular) {
             return prices[level] * adjustment;
         } else if(magic) {
             return magic.cost * adjustment;
-        } 
+        }
     }
     return {
-        item_from_magic: item_from_magic,
         item_from_mundane: item_from_mundane,
+        get_item_dict: get_item_dict,
 
         new_item: new_item,
         destroy_item: destroy_item,

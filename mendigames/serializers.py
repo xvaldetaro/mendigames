@@ -99,6 +99,7 @@ class MonsterSerializer(RevSerializer):
 
 
 class CategorySerializer(RevSerializer):
+    mundanes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     subtypes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     magics = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     revision_key = 'category'

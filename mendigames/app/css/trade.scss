@@ -69,6 +69,8 @@ $TOPPREAMBLE: 62px;
   font-weight: bold;
   .inventory-cell {
     cursor: pointer;
+    margin-left: 0px;
+    text-align: center;
   }
 }
 .inventory-table-body {
@@ -96,6 +98,8 @@ $TOPPREAMBLE: 62px;
     border-top: 0;
     border-left: 0;
     border-bottom: 0;
+    text-align: center;
+    margin-left: 0px;
     &.last-cell {
       border-right: 0;
     }

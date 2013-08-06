@@ -25,3 +25,6 @@ label {
 
 .input-nano {
   width: 20px; }
+
+.modal-body {
+  max-height: 700px; }
