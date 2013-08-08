@@ -125,11 +125,11 @@ function($scope, dialog, U) {
     $scope.input = "";
 }])
 
-.controller('ModalController', ['$scope', 'WizardsService',
-function($scope, WizardsService) {
+.controller('ModalController', ['$scope', 'Wizards',
+function($scope, Wizards) {
     $scope.wizardsModal = false;
     $scope.close = function() { $scope.wizardsModal = false; };
-    $scope.$on('WizardsService.fetch', function(event, detailTag) {
+    $scope.$on('Wizards.fetch', function(event, detailTag) {
         $scope.wizardsModal = true;
         $scope.detailTag = detailTag;
     });

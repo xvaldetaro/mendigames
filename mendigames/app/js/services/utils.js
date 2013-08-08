@@ -2,34 +2,38 @@
 
 angular.module('mendigames')
 
-.factory('WizardsService', ['$rootScope', '$http','EM',
-function($rootScope, $http, EM){
-    return {
-        fetch: function(id, model, entity, instance) {
-            if(instance.html_description) {
-                $rootScope.$broadcast('WizardsService.fetch',
-                    instance.html_description);
-                console.log('Got from db');
-                return;
-            }
-
-            $http({
-                url: '/dndinsider/compendium/display.aspx?page='+model+'&id='+id,
+.factory('Wizards', ['$rootScope', '$http','EM','$log','$q',
+function($rootScope, $http, EM, $log, $q){
+    return function(model, entity, instance) {
+        var deferred = $q.defer();
+        if(instance.html_description) {
+            $log.log('Got from db');
+            deferred.resolve();
+        } else {
+            return $http({
+                url: '/dndinsider/compendium/display.aspx?page='+model+'&id='+instance.wizards_id,
                 method: 'GET',
                 dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
             }).
-            success(function(data){
+            then(function(data){
                 var fakedom = $('<div></div>');
-                fakedom.html(data.replace('<img src="images/bullet.gif" alt=""/>',
+                fakedom.html(data.data.replace('<img src="images/bullet.gif" alt=""/>',
                     '<i class="icon-star"></i>'));
                 var html_description = $('div[id|="detail"]', fakedom).html();
                 if(entity){
                     instance.html_description = html_description;
                     EM.update(entity, instance);
                 }
-                $rootScope.$broadcast('WizardsService.fetch', html_description);
+                deferred.resolve();
+            },function(error) {
+                window.open(
+                  'http://127.0.0.1/dndinsider/compendium/login.aspx',
+                  '_blank'
+                );
+                deferred.reject();
             });
         }
+        return deferred.promise;
     };
 }])
 

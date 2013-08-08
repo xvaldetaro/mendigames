@@ -139,11 +139,54 @@ function(EM, Restangular) {
             return magic.cost * adjustment;
         }
     }
+    var preamble = '<b>\\s*', posamble = ':\\s*<\\/b>([\\w\\s\\(\\),]+)<\\/p>';
+    var lineSplit = /\s*,\s*|\s*or\s*/, any = /^\s*any\s*$/i, space = /\s+/;
+    function match_names(rawName, subtypes, matchedSubtypes) {
+        var subName = rawName.split(space)[0];
+        if(subName.match(any))
+            subName = rawName.split(space)[1];
+        for(var i = subtypes.length - 1; i >= 0; i--) {
+            if(subtypes[i].tags.match(new RegExp(subName,'i')) ||
+                subtypes[i].name.match(new RegExp('^'+subName+'(:?\\s|$)','i'))) {
+                if(matchedSubtypes.indexOf(subtypes[i]) == -1)
+                    matchedSubtypes.push(subtypes[i]);
+            }
+        }
+    }
+    function parse_subtypes(magic, html) {
+        var category = magic._2o.category();
+        var subtypes = category._2m.subtypes();
+        if(subtypes.length == 1)
+            return subtypes;
+
+        var line = html.match(new RegExp(preamble+category.name+posamble, 'i'))[1];
+        if(!line)
+            return null;
+
+        var rawNames = line.split(lineSplit);
+        if(!rawNames)
+            return null;
+
+        var matchSubtypes = [];
+        if(rawNames.length == 1 && rawNames[0].match(any)) {
+            matchSubtypes = subtypes;
+        } else {
+            for(var i = rawNames.length - 1; i >= 0; i--) {
+                var subtype = match_names(rawNames[i], subtypes, matchSubtypes);
+            }
+        }
+        var instanceList = [];
+        for(var i=0, len=matchSubtypes.length; i<len; i++) {
+            instanceList.push({magic: magic.id, subtype: matchSubtypes[i].id});
+        }
+        return EM.add_list('m2m_magic_subtype', instanceList);
+    }
     return {
         item_from_mundane: item_from_mundane,
         get_item_dict: get_item_dict,
 
         new_item: new_item,
         destroy_item: destroy_item,
+        parse_subtypes: parse_subtypes
     };
 }]);

@@ -73,6 +73,20 @@ filter('power_type', function(){
   };
 })
 
+.filter('subtypes', function(){
+  return function(subtypes){
+    if(!subtypes || subtypes.length === 0)
+      return "?";
+    if(subtypes.length > 4)
+      return 'Many';
+    var ststr = subtypes[0].name.slice(0,2);
+    for(var i=1, len=subtypes.length; i<len; i++) {
+      ststr += ','+subtypes[i].name.slice(0,2);
+    }
+    return ststr;
+  };
+})
+
   .filter('power_style', function(){
     return function(power){
       if(!power)

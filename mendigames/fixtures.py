@@ -193,6 +193,9 @@ categories = [
         { 'name': 'Tome Implement', 'drop': 100, 'templates': [
             { 'name': 'Tome Implement', 'weight': 1, 'drop': 100 },
         ]},
+        { 'name': 'Totem Implement', 'drop': 100, 'templates': [
+            { 'name': 'Totem Implement', 'weight': 1, 'drop': 50 },
+        ]},
         { 'name': 'Wand Implement', 'drop': 100, 'templates': [
             { 'name': 'Wand Implement', 'weight': 0, 'drop': 100 },
         ]},
@@ -223,7 +226,7 @@ categories = [
         ] }
     ]},
     { 'abbr': 'WEAP', 'name': 'Weapon', 'drop': 100, 'groups': [
-        { 'name': 'Flail', 'drop': 100, 'templates': [
+        { 'name': 'Flail', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Flail', 'weight': 5, 'drop': 100 },
             { 'name': 'Scourge', 'weight': 2, 'drop': 100 },
             { 'name': 'Heavy Flail', 'weight': 10, 'drop': 100 },
@@ -231,18 +234,18 @@ categories = [
             { 'name': 'Spiked Chain', 'weight': 10, 'drop': 100 },
             { 'name': 'Double Flail', 'weight': 11, 'drop': 100 },
         ]},
-        { 'name': 'Sling', 'drop': 30, 'templates': [
+        { 'name': 'Sling', 'drop': 30, 'tags': 'ranged', 'templates': [
             { 'name': 'Dejada', 'weight': 2, 'drop': 100 },
             { 'name': 'Sling', 'weight': 0, 'drop': 100 },
         ]},
-        { 'name': 'Spear', 'drop': 100, 'templates': [
+        { 'name': 'Spear', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Javelin', 'weight': 2, 'drop': 70 },
             { 'name': 'Spear', 'weight': 6, 'drop': 100 },
             { 'name': 'Trident', 'weight': 4, 'drop': 70 },
             { 'name': 'Longspear', 'weight': 9, 'drop': 0 },
             { 'name': 'Tratnyr', 'weight': 5, 'drop': 10 },
         ]},
-        { 'name': 'Heavy Blade', 'drop': 100, 'templates': [
+        { 'name': 'Heavy Blade', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Scythe', 'weight': 10, 'drop': 100 },
             { 'name': 'Broadsword', 'weight': 5, 'drop': 100 },
             { 'name': 'Khopesh', 'weight': 8, 'drop': 100 },
@@ -253,27 +256,27 @@ categories = [
             { 'name': 'Bastard Sword', 'weight': 6, 'drop': 100 },
             { 'name': 'Fullblade', 'weight': 10, 'drop': 100 },
         ]},
-        { 'name': 'Crossbow', 'drop': 80, 'templates': [
+        { 'name': 'Crossbow', 'drop': 80, 'tags': 'ranged', 'templates': [
             { 'name': 'Hand Crossbow', 'weight': 2, 'drop': 100 },
             { 'name': 'Crossbow', 'weight': 4, 'drop': 100 },
             { 'name': 'Repeating Crossbow', 'weight': 6, 'drop': 100 },
             { 'name': 'Superior Crossbow', 'weight': 6, 'drop': 100 },
         ]},
-        { 'name': 'Pick', 'drop': 50, 'templates': [
+        { 'name': 'Pick', 'drop': 50, 'tags': 'melee', 'templates': [
             { 'name': 'Light War Pick', 'weight': 4, 'drop': 100 },
             { 'name': 'War Pick', 'weight': 6, 'drop': 100 },
             { 'name': 'Heavy War Pick', 'weight': 8, 'drop': 100 },
         ]},
-        { 'name': 'Unarmed', 'drop': 10, 'templates': [
+        { 'name': 'Unarmed', 'drop': 10, 'tags': 'melee', 'templates': [
             { 'name': 'Spiked Gauntlet', 'weight': 1, 'drop': 100 },
         ]},
-        { 'name': 'Mace', 'drop': 100, 'templates': [
+        { 'name': 'Mace', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Club', 'weight': 3, 'drop': 100 },
             { 'name': 'Mace', 'weight': 6, 'drop': 100 },
             { 'name': 'Greatclub', 'weight': 10, 'drop': 50 },
             { 'name': 'Morningstar', 'weight': 8, 'drop': 100 },
         ]},
-        { 'name': 'Axe', 'drop': 100, 'templates': [
+        { 'name': 'Axe', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Battleaxe', 'weight': 6, 'drop': 100 },
             { 'name': 'Handaxe', 'weight': 3, 'drop': 100 },
             { 'name': 'Greataxe', 'weight': 12, 'drop': 100 },
@@ -282,7 +285,7 @@ categories = [
             { 'name': 'Double Axe', 'weight': 15, 'drop': 5 },
             { 'name': 'Urgrosh', 'weight': 8, 'drop': 5 },
         ]},
-        { 'name': 'Light Blade', 'drop': 100, 'templates': [
+        { 'name': 'Light Blade', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Dagger', 'weight': 1, 'drop': 100 },
             { 'name': 'Sickle', 'weight': 2, 'drop': 50 },
             { 'name': 'Rapier', 'weight': 2, 'drop': 90 },
@@ -294,24 +297,24 @@ categories = [
             { 'name': 'Shuriken (5)', 'weight': 0, 'drop': 5 },
             { 'name': 'Spiked Shield', 'weight': 7, 'drop': 12 },
         ]},
-        { 'name': 'Polearm', 'drop': 100, 'templates': [
+        { 'name': 'Polearm', 'drop': 100, 'tags': 'melee', 'templates': [
             { 'name': 'Glaive', 'weight': 10, 'drop': 100 },
             { 'name': 'Halberd', 'weight': 12, 'drop': 100 },
             { 'name': 'Greatspear', 'weight': 8, 'drop': 100 },
         ]},
-        { 'name': 'Hammer', 'drop': 80, 'templates': [
+        { 'name': 'Hammer', 'drop': 80, 'tags': 'melee', 'templates': [
             { 'name': 'Throwing Hammer', 'weight': 2, 'drop': 70 },
             { 'name': 'Warhammer', 'weight': 5, 'drop': 100 },
             { 'name': 'Maul', 'weight': 12, 'drop': 100 },
             { 'name': 'Craghammer', 'weight': 6, 'drop': 15 },
             { 'name': 'Mordenkrad', 'weight': 12, 'drop': 10 },
         ]},
-        { 'name': 'Bow', 'drop': 100, 'templates': [
+        { 'name': 'Bow', 'drop': 100, 'tags': 'ranged', 'templates': [
             { 'name': 'Longbow', 'weight': 3, 'drop': 100 },
             { 'name': 'Shortbow', 'weight': 2, 'drop': 100 },
             { 'name': 'Greatbow', 'weight': 5, 'drop': 50 },
         ]},
-        { 'name': 'Staff', 'drop': 20, 'templates': [
+        { 'name': 'Staff', 'drop': 20, 'tags': 'melee', 'templates': [
             { 'name': 'Quarterstaff', 'weight': 4, 'drop': 100 },
         ]},
     ]},

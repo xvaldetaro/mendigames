@@ -179,8 +179,8 @@ function($scope, EM, Ohpo, Log) {
 }])
 
 .controller('MenuController', ['$scope', 'EM','U','Log','$dialog','Ocam',
-'WizardsService',
-function($scope, EM, U, Log, $dialog, Ocam, WizardsService) {
+'Wizards',
+function($scope, EM, U, Log, $dialog, Ocam, Wizards) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -217,7 +217,7 @@ function($scope, EM, U, Log, $dialog, Ocam, WizardsService) {
     };
     $scope.enemyCount = 0;
     $scope.fetch_from_compendium = function(condition) {
-        WizardsService.fetch(condition.wizards_id, 'glossary', 'condition',condition);
+        Wizards(condition.wizards_id, 'glossary', 'condition',condition);
     };
     $scope.clear_enemies = function(){
         EM.remove_list('character', {campaign: $scope.campaignId,

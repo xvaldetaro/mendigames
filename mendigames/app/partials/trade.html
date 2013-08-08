@@ -104,20 +104,28 @@
                 </div>
                 <div class="inventory-table-header minus-scrollbar">
                     <div class="row-fluid">
-                        <div class="span5 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                        <div class="span4 inventory-cell" ng-click="set_predicate('category')">Category</div>
+                        <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
+                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Category</div>
+                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Types</div>
                         <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
                         <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
-                        <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
+                        <div class="span1 inventory-cell" ng-click="set_predicate('cost')">G</div>
                     </div>
                 </div>
                 <div class="inventory-table-body" btf-dragon="magic in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
                     <div class="row-fluid inventory-row">
-                        <div class="span5 inventory-cell" ng-click="fetch_from_compendium(magic)">{{magic.name}}</div>
-                        <div class="span4 inventory-cell">{{get_category(magic).name}}</div>
+                        <div class="span4 inventory-cell" ng-click="compendium(magic)">{{magic.name}}</div>
+                        <div class="span3 inventory-cell">{{magic._2o.category().name}}</div>
+                        <div class="span3 inventory-cell" ng-click="fill_subtypes(magic)">{{magic._2m.subtypes() | subtypes}}</div>
                         <div class="span1 inventory-cell">{{magic | level_plus}}</div>
                         <div class="span1 inventory-cell">{{magic.rarity}}</div>
-                        <div class="span2 inventory-cell last-cell">{{magic | cost_plus}}</div>
+                        <div class="span1 inventory-cell last-cell">{{magic | cost_plus}}</div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="wizards-modal" modal="detailModal" close="close()">
+                    <button type="button" class="close" ng-click="detailModal = false;">×</button>
+                    <div ng-bind-html="wizardsDetail" id="detail">
                     </div>
                 </div>
             </div>
@@ -150,12 +158,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Modal -->
-<div ng-controller='ModalController' class="wizards-modal" modal="wizardsModal" close="close()">
-        <button type="button" class="close" ng-click="close()">×</button>
-    <div ng-bind-html="detailTag" id="detail">
     </div>
 </div>
 

@@ -2,9 +2,9 @@
 
 angular.module('mendigames')
 
-.controller('TradeCtrl', ['$scope','$routeParams','EM','WizardsService','InputDialog',
+.controller('TradeCtrl', ['$scope','$routeParams','EM','Wizards','InputDialog',
 'Ocam', 'Oit','$q',
-function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam, Oit, $q) {
+function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
@@ -35,13 +35,6 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam, Oit, $q) {
     // Bootstrap the scope
     EM.start(entitiesMetadata, syncEntities);
 
-    $scope.fetch_from_compendium = function(item) {
-        var entity = 'magic';
-        if(item.rarity === undefined)
-            entity = 'mundane'
-        WizardsService.fetch(item.wizards_id, 'item', entity,item);
-    };
-
     $scope.split_gold = function () {
         InputDialog('input',{title: 'Split Gold', label: 'Split how much?', size: 'mini'})
         .then(function(result){
@@ -67,7 +60,6 @@ function($scope, $routeParams, EM, WizardsService,InputDialog, Ocam, Oit, $q) {
     };
     function create_magic_item(magic) {
         var deferred = $q.defer();
-        EM.merge_related('magic', magic);
         return InputDialog('create_item', { magic: magic }).then(function(result){
             if(!result)
                 return;
@@ -160,22 +152,32 @@ function($scope, EM, Ocont) {
     };
 }])
 
-.controller('MagicItemFinderCtrl', ['$scope','EM','Ocont','$http',
-function($scope, EM, Ocont, $http) {
+.controller('MagicItemFinderCtrl', ['$scope','EM','Ocont','Oit','$http','Wizards',
+function($scope, EM, Ocont, Oit, $http, Wizards) {
     $scope.rarityList = [
         {name: 'Common', value: 'C'},
         {name: 'Uncommon', value: 'U'},
         {name: 'Rare', value: 'R'},
     ];
 
-    $scope.get_category = function(magic) {
-        return EM.by_key('category', magic.category);
+    $scope.compendium = function(item) {
+        var entity = 'magic';
+        if(item.rarity === undefined)
+            entity = 'mundane';
+        Wizards('item', entity, item).then(function(){
+            $scope.detailModal = true;
+            $scope.wizardsDetail = item.html_description;
+            Oit.parse_subtypes(item, item.html_description);
+        });
     };
 
     function got_item_finder(list){
         $scope.itemFinder = list.data.data;
-        $scope.pageCount = Math.ceil($scope.itemFinder.count/100)
-        
+        var results = $scope.itemFinder.results;
+        for(var i=0, len=results.length; i<len; i++) {
+            EM.merge_related('magic', results[i]);
+        }
+        $scope.pageCount = Math.ceil($scope.itemFinder.count/100);
     }
     function item_page_REST(query) {
         return $http.get('/magic_page', {params: query});

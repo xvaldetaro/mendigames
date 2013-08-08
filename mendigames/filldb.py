@@ -294,7 +294,7 @@ w = wizards("/home/xande/Documents")
 # w.persist_monsters()
 w.persist_conditions()
 w.persist_item_categories(categories)
-w.persist_items()
+#w.persist_items()
 
 
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')

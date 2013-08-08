@@ -46,6 +46,9 @@ urlpatterns = patterns('',
     url(r'^subtype/?$', views.SubtypeList.as_view()),
     url(r'^subtype/(?P<pk>[0-9]+)/?$', views.SubtypeDetail.as_view()),
 
+    url(r'^m2m_magic_subtype/?$', views.M2MMagicSubtypeList.as_view()),
+    url(r'^m2m_magic_subtype/(?P<pk>[0-9]+)/?$', views.M2MMagicSubtypeDetail.as_view()),
+
     url(r'^mundane/?$', views.MundaneList.as_view()),
     url(r'^mundane/(?P<pk>[0-9]+)/?$', views.MundaneDetail.as_view()),
 

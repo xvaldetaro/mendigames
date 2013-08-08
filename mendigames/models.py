@@ -197,6 +197,8 @@ class Magic(BookEntry):
 class M2MMagicSubtype(models.Model):
     magic = models.ForeignKey(Magic, related_name="subtypes")
     subtype = models.ForeignKey(Subtype, related_name="magics")
+    class Meta:
+        unique_together = (("magic", "subtype"),)
 
 
 class Item(models.Model):

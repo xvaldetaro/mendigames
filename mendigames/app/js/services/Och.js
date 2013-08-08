@@ -178,15 +178,15 @@ function(EM, U) {
     };
 }])
 
-.factory('Ohpo', ['EM', 'WizardsService',
-function(EM, WizardsService) {
+.factory('Ohpo', ['EM', 'Wizards',
+function(EM, Wizards) {
     return {
         use_power: function(h) {
             h.used = !h.used;
             EM.update('has_power', h);
         },
         fetch_from_compendium: function(h){
-            WizardsService.fetch(h._2o.power().wizards_id, 'power');
+            Wizards(h._2o.power().wizards_id, 'power');
         }
     };
 }]);

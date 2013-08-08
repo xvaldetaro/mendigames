@@ -42,15 +42,14 @@ class ThroughSerializer(RevSerializer):
         return super(ThroughSerializer, self).__init__(*args, **kwargs)
 
     def to_native(self, value):
-        if through:
-            return value[through]
-        return super(ThroughSerializer, self).to_native(self, value)
+        if self.through:
+            return value.subtype.id
+        return super(ThroughSerializer, self).to_native(value)
 
 
 class CharacterSerializer(RevSerializer):
     has_powers = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     has_conditions = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    #has_items = serializers.PrimaryKeyRelatedField(many=True)
     revision_key = 'character'
     class Meta:
         model = models.Character
