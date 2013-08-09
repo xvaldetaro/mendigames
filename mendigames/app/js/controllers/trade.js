@@ -26,8 +26,21 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
     $scope.campaignId = $routeParams.campaignId;
     $scope.$on('EM.new_list.container', function(){
         var containers = Ocam.categorize_containers(EM.list('container'));
+        var activePlayer = 0, activeContainer = 0;
+        if($scope.plContList) {
+            for(var i=0, len=$scope.plContList.length; i<len; i++) {
+                if($scope.plContList[i].active)
+                    activePlayer = i;
+            }
+            for(var i=0, len=$scope.othContList.length; i<len; i++) {
+                if($scope.othContList[i].active)
+                    activeContainer = i;
+            }
+        }
         $scope.plContList = containers.player;
+        $scope.plContList[activePlayer].active = true;
         $scope.othContList = containers.other;
+        $scope.othContList[activeContainer].active = true;
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
