@@ -43,7 +43,7 @@
                                 <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
                                 <div class="span1 inventory-cell">{{item.weight}}</div>
                                 <div class="span2 inventory-cell">{{item.cost}}</div>
-                                <div class="span1 inventory-cell last-cell">x {{item.amount}}</div>
+                                <div class="span1 inventory-cell last-cell" ng-click="split_item(item)">x {{item.amount}}</div>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                                 <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
                                 <div class="span1 inventory-cell">{{item.weight}}</div>
                                 <div class="span2 inventory-cell">{{item.cost}}</div>
-                                <div class="span1 inventory-cell last-cell">x {{item.amount}}</div>
+                                <div class="span1 inventory-cell last-cell" ng-click="split_item(item)">x {{item.amount}}</div>
                             </div>
                         </div>
                     </div>

@@ -45,14 +45,33 @@ function(EM, U, Oit, $q) {
         else
             return Oit.new_item(item).then(function(newE) {
                 U.replace(to_cont._2m.items(), item, newE);
-            })
+            });
+    }
+    function split_item(item, amount) {
+        var percent = amount/item.amount;
+        var newItem = {};
+        angular.extend(newItem, item);
+        newItem.amount = amount;
+        newItem.weight = item.weight*percent;
+        newItem.cost = item.cost*percent;
+
+        item.amount = item.amount-amount;
+        item.weight = item.weight-newItem.weight;
+        item.cost = item.cost-newItem.cost;
+        
+        delete newItem.id;
+        return $q.all([
+            EM.update('item', item),
+            put_item(item._2o.container(), newItem)
+        ]);
     }
     return {
         change_gold: change_gold,
         buy_item: buy_item,
         put_item: put_item,
         sell_item_destroy: sell_item_destroy,
-        sell_item_transfer: sell_item_transfer
+        sell_item_transfer: sell_item_transfer,
+        split_item: split_item
     };
 }])
 

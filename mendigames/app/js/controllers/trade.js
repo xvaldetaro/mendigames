@@ -73,7 +73,11 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
     };
     function create_magic_item(magic) {
         var deferred = $q.defer();
-        return InputDialog('create_item', { magic: magic }).then(function(result){
+        var subtypes = magic._2m.subtypes();
+        if(subtypes.length == 0)
+            subtypes = magic._2o.category()._2m.subtypes();
+        return InputDialog('create_item', { magic: magic, subtypes: subtypes })
+        .then(function(result){
             if(!result)
                 return;
             result.magic = magic;
@@ -141,6 +145,20 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
             else
                 Ocont.change_gold(result.container, $scope.cont.gold);
             Ocont.change_gold($scope.cont, -1*$scope.cont.gold);
+        });
+    };
+    $scope.split_item = function(item) {
+        if(item.amount < 2)
+            return;
+        var amounts = [];
+        for(var i=1; i<item.amount; i++) {
+            amounts.push(i);
+        }
+        InputDialog('split_item',{amounts: amounts})
+        .then(function(result){
+            if(!result)
+                return;
+            Ocont.split_item(item, result);
         });
     };
     // itemBase can be decorator, template or item
