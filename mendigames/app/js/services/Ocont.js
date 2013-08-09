@@ -145,7 +145,7 @@ function(EM, Restangular) {
         var subName = rawName.split(space)[0];
         if(subName.match(any))
             subName = rawName.split(space)[1];
-        for(var i = subtypes.length - 1; i >= 0; i--) {
+        for(var i = 0, len=subtypes.length; i < len; i++) {
             if(subtypes[i].tags.match(new RegExp(subName,'i')) ||
                 subtypes[i].name.match(new RegExp('^'+subName+'(:?\\s|$)','i'))) {
                 if(matchedSubtypes.indexOf(subtypes[i]) == -1)
@@ -153,7 +153,8 @@ function(EM, Restangular) {
             }
         }
     }
-    function parse_subtypes(magic, html) {
+    function parse_subtypes(magic) {
+        var html = magic.html_description;
         var category = magic._2o.category();
         var subtypes = category._2m.subtypes();
         if(subtypes.length == 1)
@@ -175,11 +176,7 @@ function(EM, Restangular) {
                 var subtype = match_names(rawNames[i], subtypes, matchSubtypes);
             }
         }
-        var instanceList = [];
-        for(var i=0, len=matchSubtypes.length; i<len; i++) {
-            instanceList.push({magic: magic.id, subtype: matchSubtypes[i].id});
-        }
-        return EM.add_list('m2m_magic_subtype', instanceList);
+        return matchSubtypes;
     }
     return {
         item_from_mundane: item_from_mundane,

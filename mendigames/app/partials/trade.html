@@ -122,12 +122,6 @@
                         <div class="span1 inventory-cell last-cell">{{magic | cost_plus}}</div>
                     </div>
                 </div>
-                <!-- Modal -->
-                <div class="wizards-modal" modal="detailModal" close="close()">
-                    <button type="button" class="close" ng-click="detailModal = false;">×</button>
-                    <div ng-bind-html="wizardsDetail" id="detail">
-                    </div>
-                </div>
             </div>
             <div class="mundane-item-finder" ng-show='!magic' ng-controller="MundaneItemFinderCtrl">
                 <div class="inventory-config">

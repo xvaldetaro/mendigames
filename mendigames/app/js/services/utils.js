@@ -1,7 +1,12 @@
 "use strict";
 
 angular.module('mendigames')
-
+.factory('BASEURL', ['DjangoProperties', function(DjangoProperties){
+    var static_url = DjangoProperties.STATIC_URL;
+    return function() {
+        return static_url;
+    };
+}])
 .factory('Wizards', ['$rootScope', '$http','EM','$log','$q',
 function($rootScope, $http, EM, $log, $q){
     return function(model, entity, instance) {
@@ -62,9 +67,9 @@ function($scope, dialog, params) {
     }
 }])
 
-.factory('InputDialog', ['$dialog',
-function($dialog) {
-    var baseUrl = '/static/mendigames/partials/dialogs/';
+.factory('InputDialog', ['$dialog','BASEURL',
+function($dialog, BASEURL) {
+    var baseUrl = BASEURL()+'mendigames/partials/dialogs/';
     return function(partialName, scopeAugment) {
         return $dialog.dialog({
             resolve: { params: function(){ return scopeAugment || {}; } }

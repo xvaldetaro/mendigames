@@ -153,21 +153,27 @@ function($scope, EM, Ocont) {
 }])
 
 .controller('MagicItemFinderCtrl', ['$scope','EM','Ocont','Oit','$http','Wizards',
-function($scope, EM, Ocont, Oit, $http, Wizards) {
+'$dialog','BASEURL',
+function($scope, EM, Ocont, Oit, $http, Wizards, $dialog, BASEURL) {
     $scope.rarityList = [
         {name: 'Common', value: 'C'},
         {name: 'Uncommon', value: 'U'},
         {name: 'Rare', value: 'R'},
     ];
 
-    $scope.compendium = function(item) {
-        var entity = 'magic';
-        if(item.rarity === undefined)
-            entity = 'mundane';
-        Wizards('item', entity, item).then(function(){
-            $scope.detailModal = true;
-            $scope.wizardsDetail = item.html_description;
-            Oit.parse_subtypes(item, item.html_description);
+    $scope.compendium = function(magic) {
+        var subtypes = magic._2m.subtypes();
+        if(!subtypes || subtypes.length < 1) {
+            Wizards('item', 'magic', magic).then(function(){
+                Oit.parse_subtypes(magic);
+            });
+        }
+        $dialog.dialog({
+            resolve: { magic: function(){ return magic; } }
+        }).open(BASEURL()+'mendigames/partials/dialogs/magic.html', 'MagicDialogCtrl')
+        .then(function(changed) {
+            if(changed)
+                item_page_REST($scope.current_query);
         });
     };
 

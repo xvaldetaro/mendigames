@@ -125,6 +125,60 @@ function($scope, dialog, U) {
     $scope.input = "";
 }])
 
+.controller('MagicDialogCtrl', ['$scope', 'dialog', 'magic','EM','Oit',
+function($scope, dialog, magic, EM, Oit) {
+    $scope.magic = magic;
+    $scope.subtypes = magic._2m.subtypes().slice();
+    $scope.newSubtypeForm = false;
+
+    $scope.clear = function() {
+        $scope.subtypes = [];
+    };
+    $scope.clear_parse = function() {
+        $scope.subtypes = Oit.parse_subtypes(magic);
+    };
+    $scope.remove_subtype = function(i) {
+        $scope.subtypes.splice(i,1);
+    };
+    $scope.add_subtype = function() {
+        $scope.newSubtypeForm = false;
+        $scope.subtypes.push($scope.subtypeToAdd);
+    };
+    $scope.confirm = function() {
+        var currSubtypes = magic._2m.subtypes(), toAdd=[], toRemove=[];
+        for(var i=0, len=currSubtypes.length; i<len; i++) {
+            if($scope.subtypes.indexOf(currSubtypes[i]) == -1)
+                toRemove.push(currSubtypes[i]);
+        }
+        for(var i=0, len=$scope.subtypes.length; i<len; i++) {
+            if(currSubtypes.indexOf($scope.subtypes[i]) == -1)
+                toAdd.push($scope.subtypes[i]);
+        }
+        if(toRemove.length > 0) {
+            EM.remove_list('m2m_magic_subtype', {magic: magic.id}).then(function(){
+                var instanceList = [];
+                for(var i=0, len=$scope.subtypes.length; i<len; i++) {
+                    instanceList.push({magic: magic.id, subtype: $scope.subtypes[i].id});
+                }
+                EM.add_list('m2m_magic_subtype', instanceList);
+            });
+        } else {
+            var instanceList = [];
+            for(var i=0, len=toAdd.length; i<len; i++) {
+                instanceList.push({magic: magic.id, subtype: toAdd[i].id});
+            }
+            EM.add_list('m2m_magic_subtype', instanceList);
+        }
+        magic._2m.subtypes = function() {
+            return $scope.subtypes;
+        };
+        dialog.close(true);
+    };
+    $scope.cancel = function() {
+        dialog.close();
+    };
+}])
+
 .controller('ModalController', ['$scope', 'Wizards',
 function($scope, Wizards) {
     $scope.wizardsModal = false;
