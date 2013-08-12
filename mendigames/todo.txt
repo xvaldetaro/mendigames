@@ -1,8 +1,4 @@
-fix compendium item searches
-tesxt if Wizqardservice works wo jquery
-table-scrollbar draggable directive
-random shop
-random treasure
+put defenses and xp in combat view
 management view (create character/container...)
 colorful entries for types background differ for munda/magic, color change for category
 

@@ -142,9 +142,6 @@ function(EM, U) {
             ch._2m.has_items()[i] = newE;
         });
     }
-    function delete_character(chi, c) {
-        return EM.remove('character', c, chi);
-    }
     function switch_condition(ch, hasCondition){
         ch._2m.has_conditions().push(hasCondition);
         hasCondition.character = ch.id;
@@ -171,7 +168,6 @@ function(EM, U) {
         add_condition: add_condition,
         add_item: add_item,
         remove_item: remove_item,
-        delete_character: delete_character,
         incapacitated: incapacitated,
         increase_sub_init: increase_sub_init,
         switch_condition: switch_condition

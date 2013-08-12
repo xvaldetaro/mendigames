@@ -45,7 +45,7 @@ span.uneditable-input.turn {
   background-image: radial-gradient(   #f8ecc2, #f3de94);
   overflow: auto;
   overflow-x: hidden;
-  height: 30%; }
+  height: 20%; }
 
 div.condition-box {
   display: inline-block;

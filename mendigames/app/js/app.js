@@ -13,14 +13,24 @@ angular.module('mendigames',
 
     $routeProvider.otherwise({redirectTo: '/campaign_list'});
 
-    $routeProvider.when('/campaign/combat/:campaignId', {
+    $routeProvider.when('/campaign/:campaignId/combat/', {
         templateUrl: static_url+'mendigames/partials/combat.html',
         controller: 'CombatCtrl'
     });
 
-    $routeProvider.when('/campaign/trade/:campaignId', {
+    $routeProvider.when('/campaign/:campaignId/trade/', {
         templateUrl: static_url+'mendigames/partials/trade.html',
         controller: 'TradeCtrl'
+    });
+
+    // Management routes
+    $routeProvider.when('/campaign/:campaignId/management/', {
+        templateUrl: static_url+'mendigames/partials/management/management.html',
+        controller: 'ManagementCtrl'
+    });
+    $routeProvider.when('/campaign/:campaignId/management/character/:characterId', {
+        templateUrl: static_url+'mendigames/partials/management/character.html',
+        controller: 'ManagementCharacterCtrl'
     });
 }])
 

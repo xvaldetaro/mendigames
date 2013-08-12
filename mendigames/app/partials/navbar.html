@@ -1,0 +1,17 @@
+<div class="navbar navbar-inverse" ng-controller="NavbarCtrl">
+    <div class="navbar-inner">
+      <a class="brand" href="#">Campaign</a>
+      <ul class="nav">
+        <li class="{{ isActive('combat')}}">
+            <a href="#/campaign/{{campaign}}/combat/">Combat</a>
+        </li>
+        <li class="{{ isActive('trade')}}">
+            <a href="#/campaign/{{campaign}}/trade/">Trade</a>
+        </li>
+        <li class="{{ isActive('management')}}">
+            <a href="#/campaign/{{campaign}}/management/">Management</a>
+        </li>
+      </ul>
+      <a class="pull-right" href="#">Mendigames</a>
+    </div>
+</div>

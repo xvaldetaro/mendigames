@@ -52,19 +52,16 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
             }, 300);
         },100);
     }, true);
-
-    $scope.inputDialog = $dialog.dialog({
-        templateUrl:  '/static/mendigames/partials/dialogs/input.html',
-        controller: 'InputDialogController'
-    });
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
-function($scope, $rootScope, $dialog, Och, Log) {
+'InputDialog',
+function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
     $scope.Och = Och;
 
     $scope.change_xp = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Give Experience Points', label: 'how many?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Och.change_xp($scope.ch, result);
@@ -102,9 +99,9 @@ function($scope, $rootScope, $dialog, Och, Log) {
         Log(c.name+' is clean');
     };
     $scope.delete_character = function(chi, c) {
-        Och.delete_character(chi,c);
+        Och.delete_character(c);
         Log(c.name+' Removed!');
-    }
+    };
     $scope.increase_sub_init = function(c) {
         Och.increase_sub_init(c);
         Log(c.name+' sub init increased');
@@ -178,9 +175,9 @@ function($scope, EM, Ohpo, Log) {
     };
 }])
 
-.controller('MenuController', ['$scope', 'EM','U','Log','$dialog','Ocam',
+.controller('MenuController', ['$scope', 'EM','U','Log','$dialog','Ocam','InputDialog',
 'Wizards',
-function($scope, EM, U, Log, $dialog, Ocam, Wizards) {
+function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -200,6 +197,13 @@ function($scope, EM, U, Log, $dialog, Ocam, Wizards) {
         Ocam.set_round($scope.campaign, value);
     };
     $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
+
+    $scope.compendium = function(condition) {
+        Wizards('glossary', 'condition', condition).then(function(){
+            $scope.modalCondition = condition;
+            $scope.wizardsModal = true;
+        });
+    };
 
     $scope.diceMult = 1;
     $scope.diceMod = 0;
@@ -253,14 +257,16 @@ function($scope, EM, U, Log, $dialog, Ocam, Wizards) {
         });
     };
     $scope.split_xp = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Split Experience Points', label: 'How many?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Ocam.split_xp($scope.campaign, $scope.characterList, result);
         });
     };
     $scope.mass_give_xp = function () {
-        $scope.inputDialog.open().then(function(result){
+        InputDialog('input',{title: 'Give Experience Points to All Players', label: 'How many?', size: 'mini'})
+        .then(function(result){
             if(!result)
                 return;
             Ocam.mass_give_xp($scope.campaign, $scope.characterList, result);
@@ -278,7 +284,7 @@ function($scope, EM, U, Log, $dialog, Ocam, Wizards) {
     $scope.mass_milestone = function(){
         Ocam.mass_milestone($scope.characterList);
     };
-    $scope.ret_false = function(){ 
-    return false; 
-};
-}])
+    $scope.ret_false = function(){
+        return false;
+    };
+}]);

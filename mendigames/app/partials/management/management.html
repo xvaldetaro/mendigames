@@ -1,0 +1,20 @@
+<div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
+<div class="container">
+  <div class="row-fluid">
+    <div class="span2">
+      <ul>
+        <li>Characters</li>
+      </ul>
+    </div>
+    <div class="span10">
+      <button class="btn btn-primary" ng-click="add_character()">Add Character</button>
+      <table class="table table-bordered table-striped">
+        <tr ng-repeat="(chi,c) in characterList">
+          <td>{{c.name}}</td>
+          <td><button class="btn" ng-click="edit_character(c)" tooltip="Edit"><i class="icon-edit"></i></button></td>
+          <td><button class="btn btn-danger" ng-click="delete_character(chi, c)"><i class="icon-remove"></i></button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,21 @@ angular.module('mendigames')
 
 .factory('Ocam', ['EM','Och','Ocont','$q','U',
 function(EM, Och, Ocont, $q, U) {
+    function delete_character(c) {
+        return EM.remove('character', c);
+    }
+    function add_character(cDict){
+        var container = {
+            name: cDict.name,
+            campaign: cDict.campaign,
+            gold: cDict.gold
+        };
+
+        return EM.add('container', container).then(function(cont){
+            cDict.container = cont.id;
+            return EM.add('character', cDict);
+        });
+    }
     function remove_container(container) {
         return EM.remove('container', container);
     }
@@ -164,6 +179,8 @@ function(EM, Och, Ocont, $q, U) {
         mass_milestone: mass_milestone,
         categorize_containers: categorize_containers,
         add_container: add_container,
-        remove_container: remove_container
+        remove_container: remove_container,
+        add_character: add_character,
+        delete_character: delete_character,
     };
 }]);

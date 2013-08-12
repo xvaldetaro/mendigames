@@ -214,15 +214,18 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
                 revision = data.revision;
                 start_poll_timeout();
             });
-        })
+        });
     }
     function start_poll_timeout(){
         $timeout(poll, 2000);
     }
-    function start(entitiesMetadata, syncEntities) {
+    function start(entitiesMetadata, syncEntities, nosync) {
         all = {};
-        var initEntities = [];
         set_all_entity_metadata(entitiesMetadata, syncEntities);
+        if(nosync)
+            return;
+
+        var initEntities = [];
         for (var eName in entitiesMetadata)
             initEntities.push(eName);
         fetch_multiple(initEntities);

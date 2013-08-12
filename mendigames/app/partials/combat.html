@@ -1,26 +1,15 @@
-<div class="navbar navbar-inverse">
-    <div class="navbar-inner">
-      <a class="brand" href="#">{{campaign.name}}</a>
-      <ul class="nav">
-        <li class="active">
-            <a href="#/campaign/combat/{{campaign.id}}/">Combat</a>
-        </li>
-        <li>
-            <a href="#/campaign/trade/{{campaign.id}}/">Trade</a>
-        </li>
-        <li>
-            <a href="#">Status</a>
-        </li>
-      </ul>
-      <a class="pull-right" href="#">Mendigames</a>
-    </div>
-</div>
+<div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
 <div ng-controller="MenuController" class="docked-menu hidden-phone">
     <div class="menu-group">
         <label>Conditions</label>
         <div class="row-fluid conditions-box" btf-dragon="(ci, condition) in conditionList" btf-double-dragon btf-dragon-accepts="ret_false">
-            <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="fetch_from_compendium(condition, 'glossary')">
+            <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="compendium(condition)">
                 <i class="{{condition|condition_icon}} icon-white"></i>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="wizards-modal" modal="wizardsModal" close="wizardsModal = false;">
+            <div ng-bind-html="modalCondition.html_description" id="detail">
             </div>
         </div>
     </div>
@@ -119,6 +108,15 @@
                 </div>
             </div>
         </div>
+        <div class="row-fluid">
+            <div class="span7">
+                <label>Mass XP</label>
+                <div class="input-prepend input-append">
+                    <div class="btn btn-inverse" ng-click="mass_give_xp()"><i class="icon-trash icon-white"></i>&nbsp;Give XP</div>
+                    <div class="btn btn-inverse" ng-click="split_xp()"><i class="icon-flag icon-white"></i>&nbsp;Split XP</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="menu-group" id="console">
         <div ng-repeat="line in log">{{line}}</div>
@@ -170,6 +168,9 @@
                         <div ng-click="spend_ap(ch)" class="stat-number ap">
                             <i class="icon-star icon-white"></i><p>{{ch|total_ap}}</p>
                         </div>
+                        <div ng-click="change_xp(ch)" class="stat-number xp">
+                            <i class="icon-user icon-white"></i><p>{{ch.experience_points}}</p>
+                        </div>
                     </div>
                     <div class="span3">
                         <div class="row-fluid has-conditions-box" btf-dragon="(hci, hco) in ch._2m.has_conditions()" btf-dragon-drop-function="drop_condition">
@@ -196,10 +197,4 @@
         </div>
     </div>
 
-</div>
-<!-- Modal -->
-<div ng-controller='ModalController' class="wizards-modal" modal="wizardsModal" close="close()">
-        <button type="button" class="close" ng-click="close()">×</button>
-    <div ng-bind-html="detailTag" id="detail">
-    </div>
 </div>
