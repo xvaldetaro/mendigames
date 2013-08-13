@@ -6,17 +6,11 @@ angular.module('mendigames')
 function($scope, $routeParams, EM, Ocam, $location) {
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: {id: $routeParams.campaignId}},
-        'condition': { _2o: [], _2m: [], query: {}},
-        'power': { _2o: [], _2m: [], query: {haspower__isnull: false}},
-        'has_power': { _2o: ['power'], _2m: [],
-            query: {character__campaign: $routeParams.campaignId}},
-        'character': { _2o: [], _2m: ['has_power'],
-            query: {campaign: $routeParams.campaignId}}
+        'character': { _2o: ['container'], _2m: [],
+            query: {campaign: $routeParams.campaignId}},
+        'container': { _2o: [], _2m: [], query: {campaign: $routeParams.campaignId}},
     };
     var syncEntities = [
-        'has_power',
-        'character',
-        'campaign'
     ];
 
     $scope.campaignId = $routeParams.campaignId;

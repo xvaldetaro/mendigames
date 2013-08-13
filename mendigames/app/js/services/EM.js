@@ -112,6 +112,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         .then(function(newE) {
             $log.log('Received Add '+entity+' response');
             U.replace(entData.list, e, newE);
+            entData.edict[newE[get_pk(entity)]] = newE;
             merge_related(entity, newE);
             $rootScope.$broadcast('EM.new_list.'+entity);
             return newE;
@@ -145,7 +146,6 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
             return;
         var entData = all[entity];
         entData.list.push(instance);
-        var i = entData.list.length-1;
         entData.edict[instance[get_pk(entity)]] = instance;
     }
     function remove_list(entity, query) {
@@ -180,6 +180,8 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         for(var entity in emmd){
             emmd[entity].pk = emmd[entity].pk || 'id';
             all[entity] = {};
+            all[entity].list = [];
+            all[entity].edict = {};
             emmd[entity].reverse = [];
         }
         for(var entity in emmd){

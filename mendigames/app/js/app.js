@@ -28,9 +28,13 @@ angular.module('mendigames',
         templateUrl: static_url+'mendigames/partials/management/management.html',
         controller: 'ManagementCtrl'
     });
+    $routeProvider.when('/campaign/:campaignId/management/character/', {
+        templateUrl: static_url+'mendigames/partials/management/character.html',
+        controller: 'ManagementNewCharacterCtrl'
+    });
     $routeProvider.when('/campaign/:campaignId/management/character/:characterId', {
         templateUrl: static_url+'mendigames/partials/management/character.html',
-        controller: 'ManagementCharacterCtrl'
+        controller: 'ManagementEditCharacterCtrl'
     });
 }])
 

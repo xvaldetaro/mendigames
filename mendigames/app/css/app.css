@@ -31,3 +31,6 @@ label {
 
 .modal-body {
   max-height: 700px; }
+
+.droppable-area {
+  min-height: 50px; }

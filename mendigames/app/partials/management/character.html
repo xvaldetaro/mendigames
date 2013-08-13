@@ -27,9 +27,68 @@
             </div>
         </div>
         <legend>Powers</legend>
-        <div ng-controller="HasPowerController" ng-repeat="hasPower in c._2m.has_powers()" ng-click="use_power()" class="power-use-button {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" tooltip-popup-delay='400' tooltip="{{hasPower._2o.power().name}} - {{hasPower._2o.power().action}}">
-                        {{hasPower._2o.power().level}}
-                    </div>
+        <div class="row-fluid" ng-controller="ManagementCharacterPowerCtrl">
+            <div class="span6 well">
+                <h5>{{c.name}}'s Powers</h5>
+                <table class="table table-striped" btf-dragon-drop-function="'power_drop'" class="droppable-area">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Level</th>
+                            <th>Usage</th>
+                            <th>Action</th>
+                            <th>Remove?</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+                       <tr ng-repeat="(pi, power) in cPowers">
+                           <td>{{power.name}}</td>
+                           <td>{{power.level}}</td>
+                           <td>{{power.usage}}</td>
+                           <td>{{power.action}}</td>
+                           <td><i class="icon-trash" ng-click="delete_power(pi)"></i></td>
+                       </tr>
+                   </tbody> 
+                </table>
+            </div>
+            <div class="span6 well">
+                <h5>Power Compendium</h5>
+                <form class="form-search">
+                  <input type="text" ng-model="pName" class="input-medium search-query">
+                    <select class="input-small" ng-model="pUsage" ng-options="usage.name for usage in pUsages"><option value="">-Usage-</option></select>
+                    <select class="input-small" ng-model="pAction" ng-options="action.name for action in pActions"><option value="">-Action-</option></select>
+                    Level:
+                    <input type="text" class="input-nano" ng-model="pLevel" maxlength="" placeholder="">
+                  <button ng-click="search()" class="btn">Search</button>
+                </form>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Add</th>
+                            <th>Name</th>
+                            <th>Level</th>
+                            <th>Usage</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                   <tbody btf-dragon="(pi, power) in powers" btf-double-dragon class="droppable-area">
+                       <tr>
+                           <td><i class="icon-arrow-left" ng-click="add_power(power)"></i></td>
+                           <td ng-click="compendium(power)">{{power.name}}</td>
+                           <td>{{power.level}}</td>
+                           <td>{{power.usage}}</td>
+                           <td>{{power.action}}</td>
+                       </tr>
+                   </tbody> 
+                </table>
+                <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
+            </div>
+            <!-- Modal -->
+            <div class="wizards-modal" modal="wizardsModal" close="wizardsModal = false;">
+                <div ng-bind-html="modalPower.html_description" id="detail">
+                </div>
+            </div>
+        </div>
         <div class="control-group">
             <div class="controls">
                 <button class="btn btn-success" ng-click="save()">Save</button>

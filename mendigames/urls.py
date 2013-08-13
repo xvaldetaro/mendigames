@@ -56,6 +56,7 @@ urlpatterns = patterns('',
     url(r'^magic/(?P<pk>[0-9]+)/?$', views.MagicDetail.as_view()),
 
     url(r'^magic_page/?$', views.MagicPage.as_view()),
+    url(r'^power_page/?$', views.PowerPage.as_view()),
 
     url(r'^rev/?$', views.RevView.as_view()),
 )

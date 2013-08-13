@@ -122,6 +122,13 @@ class MagicPage(RevListView):
     paginate_by_param = 'page_size'
 
 
+class PowerPage(RevListView):
+    queryset = models.Power.objects.all()
+    serializer_class = serializers.PowerSerializer
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+
+
 # Character Views
 class CharacterList(RevListView):
     queryset = models.Character.objects.all()
