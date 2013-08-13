@@ -1,12 +1,13 @@
 # Create your views here.
 from django.views.generic.base import TemplateView
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, renderers, status, generics
+from rest_framework import viewsets, renderers, status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from mendigames import models
 from mendigames import serializers
 from django.core.cache import cache
+from django.contrib.auth import authenticate, login
 import re
 
 
@@ -21,7 +22,7 @@ class RevJSONRenderer(renderers.JSONRenderer):
 
 class RevListView(generics.ListCreateAPIView):
     renderer_classes = (RevJSONRenderer,)
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def delete(self, request, format=None):
         queryset = self.get_queryset()
         queryset.delete()
@@ -77,7 +78,7 @@ class RevListView(generics.ListCreateAPIView):
 
 class RevDetailView(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = (RevJSONRenderer,)
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def destroy(self, request, *args, **kwargs):
         self.get_serializer().save_revision()
         super(RevDetailView, self).destroy(request, *args, **kwargs)
@@ -116,7 +117,25 @@ class IndexView(TemplateView):
     template_name = 'mendigames/index.html'
 
 
+class AuthView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request, format=None):
+        username = request.DATA['username']
+        password = request.DATA['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 class SummaryView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def post(self, request, format=None):
         text = request.DATA['summary']
         names = re.findall("""[\w'\d\s]+\:\s((?:[\w'\d]+\s*)+)(?:\n|$)""", text)

@@ -12,6 +12,32 @@
             <a href="#/campaign/{{campaign}}/management/">Management</a>
         </li>
       </ul>
-      <a class="pull-right" href="#">Mendigames</a>
+      <a class="pull-right" ng-click="loginModal = true;">LogIn</a>
+    </div>
+    <!-- Modal -->
+    <div class="modal" modal="loginModal" close="cancel()">
+      <div class="modal-header">
+            <h3>Log in</h3>
+        </div>
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Username</label>
+                <div class="controls">
+                <input type="text" class="input-large" ng-model="username" maxlength="" placeholder="Username">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Password</label>
+                <div class="controls">
+                <input type="password" class="input-large" ng-model="password" maxlength="" placeholder="Password">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" ng-click="login()">Login</button>
+                    <button class="btn" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

@@ -60,4 +60,10 @@ urlpatterns = patterns('',
     url(r'^summary/?$', views.SummaryView.as_view()),
 
     url(r'^rev/?$', views.RevView.as_view()),
+
+    url(r'^auth/', views.AuthView.as_view()),
+)
+
+urlpatterns += patterns('',
+    
 )
