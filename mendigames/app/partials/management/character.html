@@ -29,7 +29,10 @@
         <legend>Powers</legend>
         <div class="row-fluid" ng-controller="ManagementCharacterPowerCtrl">
             <div class="span6 well">
-                <h5>{{c.name}}'s Powers</h5>
+                <div>
+                    <h5 class="inline">{{c.name}}'s Powers</h5>
+                    <div class="btn pull-right" ng-click="remove_all()"><i class="icon-trash"></i>Remove All</div>
+                </div>
                 <table class="table table-striped" btf-dragon-drop-function="'power_drop'" class="droppable-area">
                     <thead>
                         <tr>
@@ -52,7 +55,10 @@
                 </table>
             </div>
             <div class="span6 well">
-                <h5>Power Compendium</h5>
+                <div>
+                    <h5 class="inline">Power Compendium</h5><div class="btn pull-right" ng-click="from_summary()">Paste Summary</div>
+                    <div class="btn pull-right" ng-click="add_all()"><i class="icon-arrow-left"></i>Add All</div>
+                </div>
                 <form class="form-search">
                   <input type="text" ng-model="pName" class="input-medium search-query">
                     <select class="input-small" ng-model="pUsage" ng-options="usage.name for usage in pUsages"><option value="">-Usage-</option></select>

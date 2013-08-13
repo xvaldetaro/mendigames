@@ -125,7 +125,7 @@ span.dropdown-container {
     line-height: 0;
     cursor: pointer; }
 
-div.inline {
+.inline {
   display: inline-block; }
 
 .dropdown-menu li {

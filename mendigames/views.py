@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from mendigames import models
 from mendigames import serializers
 from django.core.cache import cache
+import re
 
 
 class RevJSONRenderer(renderers.JSONRenderer):
@@ -113,6 +114,21 @@ class GroupViewSet(viewsets.ModelViewSet):
 #### Mendigames views #######
 class IndexView(TemplateView):
     template_name = 'mendigames/index.html'
+
+
+class SummaryView(APIView):
+    def post(self, request, format=None):
+        text = request.DATA['summary']
+        names = re.findall("""[\w'\d\s]+\:\s((?:[\w'\d]+\s*)+)(?:\n|$)""", text)
+        powers = []
+        for name in names:
+            try:
+                p = models.Power.objects.get(name=name)
+                powers.append(p)
+            except:
+                pass
+        serializer = serializers.PowerSerializer(powers, many=True)
+        return Response(serializer.data)
 
 
 class MagicPage(RevListView):

@@ -120,9 +120,9 @@ function($scope, $routeParams, EM, Och, $location, Ocam, $http) {
     }
 }])
 
-.controller('ManagementCharacterPowerCtrl', ['$scope', '$routeParams', 'EM', 'Och','$location',
+.controller('ManagementCharacterPowerCtrl', ['$scope', '$routeParams', 'EM', 'Och','InputDialog',
 'Ocam','$http','Wizards',
-function($scope, $routeParams, EM, Och, $location, Ocam, $http, Wizards) {
+function($scope, $routeParams, EM, Och, InputDialog, Ocam, $http, Wizards) {
     $scope.pUsages = [{name: 'At-Will', abbr: 'W'},
     {name: 'Encounter', abbr: 'E'},
     {name: 'Daily', abbr: 'D'}];
@@ -177,10 +177,31 @@ function($scope, $routeParams, EM, Och, $location, Ocam, $http, Wizards) {
         $scope.cPowers.splice(pi, 1);
     };
 
+    $scope.remove_all = function() {
+        $scope.cPowers.length = 0;
+    };
+
+    $scope.add_all = function() {
+        for(var i=0, len=$scope.powers.length; i<len; i++) {
+            $scope.add_power($scope.powers[i]);
+        }
+    };
+
     $scope.compendium = function(power) {
         Wizards('power', 'power', power).then(function(){
             $scope.modalPower = power;
             $scope.wizardsModal = true;
         });
     };
+
+    $scope.from_summary = function() {
+        InputDialog('input_textarea',{title: 'Paste Character Summary', label: 'Summary'})
+        .then(function(result){
+            if(!result)
+                return;
+            $http.post('/summary', {summary:result}).then(function(data){
+                $scope.powers = data.data;
+            });
+        });
+    }
 }]);
