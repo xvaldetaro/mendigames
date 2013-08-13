@@ -254,6 +254,7 @@ function(Restangular, $routeParams, $rootScope, $http, $timeout,$log,U,$q) {
         };
         return res;
     }
+    start_poll_timeout();
     return {
         update: update,
         add: add,

@@ -15,7 +15,12 @@ function($scope, $routeParams, EM, Ocam, $location) {
 
     $scope.campaignId = $routeParams.campaignId;
     $scope.$on('EM.new_list.character', function(){
-        $scope.characterList = EM.listSlice('character');
+        var fullList = EM.list('character');
+        $scope.characterList = [];
+        for (var i = fullList.length - 1; i >= 0; i--) {
+            if(fullList[i].type!=='Enemy')
+                $scope.characterList.push(fullList[i]);
+        }
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
