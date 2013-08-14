@@ -69,8 +69,8 @@
             </div>
         </div>
     </div>
-    <div ng-show="list()" class="characters-container">
-        <table class="character-list">
+    <div class="characters-container" ng-switch="character_container_display()">
+        <table ng-switch-when="list" class="character-list">
             <tr>
                 <th>Init</th>
                 <th>Name</th>
@@ -114,32 +114,32 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div ng-show="detail()" class="characters-container">
-        <div class="button" ng-click="open_list()"><i class="icon-arrow-left icon-white"></i>Character List</div>
-        <div class="character-detail" ng-controller="CharacterDetailCtrl">
-            <div class="gui-row">
-                {{c.name}}
-            </div>
-            <div class="gui-row">
-                <div class="gui-group">
-                    <div class="gui-text-label">Max Hit Points</div>
-                    <div class="gui-stat">{{c.hit_points}}</div>
+        <div ng-switch-when="detail">
+            <div class="button" ng-click="open_list()"><i class="icon-arrow-left icon-white"></i>Character List</div>
+            <div class="character-detail" ng-controller="CharacterDetailCtrl">
+                <div class="gui-row">
+                    {{c.name}}
                 </div>
-                <div class="gui-group">
-                    <div class="gui-text-label">Max Healing Surges</div>
-                    <div class="gui-stat">{{c.healing_surges}}</div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-text-label">Max Hit Points</div>
+                        <div class="gui-stat">{{c.hit_points}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-text-label">Max Healing Surges</div>
+                        <div class="gui-stat">{{c.healing_surges}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-text-label">Experience Points</div>
+                        <div class="gui-stat">{{c.hit_points}}</div>
+                    </div>
                 </div>
-                <div class="gui-group">
-                    <div class="gui-text-label">Experience Points</div>
-                    <div class="gui-stat">{{c.hit_points}}</div>
-                </div>
-            </div>
-            <div class="gui-row">Defenses</div>
-            <div class="gui-row">
-                <div class="gui-group">
-                    <div class="gui-text-label">Armor Class</div>
-                    <div class="gui-stat">{{c.ac}}</div>
+                <div class="gui-row">Defenses</div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-text-label">Armor Class</div>
+                        <div class="gui-stat">{{c.ac}}</div>
+                    </div>
                 </div>
             </div>
         </div>

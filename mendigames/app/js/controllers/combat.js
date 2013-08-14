@@ -62,11 +62,10 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
         $scope.detailOn = false;
         $scope.detailCharacter = null;
     };
-    $scope.detail = function() {
-        return $scope.detailOn;
-    };
-    $scope.list = function() {
-        return !$scope.detailOn;
+    $scope.character_container_display = function() {
+        if($scope.detailOn)
+            return 'detail';
+        return 'list';
     };
 }])
 
@@ -161,7 +160,7 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
     };
     $scope.remove_condition = function(hci){
         var name = $scope.c._2m.has_conditions()[hci]._2o.condition().name;
-        Och.remove_condition($scope.c, hci)
+        Och.remove_condition($scope.c, hci);
 
         Log($scope.c.name+' is not: '+name+' anymore');
     };
@@ -169,7 +168,7 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
         // The condition dropped is the raw Restangular condition object
         if(!condition.wizards_id && condition.condition){
             Och.switch_condition($scope.c, condition);
-            return; 
+            return;
         }
 
         Och.add_condition($scope.c, condition,
