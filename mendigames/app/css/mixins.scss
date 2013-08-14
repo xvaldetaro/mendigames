@@ -20,6 +20,13 @@ $IFRONT: white;
   border-color: $BLOCKBORDER;
   border-radius: 3px;
 }
+@mixin sq_buttonify($color) {
+  @include background-image(linear-gradient(to top, darken($color,9%),lighten($color,9%)));
+  cursor: pointer;
+  &:hover{
+      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
+  }
+}
 @mixin flatify($color) {
   background-image: none;
   background-color: $color;

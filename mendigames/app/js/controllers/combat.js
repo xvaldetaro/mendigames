@@ -52,25 +52,40 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
             }, 300);
         },100);
     }, true);
+
+    $scope.detailOn = false;
+    $scope.open_detail = function(c) {
+        $scope.detailOn = true;
+        $scope.detailCharacter = c;
+    };
+    $scope.open_list = function() {
+        $scope.detailOn = false;
+        $scope.detailCharacter = null;
+    };
+    $scope.detail = function() {
+        return $scope.detailOn;
+    };
+    $scope.list = function() {
+        return !$scope.detailOn;
+    };
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
 'InputDialog',
 function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
     $scope.Och = Och;
-
     $scope.change_xp = function () {
         InputDialog('input',{title: 'Give Experience Points', label: 'how many?', size: 'mini'})
         .then(function(result){
             if(!result)
                 return;
-            Och.change_xp($scope.ch, result);
+            Och.change_xp($scope.c, result);
         });
     };
     $scope.has_turn = function() {
         if(!$scope.campaign)
             return '';
-        if($scope.chi == $scope.campaign.turn)
+        if($scope.ci == $scope.campaign.turn)
             return "turn";
         return '';
     };
@@ -114,8 +129,8 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
         d.open().then(function(result){
           if(result)
           {
-            Och.set_init($scope.ch, result.result);
-            Log($scope.ch.name+" init set to: "+result.log);
+            Och.set_init($scope.c, result.result);
+            Log($scope.c.name+" init set to: "+result.log);
           }
         });
     };
@@ -129,48 +144,50 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
           {
             if(result.heal == 'heal')
             {
-                Och.change_hp($scope.ch, result.result);
-                Log($scope.ch.name+" gained "+result.log+" hit points");
+                Och.change_hp($scope.c, result.result);
+                Log($scope.c.name+" gained "+result.log+" hit points");
             }
             else
             {
-                var bloodied = Och.bloodied($scope.ch);
-                Och.change_hp($scope.ch, -1*result.result);
-                Log($scope.ch.name+" lost "+result.log+" hit points");
+                var bloodied = Och.bloodied($scope.c);
+                Och.change_hp($scope.c, -1*result.result);
+                Log($scope.c.name+" lost "+result.log+" hit points");
 
-                if(bloodied == false && Och.bloodied($scope.ch) == true)
-                    Log($scope.ch.name+" is Bloodied!");
+                if(bloodied == false && Och.bloodied($scope.c) == true)
+                    Log($scope.c.name+" is Bloodied!");
             }
           }
         });
     };
     $scope.remove_condition = function(hci){
-        var name = $scope.ch._2m.has_conditions()[hci]._2o.condition().name;
-        Och.remove_condition($scope.ch, hci)
+        var name = $scope.c._2m.has_conditions()[hci]._2o.condition().name;
+        Och.remove_condition($scope.c, hci)
 
-        Log($scope.ch.name+' is not: '+name+' anymore');
+        Log($scope.c.name+' is not: '+name+' anymore');
     };
     $scope.drop_condition = function(condition) {
         // The condition dropped is the raw Restangular condition object
         if(!condition.wizards_id && condition.condition){
-            Och.switch_condition($scope.ch, condition);
+            Och.switch_condition($scope.c, condition);
             return; 
         }
 
-        Och.add_condition($scope.ch, condition,
+        Och.add_condition($scope.c, condition,
             $scope.characterList[$scope.campaign.turn].init, $scope.campaign.round);
 
-        Log($scope.ch.name+' is: '+condition.name);
+        Log($scope.c.name+' is: '+condition.name);
     };
 }])
 
-.controller('HasPowerController', ['$scope', 'EM', 'Ohpo', 'Log',
+.controller('CharacterDetailCtrl', ['$scope', 'EM', 'Ohpo', 'Log',
 function($scope, EM, Ohpo, Log) {
+    $scope.c = $scope.detailCharacter;
+
     $scope.use_power = function(){
         if($scope.hasPower.used)
-            Log($scope.ch.name+' used: '+$scope.hasPower._2o.power().name);
+            Log($scope.c.name+' used: '+$scope.hasPower._2o.power().name);
         else
-            Log($scope.ch.name+' recharged: '+$scope.hasPower._2o.power().name);
+            Log($scope.c.name+' recharged: '+$scope.hasPower._2o.power().name);
         Ohpo.use_power($scope.hasPower);
     };
 }])
@@ -181,6 +198,17 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
+    $scope.multipliers = [];
+    for(var i=1; i<20; i++) {
+        $scope.multipliers.push(i);
+    }
+    $scope.modifiers = [];
+    for(var i=0; i<15; i++) {
+        $scope.modifiers.push(i);
+    }
+    $scope.modifier = 0;
+    $scope.multiplier = 1;
+    $scope.dices = [4,6,8,10,12,20,100];
     $scope.previous_turn = function(){
         Ocam.previous_turn($scope.campaign, $scope.characterList);
     };

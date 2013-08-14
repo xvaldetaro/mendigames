@@ -2,73 +2,189 @@
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
 
-// -------------- Colors
-$HP: #bd362f;
-$MISC: rgb(56,56,56);
-$AP: rgb(56,56,56);
-$HS: rgb(0,158,197);
-$XP: rgb(89,150,83);
-$GOLD: rgb(255,198,19);
-$ENCOUNTER: #961334;
-$ATWILL: darken(#619869,15%);
-$DAILY: #4d4d4f;
-$BGRAY: #ddd;
-$GBORDER: rgb(213,213,213);
+$DARKFONT: rgb(70,70,70);
 
+.gui-row {
+  text-align: left;
+  vertical-align: middle;
+  background-color: rgb(245,245,245);
+  padding: {
+    left: 5px;
+    top: 1px;
+    bottom: 1px;
+  }
 
+  span {
+    width: 5em;
+  }
 
-// ----------- Docked Menu Config
-div.docked-menu {
-  position: fixed;
-  right: 0%;
-  top: 41px;
-  width: 400px;
-  height:80%;
-  
-  .menu-group {
-    @include background-image(radial-gradient(rgb(220,220,220),rgb(200,200,200)));
-    color: $FRONT;
-    @include borderfy();
-    padding: 1em;
-    label {
+  div {
+    display: inline-block;
+    color: white;
+    &.gui-text{
+      color: $DARKFONT;
+      width: 4.5em;
+    }
+    &.gui-textlabel{
+      color: $DARKFONT;
+      width: 4.5em;
+    }
+    &.gui-group{
+      padding-left: 5px;
+      margin-right: 10px;
+      background-color: rgb(225,225,225);
+    }
+    &.gui-row-title{
+      padding-left: 5px;
       font-weight: bold;
+      color: $DARKFONT;
+
     }
   }
-  
-  .borderdices {
-    @include borderfy();
-  }
 
-  .controlsmargin {
-    margin-top: 10px;
-    vertical-align: middle;
+  p {
+    display: inline-block;
   }
-
-  .totalcenteralign {
-    vertical-align: middle;
+  select {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
   }
 }
 
-div.btn-inverse {
+.button {
+  text-align: center;
+  vertical-align: middle;
+  @include buttonify($DARKFONT);
+  color: white;
+  font-weight: bold;
+  &.dice{
+    min-width: 2em;
+  }
+  &.icon {
+    width: 1.8em;
+  }
+}
+
+.characters-container {
+  margin-top: 10px;
+}
+
+table.character-list {
+  border: {
+    color: rgb(225,225,225);
+    style: solid;
+    width: 1px;
+    bottom: 0px;
+    right: 0px;
+    radius: 3px;
+  }
+  tr {
+    padding: {
+      top: 2px;
+      bottom: 2px;
+    }
+    border-bottom: {
+      color: rgb(225,225,225);
+      style: solid;
+      width: 1px;
+    }
+  }
+  td,th {
+    padding: {
+      left: 4px;
+      right: 4px;
+    }
+    border-right: {
+      color: rgb(225,225,225);
+      style: solid;
+      width: 1px;
+    }
+  }
+  th{
+    background-color: $DARKFONT;
+    color: white;
+  }
+}
+
+@mixin button-cell($color) {
+  @include background-image(linear-gradient(to top, darken($color,3%),lighten($color,6%)));
+  cursor: pointer;
+  &:hover{
+      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
+  }
+}
+.button-cell {
+  font-weight: bold;
+  color: $DARKFONT;
+  @include button-cell(rgb(245,245,245));
+  &.hp {
+    @include button-cell(rgb(245,205,205));
+    color: rgb(94,20,20);
+  }
+  &.hs {
+    @include button-cell(rgb(205,205,245));
+    color: rgb(20,20,94);
+  }
+  &.ap {
+    @include button-cell(rgb(245,245,205));
+    color: rgb(94,94,20);
+  }
+  &.xp {
+    @include button-cell(rgb(205,245,205));
+    color: rgb(20,94,20);
+  }
+}
+
+.board-cell {
+  div {
+    display: inline-block;
+  }
+  &.init {
+    white-space: nowrap;
     font-weight: bold;
+    .incell {
+      color: $DARKFONT;
+      @include button-cell(rgb(245,245,245));
+      min-width: 1em;
+      text-align: center;
+    }
+  }
+  &.power {
+    .incell {
+      display: inline-block;
+      text-align: center;
+      border-color: rgb(213,213,213);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 3px;
+      color: white;
+      font-weight: bold;
+      width: 1.3em;
+
+      $ENCOUNTER: #961334;
+      $ATWILL: darken(#619869,15%);
+      $DAILY: #4d4d4f;
+      &.at-will {
+        display: none;
+      }
+      &.encounter {
+        @include buttonify($ENCOUNTER);
+        
+        &.used {
+          @include mutify($ENCOUNTER);
+        }
+      }
+      &.daily {
+        @include buttonify($DAILY);
+        &.used {
+          @include mutify($DAILY);
+        }
+      }
+    }
+  }
 }
 
-span.uneditable-input {
-    &.turn {
-        color: $FRONT;
-        background-color: $IFRONT;
-        font-weight: bold;
-        text-align: center;
-    }
-}
-// ----------- Docked Menu Config
-#console {
-  @include borderfy();
-  @include background-image(radial-gradient(rgb(248,236,194),darken(rgb(248,236,194),10%)));
-  overflow: auto;
-  overflow-x: hidden;
-  height: 20%;
-}
 div.condition-box {
   display: inline-block;
   text-align: center;
@@ -78,210 +194,8 @@ div.condition-box {
   border-top: 0px;
   border-left: 0px;
   border-radius: 3px;
-  color: $IFRONT;
+  color: white;
   font-weight: bold;
   width: 1.3em;
-  @include buttonify($MISC);
+  @include buttonify($DARKFONT);
 }
-// ------------- Combat List Config
-div.character-block {
-  border: 1px solid lightgray;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  padding-top: 0px;
-  padding: 2px;
-  padding-right: 4px;
-  margin-bottom: 5px;
-  &.Player {
-    @include background-image(
-      radial-gradient(rgb(215,226,234),
-        rgb(200,200,234)));
-    color: $FRONT;
-    border-color: $BLOCKBORDER;
-    &.turn {
-      box-shadow: 0px 0px 20px rgb(0,0,255);
-    }
-  }
-  &.Enemy {
-    @include background-image(
-      radial-gradient(rgb(245,226,215),
-        rgb(245,200,200)));
-    color: $FRONT;
-    border-color: rgb(213, 213, 213);
-    &.turn {
-      box-shadow: 0px 0px 20px rgb(255,0,0);
-    }
-  }
-  &.Neutral {
-    @include background-image(
-      radial-gradient($BLOCK,
-        rgb(200,200,200)));
-    color: $FRONT;
-    border-color: rgb(213, 213, 213);
-    &.turn {
-      box-shadow: 0px 0px 20px rgb(0,255,0);
-    }
-  }
-}
-  
-div.name-container {
-  padding-top: 0.2em;
-  padding-left: 0.1em;
-  font-size: 1.4em;
-  font-weight: bold;
-  white-space: nowrap;
-  i {
-    vertical-align: middle;
-  }
-  p {
-    display: inline-block;
-    font-family: Verdana;
-  }
-  color: $FRONT;
-  cursor: pointer;
-}
-span.dropdown-container {
-  position: relative;
-  right: 0%;
-  top: 0%;
-  li{
-    line-height: 0;
-    cursor: pointer;
-  }
-}
-.inline {
-  display: inline-block;
-}
-
-.dropdown-menu {
-  li {
-    cursor:pointer;
-  }
-}
-.stat-number {
-  font-size: 1.3em;
-  font-weight: bold;
-  min-width: 3em;
-  display: inline-block;
-  color: $IFRONT;
-  white-space: nowrap;
-    text-align: center;
-  p {
-    display: inline-block;
-    margin-top: 0.2em;
-    margin-bottom: 0;
-    text-align: center;
-    padding-left: 0.1em;
-    padding-right: 0.1em;
-  }
-  i {
-    height: 1em;
-    vertical-align: middle;
-    display: inline-block;
-  }
-  &.init {
-    @include buttonify($BLOCK);
-    color: $FRONT;
-    min-width: 2.2em;
-  }
-  &.sub-init {
-    @include buttonify($AP);
-    min-width: 2.2em;
-  }
-  &.hp {
-    &.Player,&.Neutral { 
-      @include buttonify($HP);
-    }
-    &.Enemy { 
-      @include buttonify(rgb(103,32,78));
-    }
-  }
-  &.ap {
-    @include buttonify($AP);
-  }
-  &.hs {
-    @include buttonify($HS);
-  }
-  &.gold {
-    @include buttonify($GOLD);
-    font-size: 1.2em;
-  }
-  &.xp {
-    @include buttonify($XP);
-    font-size: 1.2em;
-  }
-  &.dice {
-    @include buttonify($AP);
-    min-width: 3em;
-    min-height: 1.7em;
-  }
-}
-div.has-conditions-box {
-  @include background-image(radial-gradient($BLOCKBORDER,$BLOCK));
-  border: 1px solid lightgray;
-  border-color: rgb(213, 213, 213);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  padding-top: 0px;
-  min-height: 1.6em;
-}
-
-.power-span {
-  padding-top: 3px;
-  @include background-image(radial-gradient($BLOCKBORDER,$BLOCK));
-  @include borderfy();
-}
-
-div.dialog-content {
-  margin: 1em;
-}
-div.button-cell{
-  display: inline-block;
-  color: $FRONT;
-  font-weight: bold;
-  min-width: 2.5em;
-  height: 2em;
-  text-align: center;
-  vertical-align: middle;
-  @include buttonify($BGRAY);
-}
-
-.stat-edit {
-  width: 3em;
-  height: 2em;
-  font-size: 2em;
-}
-div.power-container {
-  padding-top: 0px;
-  padding-bottom: 2px;
-  div.power-use-button {
-    display: inline-block;
-    text-align: center;
-    border-color: rgb(213,213,213);
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px;
-    color: $IFRONT;
-    font-weight: bold;
-    width: 1.3em;
-    &.at-will {
-      display: none;
-    }
-    &.encounter {
-      @include buttonify($ENCOUNTER);
-      
-      &.used {
-        @include mutify($ENCOUNTER);
-      }
-    }
-    &.daily {
-      @include buttonify($DAILY);
-      &.used {
-        @include mutify($DAILY);
-      }
-    }
-  }
-}
-

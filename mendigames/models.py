@@ -57,6 +57,13 @@ class Character(models.Model):
     container = models.OneToOneField(Container, null=True, blank=True, 
         related_name='character')
 
+    insight = models.IntegerField(default=10)
+    perception = models.IntegerField(default=10)
+    ac = models.IntegerField(default=10)
+    fort = models.IntegerField(default=10)
+    refl = models.IntegerField(default=10)
+    will = models.IntegerField(default=10)
+    
     type = models.CharField(max_length=7, choices=TYPES, default='Player')
     name = models.CharField(max_length=20, default='Unnamed')
     healing_surges = models.IntegerField(default=6)

@@ -1,51 +1,200 @@
 /* app css stylesheet */
-div.docked-menu {
-  position: fixed;
-  right: 0%;
-  top: 41px;
-  width: 400px;
-  height: 80%; }
-  div.docked-menu .menu-group {
-    background-image: -webkit-radial-gradient( gainsboro, #c8c8c8);
-    background-image: radial-gradient(   gainsboro, #c8c8c8);
-    color: #333333;
-    border-color: #dddddd;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px;
-    padding: 1em; }
-    div.docked-menu .menu-group label {
-      font-weight: bold; }
-  div.docked-menu .borderdices {
-    border-color: #dddddd;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px; }
-  div.docked-menu .controlsmargin {
-    margin-top: 10px;
-    vertical-align: middle; }
-  div.docked-menu .totalcenteralign {
-    vertical-align: middle; }
+.gui-row {
+  text-align: left;
+  vertical-align: middle;
+  background-color: whitesmoke;
+  padding-left: 5px;
+  padding-top: 1px;
+  padding-bottom: 1px; }
+  .gui-row span {
+    width: 5em; }
+  .gui-row div {
+    display: inline-block;
+    color: white; }
+    .gui-row div.gui-text {
+      color: #464646;
+      width: 4.5em; }
+    .gui-row div.gui-textlabel {
+      color: #464646;
+      width: 4.5em; }
+    .gui-row div.gui-group {
+      padding-left: 5px;
+      margin-right: 10px;
+      background-color: #e1e1e1; }
+    .gui-row div.gui-row-title {
+      padding-left: 5px;
+      font-weight: bold;
+      color: #464646; }
+  .gui-row p {
+    display: inline-block; }
+  .gui-row select {
+    display: inline-block;
+    margin: 0;
+    padding: 0; }
 
-div.btn-inverse {
-  font-weight: bold; }
-
-span.uneditable-input.turn {
-  color: #333333;
-  background-color: white;
-  font-weight: bold;
-  text-align: center; }
-
-#console {
+.button {
+  text-align: center;
+  vertical-align: middle;
+  background-image: -webkit-linear-gradient(bottom, #2f2f2f, #5d5d5d);
+  background-image: linear-gradient(to top, #2f2f2f, #5d5d5d);
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
   border-color: #dddddd;
+  border-radius: 3px;
+  color: white;
+  font-weight: bold; }
+  .button:hover {
+    background-color: #464646;
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
+    background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
+    background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
+  .button.dice {
+    min-width: 2em; }
+  .button.icon {
+    width: 1.8em; }
+
+.characters-container {
+  margin-top: 10px; }
+
+table.character-list {
+  border-color: #e1e1e1;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: 0px;
+  border-right: 0px;
+  border-radius: 3px; }
+  table.character-list tr {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-bottom-color: #e1e1e1;
+    border-bottom-style: solid;
+    border-bottom-width: 1px; }
+  table.character-list td, table.character-list th {
+    padding-left: 4px;
+    padding-right: 4px;
+    border-right-color: #e1e1e1;
+    border-right-style: solid;
+    border-right-width: 1px; }
+  table.character-list th {
+    background-color: #464646;
+    color: white; }
+
+.button-cell {
+  font-weight: bold;
+  color: #464646;
+  background-image: -webkit-linear-gradient(bottom, #ededed, white);
+  background-image: linear-gradient(to top, #ededed, white);
+  cursor: pointer; }
+  .button-cell:hover {
+    background-color: whitesmoke;
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
+    background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
+    background-image: radial-gradient(  whitesmoke, #dedede, white); }
+  .button-cell.hp {
+    background-image: -webkit-linear-gradient(bottom, #f2c0c0, #fae7e7);
+    background-image: linear-gradient(to top, #f2c0c0, #fae7e7);
+    cursor: pointer;
+    color: #5e1414; }
+    .button-cell.hp:hover {
+      background-color: #f5cdcd;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f5cdcd), color-stop(50%, #eda7a7), color-stop(100%, #fdf3f3));
+      background-image: -webkit-radial-gradient(#f5cdcd, #eda7a7, #fdf3f3);
+      background-image: radial-gradient(  #f5cdcd, #eda7a7, #fdf3f3); }
+  .button-cell.hs {
+    background-image: -webkit-linear-gradient(bottom, #c0c0f2, #e7e7fa);
+    background-image: linear-gradient(to top, #c0c0f2, #e7e7fa);
+    cursor: pointer;
+    color: #14145e; }
+    .button-cell.hs:hover {
+      background-color: #cdcdf5;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #cdcdf5), color-stop(50%, #a7a7ed), color-stop(100%, #f3f3fd));
+      background-image: -webkit-radial-gradient(#cdcdf5, #a7a7ed, #f3f3fd);
+      background-image: radial-gradient(  #cdcdf5, #a7a7ed, #f3f3fd); }
+  .button-cell.ap {
+    background-image: -webkit-linear-gradient(bottom, #f2f2c0, #fafae7);
+    background-image: linear-gradient(to top, #f2f2c0, #fafae7);
+    cursor: pointer;
+    color: #5e5e14; }
+    .button-cell.ap:hover {
+      background-color: #f5f5cd;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f5f5cd), color-stop(50%, #ededa7), color-stop(100%, #fdfdf3));
+      background-image: -webkit-radial-gradient(#f5f5cd, #ededa7, #fdfdf3);
+      background-image: radial-gradient(  #f5f5cd, #ededa7, #fdfdf3); }
+  .button-cell.xp {
+    background-image: -webkit-linear-gradient(bottom, #c0f2c0, #e7fae7);
+    background-image: linear-gradient(to top, #c0f2c0, #e7fae7);
+    cursor: pointer;
+    color: #145e14; }
+    .button-cell.xp:hover {
+      background-color: #cdf5cd;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #cdf5cd), color-stop(50%, #a7eda7), color-stop(100%, #f3fdf3));
+      background-image: -webkit-radial-gradient(#cdf5cd, #a7eda7, #f3fdf3);
+      background-image: radial-gradient(  #cdf5cd, #a7eda7, #f3fdf3); }
+
+.board-cell div {
+  display: inline-block; }
+.board-cell.init {
+  white-space: nowrap;
+  font-weight: bold; }
+  .board-cell.init .incell {
+    color: #464646;
+    background-image: -webkit-linear-gradient(bottom, #ededed, white);
+    background-image: linear-gradient(to top, #ededed, white);
+    cursor: pointer;
+    min-width: 1em;
+    text-align: center; }
+    .board-cell.init .incell:hover {
+      background-color: whitesmoke;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
+      background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
+      background-image: radial-gradient(  whitesmoke, #dedede, white); }
+.board-cell.power .incell {
+  display: inline-block;
+  text-align: center;
+  border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px;
   border-radius: 3px;
-  background-image: -webkit-radial-gradient( #f8ecc2, #f3de94);
-  background-image: radial-gradient(   #f8ecc2, #f3de94);
-  overflow: auto;
-  overflow-x: hidden;
-  height: 20%; }
+  color: white;
+  font-weight: bold;
+  width: 1.3em; }
+  .board-cell.power .incell.at-will {
+    display: none; }
+  .board-cell.power .incell.encounter {
+    background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
+    background-image: linear-gradient(to top, #6d0e26, #bf1842);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px; }
+    .board-cell.power .incell.encounter:hover {
+      background-color: #961334;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
+      background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
+      background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
+    .board-cell.power .incell.encounter.used {
+      background-image: none;
+      background-color: #3b0815;
+      color: #520a1c; }
+  .board-cell.power .incell.daily {
+    background-image: -webkit-linear-gradient(bottom, #363638, #646466);
+    background-image: linear-gradient(to top, #363638, #646466);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px; }
+    .board-cell.power .incell.daily:hover {
+      background-color: #4d4d4f;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
+      background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
+      background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+    .board-cell.power .incell.daily.used {
+      background-image: none;
+      background-color: #1b1b1b;
+      color: #272728; }
 
 div.condition-box {
   display: inline-block;
@@ -59,317 +208,15 @@ div.condition-box {
   color: white;
   font-weight: bold;
   width: 1.3em;
-  background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
-  background-image: linear-gradient(to top, #212121, #4f4f4f);
+  background-image: -webkit-linear-gradient(bottom, #2f2f2f, #5d5d5d);
+  background-image: linear-gradient(to top, #2f2f2f, #5d5d5d);
   cursor: pointer;
   border-width: 1px;
   border-style: solid;
   border-color: #dddddd;
   border-radius: 3px; }
   div.condition-box:hover {
-    background-color: #383838;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
-    background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
-    background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
-
-div.character-block {
-  border: 1px solid lightgray;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  padding-top: 0px;
-  padding: 2px;
-  padding-right: 4px;
-  margin-bottom: 5px; }
-  div.character-block.Player {
-    background-image: -webkit-radial-gradient( #d7e2ea, #c8c8ea);
-    background-image: radial-gradient(   #d7e2ea, #c8c8ea);
-    color: #333333;
-    border-color: #dddddd; }
-    div.character-block.Player.turn {
-      box-shadow: 0px 0px 20px blue; }
-  div.character-block.Enemy {
-    background-image: -webkit-radial-gradient( #f5e2d7, #f5c8c8);
-    background-image: radial-gradient(   #f5e2d7, #f5c8c8);
-    color: #333333;
-    border-color: #d5d5d5; }
-    div.character-block.Enemy.turn {
-      box-shadow: 0px 0px 20px red; }
-  div.character-block.Neutral {
-    background-image: -webkit-radial-gradient( #f8f8f8, #c8c8c8);
-    background-image: radial-gradient(   #f8f8f8, #c8c8c8);
-    color: #333333;
-    border-color: #d5d5d5; }
-    div.character-block.Neutral.turn {
-      box-shadow: 0px 0px 20px lime; }
-
-div.name-container {
-  padding-top: 0.2em;
-  padding-left: 0.1em;
-  font-size: 1.4em;
-  font-weight: bold;
-  white-space: nowrap;
-  color: #333333;
-  cursor: pointer; }
-  div.name-container i {
-    vertical-align: middle; }
-  div.name-container p {
-    display: inline-block;
-    font-family: Verdana; }
-
-span.dropdown-container {
-  position: relative;
-  right: 0%;
-  top: 0%; }
-  span.dropdown-container li {
-    line-height: 0;
-    cursor: pointer; }
-
-.inline {
-  display: inline-block; }
-
-.dropdown-menu li {
-  cursor: pointer; }
-
-.stat-number {
-  font-size: 1.3em;
-  font-weight: bold;
-  min-width: 3em;
-  display: inline-block;
-  color: white;
-  white-space: nowrap;
-  text-align: center; }
-  .stat-number p {
-    display: inline-block;
-    margin-top: 0.2em;
-    margin-bottom: 0;
-    text-align: center;
-    padding-left: 0.1em;
-    padding-right: 0.1em; }
-  .stat-number i {
-    height: 1em;
-    vertical-align: middle;
-    display: inline-block; }
-  .stat-number.init {
-    background-image: -webkit-linear-gradient(bottom, #e1e1e1, white);
-    background-image: linear-gradient(to top, #e1e1e1, white);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    color: #333333;
-    min-width: 2.2em; }
-    .stat-number.init:hover {
-      background-color: #f8f8f8;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f8f8f8), color-stop(50%, #e1e1e1), color-stop(100%, white));
-      background-image: -webkit-radial-gradient(#f8f8f8, #e1e1e1, white);
-      background-image: radial-gradient(  #f8f8f8, #e1e1e1, white); }
-  .stat-number.sub-init {
-    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
-    background-image: linear-gradient(to top, #212121, #4f4f4f);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    min-width: 2.2em; }
-    .stat-number.sub-init:hover {
-      background-color: #383838;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
-      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
-      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
-  .stat-number.hp.Player, .stat-number.hp.Neutral {
-    background-image: -webkit-linear-gradient(bottom, #982b26, #d24f48);
-    background-image: linear-gradient(to top, #982b26, #d24f48);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .stat-number.hp.Player:hover, .stat-number.hp.Neutral:hover {
-      background-color: #bd362f;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #bd362f), color-stop(50%, #982b26), color-stop(100%, #d24f48));
-      background-image: -webkit-radial-gradient(#bd362f, #982b26, #d24f48);
-      background-image: radial-gradient(  #bd362f, #982b26, #d24f48); }
-  .stat-number.hp.Enemy {
-    background-image: -webkit-linear-gradient(bottom, #441533, #8a2b69);
-    background-image: linear-gradient(to top, #441533, #8a2b69);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .stat-number.hp.Enemy:hover {
-      background-color: #67204e;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #67204e), color-stop(50%, #441533), color-stop(100%, #8a2b69));
-      background-image: -webkit-radial-gradient(#67204e, #441533, #8a2b69);
-      background-image: radial-gradient(  #67204e, #441533, #8a2b69); }
-  .stat-number.ap {
-    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
-    background-image: linear-gradient(to top, #212121, #4f4f4f);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .stat-number.ap:hover {
-      background-color: #383838;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
-      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
-      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
-  .stat-number.hs {
-    background-image: -webkit-linear-gradient(bottom, #007997, #00c3f3);
-    background-image: linear-gradient(to top, #007997, #00c3f3);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .stat-number.hs:hover {
-      background-color: #009ec5;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #009ec5), color-stop(50%, #007997), color-stop(100%, #00c3f3));
-      background-image: -webkit-radial-gradient(#009ec5, #007997, #00c3f3);
-      background-image: radial-gradient(  #009ec5, #007997, #00c3f3); }
-  .stat-number.gold {
-    background-image: -webkit-linear-gradient(bottom, #e4ad00, #ffd141);
-    background-image: linear-gradient(to top, #e4ad00, #ffd141);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    font-size: 1.2em; }
-    .stat-number.gold:hover {
-      background-color: #ffc613;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #ffc613), color-stop(50%, #e4ad00), color-stop(100%, #ffd141));
-      background-image: -webkit-radial-gradient(#ffc613, #e4ad00, #ffd141);
-      background-image: radial-gradient(  #ffc613, #e4ad00, #ffd141); }
-  .stat-number.xp {
-    background-image: -webkit-linear-gradient(bottom, #477843, #70ad6a);
-    background-image: linear-gradient(to top, #477843, #70ad6a);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    font-size: 1.2em; }
-    .stat-number.xp:hover {
-      background-color: #599653;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #599653), color-stop(50%, #477843), color-stop(100%, #70ad6a));
-      background-image: -webkit-radial-gradient(#599653, #477843, #70ad6a);
-      background-image: radial-gradient(  #599653, #477843, #70ad6a); }
-  .stat-number.dice {
-    background-image: -webkit-linear-gradient(bottom, #212121, #4f4f4f);
-    background-image: linear-gradient(to top, #212121, #4f4f4f);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    min-width: 3em;
-    min-height: 1.7em; }
-    .stat-number.dice:hover {
-      background-color: #383838;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #383838), color-stop(50%, #212121), color-stop(100%, #4f4f4f));
-      background-image: -webkit-radial-gradient(#383838, #212121, #4f4f4f);
-      background-image: radial-gradient(  #383838, #212121, #4f4f4f); }
-
-div.has-conditions-box {
-  background-image: -webkit-radial-gradient( #dddddd, #f8f8f8);
-  background-image: radial-gradient(   #dddddd, #f8f8f8);
-  border: 1px solid lightgray;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  padding-top: 0px;
-  min-height: 1.6em; }
-
-.power-span {
-  padding-top: 3px;
-  background-image: -webkit-radial-gradient( #dddddd, #f8f8f8);
-  background-image: radial-gradient(   #dddddd, #f8f8f8);
-  border-color: #dddddd;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px; }
-
-div.dialog-content {
-  margin: 1em; }
-
-div.button-cell {
-  display: inline-block;
-  color: #333333;
-  font-weight: bold;
-  min-width: 2.5em;
-  height: 2em;
-  text-align: center;
-  vertical-align: middle;
-  background-image: -webkit-linear-gradient(bottom, #c6c6c6, #f4f4f4);
-  background-image: linear-gradient(to top, #c6c6c6, #f4f4f4);
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #dddddd;
-  border-radius: 3px; }
-  div.button-cell:hover {
-    background-color: #dddddd;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #dddddd), color-stop(50%, #c6c6c6), color-stop(100%, #f4f4f4));
-    background-image: -webkit-radial-gradient(#dddddd, #c6c6c6, #f4f4f4);
-    background-image: radial-gradient(  #dddddd, #c6c6c6, #f4f4f4); }
-
-.stat-edit {
-  width: 3em;
-  height: 2em;
-  font-size: 2em; }
-
-div.power-container {
-  padding-top: 0px;
-  padding-bottom: 2px; }
-  div.power-container div.power-use-button {
-    display: inline-block;
-    text-align: center;
-    border-color: #d5d5d5;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px;
-    color: white;
-    font-weight: bold;
-    width: 1.3em; }
-    div.power-container div.power-use-button.at-will {
-      display: none; }
-    div.power-container div.power-use-button.encounter {
-      background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
-      background-image: linear-gradient(to top, #6d0e26, #bf1842);
-      cursor: pointer;
-      border-width: 1px;
-      border-style: solid;
-      border-color: #dddddd;
-      border-radius: 3px; }
-      div.power-container div.power-use-button.encounter:hover {
-        background-color: #961334;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-        background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-        background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
-      div.power-container div.power-use-button.encounter.used {
-        background-image: none;
-        background-color: #3b0815;
-        color: #520a1c; }
-    div.power-container div.power-use-button.daily {
-      background-image: -webkit-linear-gradient(bottom, #363638, #646466);
-      background-image: linear-gradient(to top, #363638, #646466);
-      cursor: pointer;
-      border-width: 1px;
-      border-style: solid;
-      border-color: #dddddd;
-      border-radius: 3px; }
-      div.power-container div.power-use-button.daily:hover {
-        background-color: #4d4d4f;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-        background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-        background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
-      div.power-container div.power-use-button.daily.used {
-        background-image: none;
-        background-color: #1b1b1b;
-        color: #272728; }
+    background-color: #464646;
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
+    background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
+    background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }

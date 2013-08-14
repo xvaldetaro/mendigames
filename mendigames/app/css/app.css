@@ -1,18 +1,6 @@
 body {
   font-family: Verdana, sans-serif; }
 
-@media (max-width: 767px) {
-  body {
-    font-size: 10px; } }
-@media (min-width: 768px) {
-  body {
-    font-size: 11px; } }
-@media (min-width: 980px) {
-  body {
-    font-size: 12px; } }
-@media (min-width: 1200px) {
-  body {
-    font-size: 14px; } }
 .tooltip {
   font-size: 1.5em; }
 
@@ -26,6 +14,9 @@ label {
 .input-nano {
   width: 20px; }
 
+.input-micro {
+  width: 41px; }
+
 .modal {
   width: 620px; }
 
@@ -34,3 +25,12 @@ label {
 
 .droppable-area {
   min-height: 50px; }
+
+.nospace {
+  margin: 0; }
+
+.inline {
+  display: inline-block; }
+
+select {
+  height: 23px; }
