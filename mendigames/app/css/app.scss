@@ -2,19 +2,18 @@ body {
   font-family: Verdana, sans-serif;
 }
 
-.modal {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  padding: 10px;
-  border: {
-    radius: 3px;
+@media (min-width: 10px) {
+  .modal {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    margin-left: -261px;
+    padding: 10px;
+    width: 500px;
+    border: {
+      radius: 3px;
+    }
   }
-}
-
-.tooltip {
-  font-size: 1.5em;
 }
 
 .content {
@@ -26,14 +25,9 @@ label {
   cursor: default;
 }
 
-.input-nano {
-  width: 20px;
-}
-
-.input-micro {
+.size-micro {
   width: 41px;
 }
-
 .size-nano {
   width: 20px;
 }
@@ -56,10 +50,6 @@ label {
   width: 220px;
 }
 
-.modal-body {
-  max-height: 700px;
-}
-
 .droppable-area {
   min-height: 50px;
 }
@@ -79,4 +69,50 @@ select,input[type="text"],input[type="password"] {
     top: 0;
     bottom: 0;
   }
+}
+
+.xpan1 {
+  display: inline-block;
+  vertical-align: top;
+  width: 10%;
+}
+.xpan2 {
+  display: inline-block;
+  vertical-align: top;
+  width: 20%;
+}
+.xpan3 {
+  display: inline-block;
+  vertical-align: top;
+  width: 30%;
+}
+.xpan4 {
+  display: inline-block;
+  vertical-align: top;
+  width: 40%;
+}
+.xpan5 {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+}
+.xpan6 {
+  display: inline-block;
+  vertical-align: top;
+  width: 60%;
+}
+.xpan7 {
+  display: inline-block;
+  vertical-align: top;
+  width: 70%;
+}
+.xpan8 {
+  display: inline-block;
+  vertical-align: top;
+  width: 80%;
+}
+.xpan9 {
+  display: inline-block;
+  vertical-align: top;
+  width: 90%;
 }

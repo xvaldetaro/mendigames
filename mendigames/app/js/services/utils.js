@@ -95,13 +95,21 @@ function() {
     function randint(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
     }
-    function roll(mod, dice){
-        var roll = randint(1,dice+1);
-        var result = parseInt(mod)+roll;
-        var log = " d"+dice+": "+roll+"+"+mod+"="+result+" ";
+    function roll(mod, dice, mult){
+        var rollStr = '', total = 0;
+        for(var i = mult - 1; i >= 0; i--) {
+            var result = randint(1,dice+1);
+            rollStr = rollStr+result+'+';
+            total += result;
+        }
+        rollStr = rollStr.slice(0, -1);
+        rollStr += '='+total;
+        var logStr = mult+'d'+dice+'('+rollStr+')+'+mod+' : ';
+        total += parseInt(mod);
+        logStr = logStr+total;
         return {
-            result: result,
-            log: log
+            result: total,
+            log: logStr
         };
     }
     return {

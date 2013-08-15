@@ -210,8 +210,8 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
     for(var i=0; i<15; i++) {
         $scope.modifiers.push(i);
     }
-    $scope.modifier = 0;
-    $scope.multiplier = 1;
+    $scope.selectedModifier = 0;
+    $scope.selectedMultiplier = 1;
     $scope.dices = [4,6,8,10,12,20,100];
     $scope.previous_turn = function(){
         Ocam.previous_turn($scope.campaign, $scope.characterList);
@@ -240,16 +240,7 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
     $scope.diceMult = 1;
     $scope.diceMod = 0;
     $scope.roll = function(dice) {
-        var logStr = 'd'+dice+'x'+$scope.diceMult+'+'+$scope.diceMod+' : ', total = 0;
-        for(var i = $scope.diceMult - 1; i >= 0; i--) {
-            var result = U.roll(0, dice).result;
-            logStr = logStr+result+'+';
-            total += result;
-        }
-        total += parseInt($scope.diceMod);
-        logStr = logStr.slice(0, -1);
-        logStr = logStr+ '= '+total;
-        Log(logStr);
+        Log(U.roll($scope.selectedModifier, dice, $scope.selectedMultiplier).log);
     };
     $scope.enemyCount = 0;
     $scope.fetch_from_compendium = function(condition) {

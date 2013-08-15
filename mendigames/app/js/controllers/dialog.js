@@ -104,28 +104,29 @@ function($scope, dialog, U) {
             heal: $scope.heal
         });
     };
-    $scope.rollClose = function(mod, dice) {
-        var roll = $scope.U.roll(mod, dice);
+    $scope.rollClose = function(dice) {
+        var roll = U.roll($scope.selectedModifier, dice, $scope.selectedMultiplier);
         roll.heal = $scope.heal;
         dialog.close(roll);
     };
-    var numbers = [];
+
+    $scope.selectedModifier = 0;
+    $scope.selectedMultiplier = 1;
+    $scope.dices = [3,4,6,8,10,12,20,100];
+    $scope.numbers = [];
     for(var i=0; i<52; i++)
     {
-        numbers.push(i);
+        $scope.numbers.push(i);
     }
-    var mods = [];
-    for(var j=-5; j<43; j++)
-    {
-        mods.push(j);
+    $scope.multipliers = [];
+    for(var i=1; i<10; i++) {
+        $scope.multipliers.push(i);
     }
-
-    $scope.U = U;
+    $scope.modifiers = [];
+    for(var i=0; i<25; i++) {
+        $scope.modifiers.push(i);
+    }
     $scope.heal = 'damage';
-    $scope.dice = 8;
-    $scope.numbers = numbers;
-    $scope.mods = mods;
-    $scope.input = "";
 }])
 
 .controller('MagicDialogCtrl', ['$scope', 'dialog', 'magic','EM','Oit',

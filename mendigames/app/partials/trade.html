@@ -79,8 +79,8 @@
                         <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
                         <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
                         <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
-                        <label class="checkbox">Level: <input type="text" ng-model="levelStart" class="input-nano"></label><label>to<input type="text" ng-model="levelStop" class="input-nano"></label>
-                        <label class="checkbox">Cost: <input type="text" ng-model="costStart" class="input-nano"></label><label>to<input type="text" ng-model="costStop" class="input-nano"></label>
+                        <label class="checkbox">Level: <input type="text" ng-model="levelStart" class="size-nano"></label><label>to<input type="text" ng-model="levelStop" class="size-nano"></label>
+                        <label class="checkbox">Cost: <input type="text" ng-model="costStart" class="size-nano"></label><label>to<input type="text" ng-model="costStop" class="size-nano"></label>
                         <button ng-click="item_finder_search(1)" class="btn">Search</button>
                     </form>
                     <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>

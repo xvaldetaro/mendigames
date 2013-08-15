@@ -7,12 +7,12 @@
         <div class="gui-row">
             <div class="gui-group">
                 <div class="gui-label">Multiplier:</div>
-                <select class="input-micro" ng-model="multiplier" ng-options="multiplier for multiplier in multipliers"></select>
+                <select class="size-micro" ng-model="selectedMultiplier" ng-options="multiplier for multiplier in multipliers"></select>
                 <div class="gui-label">Modifier:</div>
-                <select class="input-micro" ng-model="modifier" ng-options="modifier for modifier in modifiers"></select>
-                &nbsp;&nbsp;
+                <select class="size-micro" ng-model="selectedModifier" ng-options="modifier for modifier in modifiers"></select>
+            </div><div class="gui-group">
                 <div class="inline">
-                    <div ng-repeat="dice in dices" class="button dice" ng-click="roll(dice)"><b>{{dice}}</b></div>
+                    <div ng-repeat="dice in dices" class="button dice" ng-click="roll(dice)">{{dice}}</div>
                 </div>
             </div>
         </div>
@@ -202,5 +202,8 @@
                 --></div>
             </div>
         </div>
+    </div>
+    <div id="console">
+        <div ng-repeat="line in log">{{line}}</div>
     </div>
 </div>

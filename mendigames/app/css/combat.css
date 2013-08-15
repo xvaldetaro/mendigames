@@ -296,3 +296,14 @@ div.condition-box {
     background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
     background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
     background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
+
+#console {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  background-image: -webkit-radial-gradient( #f8ecc2, #f3de94);
+  background-image: radial-gradient(   #f8ecc2, #f3de94);
+  overflow: auto;
+  overflow-x: hidden;
+  height: 100px; }

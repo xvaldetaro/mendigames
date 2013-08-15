@@ -263,3 +263,11 @@ div.condition-box {
   width: 1.3em;
   @include buttonify($DARKFONT);
 }
+
+#console {
+  @include borderfy();
+  @include background-image(radial-gradient(rgb(248,236,194),darken(rgb(248,236,194),10%)));
+  overflow: auto;
+  overflow-x: hidden;
+  height: 100px;
+}

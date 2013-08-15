@@ -11,7 +11,7 @@
         <div class="control-group">
             <label class="control-label">Healing Surges</label>
             <div class="controls">
-                <input type="text" class="input-nano" ng-model="c.healing_surges" maxlength="" placeholder="">
+                <input type="text" class="size-nano" ng-model="c.healing_surges" maxlength="" placeholder="">
             </div>
         </div>
         <div class="control-group">
@@ -64,7 +64,7 @@
                     <select class="input-small" ng-model="pUsage" ng-options="usage.name for usage in pUsages"><option value="">-Usage-</option></select>
                     <select class="input-small" ng-model="pAction" ng-options="action.name for action in pActions"><option value="">-Action-</option></select>
                     Level:
-                    <input type="text" class="input-nano" ng-model="pLevel" maxlength="" placeholder="">
+                    <input type="text" class="size-nano" ng-model="pLevel" maxlength="" placeholder="">
                   <button ng-click="search()" class="btn">Search</button>
                 </form>
                 <table class="table table-striped">
