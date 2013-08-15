@@ -2,7 +2,18 @@
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
 
+@mixin button-cell($color) {
+  @include background-image(linear-gradient(to top, darken($color,3%),lighten($color,6%)));
+  cursor: pointer;
+  &:hover {
+      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
+  }
+}
+
 $DARKFONT: rgb(70,70,70);
+$ENCOUNTER: #961334;
+$ATWILL: darken(#619869,15%);
+$DAILY: #4d4d4f;
 
 .gui-row {
   text-align: left;
@@ -21,24 +32,32 @@ $DARKFONT: rgb(70,70,70);
   div {
     display: inline-block;
     color: white;
-    &.gui-text{
+    &.gui-text {
       color: $DARKFONT;
       width: 4.5em;
     }
-    &.gui-textlabel{
+    &.gui-textlabel {
       color: $DARKFONT;
-      width: 4.5em;
+      min-width: 4.5em;
     }
-    &.gui-group{
+    &.gui-group {
       padding-left: 5px;
       margin-right: 10px;
       background-color: rgb(225,225,225);
     }
-    &.gui-row-title{
+    &.gui-row-title {
       padding-left: 5px;
       font-weight: bold;
       color: $DARKFONT;
-
+    }
+    &.gui-value {
+      padding-left: 5px;
+      padding-right: 5px;
+      background-color: $DARKFONT;
+      text-align: center;
+      vertical-align: middle;
+      color: white;
+      font-weight: bold;
     }
   }
 
@@ -51,14 +70,51 @@ $DARKFONT: rgb(70,70,70);
     padding: 0;
   }
 }
-
+.power-container {
+  background-color: rgb(245,245,245);
+  padding-left: 5px;
+  padding-right: 3px;
+}
+.power-button {
+  display: inline-block;
+  &.at-will {
+    @include button-cell($ATWILL);
+  }
+}
+.power-widget {
+  font-size: 0.9em;
+  font-weight: bold;
+  display: inline-block;
+  color: white;
+  white-space: nowrap;
+  padding: {
+    left: 0.7em;
+    right: 0.7em;
+    top: 0.5em;
+    bottom: 0.5em;
+  }
+  border: {
+    style: solid;
+    width: 1px;
+    color: white;
+  }
+  &.at-will {
+    background-color: $ATWILL;
+  }
+  &.daily {
+    background-color: $DAILY;
+  }
+  &.encounter {
+    background-color: $ENCOUNTER;
+  }
+}
 .button {
   text-align: center;
   vertical-align: middle;
   @include buttonify($DARKFONT);
   color: white;
   font-weight: bold;
-  &.dice{
+  &.dice {
     min-width: 2em;
   }
   &.icon {
@@ -106,14 +162,6 @@ table.character-list {
     color: white;
   }
 }
-
-@mixin button-cell($color) {
-  @include background-image(linear-gradient(to top, darken($color,3%),lighten($color,6%)));
-  cursor: pointer;
-  &:hover{
-      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
-  }
-}
 .button-cell {
   font-weight: bold;
   color: $DARKFONT;
@@ -150,41 +198,7 @@ table.character-list {
       text-align: center;
     }
   }
-  &.power {
-    .incell {
-      display: inline-block;
-      text-align: center;
-      border-color: rgb(213,213,213);
-      border-style: solid;
-      border-width: 1px;
-      border-radius: 3px;
-      color: white;
-      font-weight: bold;
-      width: 1.3em;
-
-      $ENCOUNTER: #961334;
-      $ATWILL: darken(#619869,15%);
-      $DAILY: #4d4d4f;
-      &.at-will {
-        display: none;
-      }
-      &.encounter {
-        @include buttonify($ENCOUNTER);
-        
-        &.used {
-          @include mutify($ENCOUNTER);
-        }
-      }
-      &.daily {
-        @include buttonify($DAILY);
-        &.used {
-          @include mutify($DAILY);
-        }
-      }
-    }
-  }
 }
-
 div.condition-box {
   display: inline-block;
   text-align: center;

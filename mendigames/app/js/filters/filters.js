@@ -28,14 +28,19 @@ filter('total_hp', function(){
       return character.hit_points-character.used_hit_points;
   };
 }).
+filter('total_ap', function(){
+  return function(character){
+      return 1-character.used_action_points+Math.floor(character.milestones/2);
+  };
+}).
 filter('total_hs', function(){
   return function(character){
       return character.healing_surges-character.used_healing_surges;
   };
 }).
-filter('total_ap', function(){
-  return function(character){
-      return 1-character.used_action_points+Math.floor(character.milestones/2);
+filter('power_name', function(){
+  return function(power){
+      return power.name.slice(0,12);
   };
 }).
 filter('condition_icon',function(){

@@ -16,7 +16,7 @@
       width: 4.5em; }
     .gui-row div.gui-textlabel {
       color: #464646;
-      width: 4.5em; }
+      min-width: 4.5em; }
     .gui-row div.gui-group {
       padding-left: 5px;
       margin-right: 10px;
@@ -25,12 +25,57 @@
       padding-left: 5px;
       font-weight: bold;
       color: #464646; }
+    .gui-row div.gui-value {
+      padding-left: 5px;
+      padding-right: 5px;
+      background-color: #464646;
+      text-align: center;
+      vertical-align: middle;
+      color: white;
+      font-weight: bold; }
   .gui-row p {
     display: inline-block; }
   .gui-row select {
     display: inline-block;
     margin: 0;
     padding: 0; }
+
+.power-container {
+  background-color: whitesmoke;
+  padding-left: 5px;
+  padding-right: 3px; }
+
+.power-button {
+  display: inline-block; }
+  .power-button.at-will {
+    background-image: -webkit-linear-gradient(bottom, #3d6042, #4f7c56);
+    background-image: linear-gradient(to top, #3d6042, #4f7c56);
+    cursor: pointer; }
+    .power-button.at-will:hover {
+      background-color: #436949;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
+      background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
+      background-image: radial-gradient(  #436949, #314d35, #55855c); }
+
+.power-widget {
+  font-size: 0.9em;
+  font-weight: bold;
+  display: inline-block;
+  color: white;
+  white-space: nowrap;
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white; }
+  .power-widget.at-will {
+    background-color: #436949; }
+  .power-widget.daily {
+    background-color: #4d4d4f; }
+  .power-widget.encounter {
+    background-color: #961334; }
 
 .button {
   text-align: center;
@@ -149,52 +194,6 @@ table.character-list {
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
       background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
       background-image: radial-gradient(  whitesmoke, #dedede, white); }
-.board-cell.power .incell {
-  display: inline-block;
-  text-align: center;
-  border-color: #d5d5d5;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold;
-  width: 1.3em; }
-  .board-cell.power .incell.at-will {
-    display: none; }
-  .board-cell.power .incell.encounter {
-    background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
-    background-image: linear-gradient(to top, #6d0e26, #bf1842);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .board-cell.power .incell.encounter:hover {
-      background-color: #961334;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-      background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-      background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
-    .board-cell.power .incell.encounter.used {
-      background-image: none;
-      background-color: #3b0815;
-      color: #520a1c; }
-  .board-cell.power .incell.daily {
-    background-image: -webkit-linear-gradient(bottom, #363638, #646466);
-    background-image: linear-gradient(to top, #363638, #646466);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px; }
-    .board-cell.power .incell.daily:hover {
-      background-color: #4d4d4f;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-      background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-      background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
-    .board-cell.power .incell.daily.used {
-      background-image: none;
-      background-color: #1b1b1b;
-      color: #272728; }
 
 div.condition-box {
   display: inline-block;

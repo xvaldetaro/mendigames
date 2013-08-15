@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
+    <div ng-include src="'/valueic/mendigames/partials/navbar.html'"></div>
     <div class="" ng-controller="MenuController">
         <div class="gui-row">
            <div class="gui-row-title">Dices</div> 
@@ -118,27 +118,65 @@
             <div class="button" ng-click="open_list()"><i class="icon-arrow-left icon-white"></i>Character List</div>
             <div class="character-detail" ng-controller="CharacterDetailCtrl">
                 <div class="gui-row">
-                    {{c.name}}
+                    <div class="gui-row-title">{{c.name}}</div>
                 </div>
                 <div class="gui-row">
                     <div class="gui-group">
-                        <div class="gui-text-label">Max Hit Points</div>
-                        <div class="gui-stat">{{c.hit_points}}</div>
+                        <div class="gui-textlabel">Max Hit Points</div>
+                        <div class="gui-value">{{c.hit_points}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-text-label">Max Healing Surges</div>
-                        <div class="gui-stat">{{c.healing_surges}}</div>
+                        <div class="gui-textlabel">Max Healing Surges</div>
+                        <div class="gui-value">{{c.healing_surges}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-text-label">Experience Points</div>
-                        <div class="gui-stat">{{c.hit_points}}</div>
+                        <div class="gui-textlabel">Experience</div>
+                        <div class="gui-value">{{c.experience_points}}</div>
                     </div>
                 </div>
-                <div class="gui-row">Defenses</div>
+                <div class="gui-row">
+                    <div class="gui-row-title">Defenses</div>
+                </div>
                 <div class="gui-row">
                     <div class="gui-group">
-                        <div class="gui-text-label">Armor Class</div>
-                        <div class="gui-stat">{{c.ac}}</div>
+                        <div class="gui-textlabel">Armor Class</div>
+                        <div class="gui-value">{{c.ac}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-textlabel">Fortitude</div>
+                        <div class="gui-value">{{c.fort}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-textlabel">Reflexes</div>
+                        <div class="gui-value">{{c.refl}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-textlabel">Will</div>
+                        <div class="gui-value">{{c.will}}</div>
+                    </div>
+                </div>
+                <div class="gui-row">
+                    <div class="gui-row-title">Senses</div>
+                </div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-textlabel">Insight</div>
+                        <div class="gui-value">{{c.insight}}</div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-textlabel">Perception</div>
+                        <div class="gui-value">{{c.perception}}</div>
+                    </div>
+                </div>
+                <div class="gui-row">
+                    <div class="gui-row-title">Powers</div>
+                </div>
+                <div class="power-container">
+                    <div class="power-widget {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-repeat="hasPower in c._2m.has_powers()" ng-click="use_power()">
+                        <div class="power-button">
+                            <i class="icon-info-sign icon-white"></i>
+                        </div>
+                        {{hasPower._2o.power()|power_name}}
                     </div>
                 </div>
             </div>
