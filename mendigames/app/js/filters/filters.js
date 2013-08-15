@@ -43,6 +43,13 @@ filter('trunc', function(){
       return str.split(" ")[0].slice(0,value);
   };
 }).
+filter('plus_sign', function(){
+  return function(value){
+      if(value > 0)
+        return '+'+value;
+      return value;
+  };
+}).
 filter('condition_icon',function(){
   return function(condition){
       if(!condition)

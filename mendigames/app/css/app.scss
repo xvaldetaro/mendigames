@@ -16,6 +16,15 @@ body {
   }
 }
 
+.cage {
+  $WIDTHCAGE : 535px;
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  margin-left: -($WIDTHCAGE/2);
+  width: $WIDTHCAGE;
+}
+
 .content {
   padding-left: 1.4em;
   margin-right: 1.4em;

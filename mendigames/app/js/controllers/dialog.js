@@ -76,7 +76,7 @@ function($scope, dialog, U) {
     };
     $scope.U = U;
     $scope.rollClose = function(mod, dice) {
-        var roll = $scope.U.roll(mod, dice);
+        var roll = $scope.U.roll(mod, dice, 1);
         dialog.close(roll);
     };
     var numbers = [];

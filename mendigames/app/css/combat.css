@@ -174,6 +174,7 @@
   margin-top: 10px; }
 
 table.character-list {
+  width: 100%;
   border-color: #e1e1e1;
   border-style: solid;
   border-width: 1px;

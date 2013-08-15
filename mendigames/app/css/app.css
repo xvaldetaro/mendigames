@@ -10,6 +10,13 @@ body {
     padding: 10px;
     width: 500px;
     border-radius: 3px; } }
+.cage {
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  margin-left: -267.5px;
+  width: 535px; }
+
 .content {
   padding-left: 1.4em;
   margin-right: 1.4em; }
