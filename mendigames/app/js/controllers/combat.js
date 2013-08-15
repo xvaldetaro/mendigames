@@ -182,12 +182,12 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
 function($scope, EM, Ohpo, Log) {
     $scope.c = $scope.detailCharacter;
 
-    $scope.use_power = function(){
-        if($scope.hasPower.used)
-            Log($scope.c.name+' used: '+$scope.hasPower._2o.power().name);
+    $scope.use_power = function(hasPower){
+        if(hasPower.used)
+            Log($scope.c.name+' used: '+hasPower._2o.power().name);
         else
-            Log($scope.c.name+' recharged: '+$scope.hasPower._2o.power().name);
-        Ohpo.use_power($scope.hasPower);
+            Log($scope.c.name+' recharged: '+hasPower._2o.power().name);
+        Ohpo.use_power(hasPower);
     };
 }])
 

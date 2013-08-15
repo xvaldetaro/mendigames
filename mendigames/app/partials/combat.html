@@ -171,14 +171,15 @@
                 <div class="gui-row">
                     <div class="gui-row-title">Powers</div>
                 </div>
-                <div class="power-container">
-                    <div class="power-widget {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-repeat="hasPower in c._2m.has_powers()" ng-click="use_power()">
-                        <div class="power-button">
-                            <i class="icon-info-sign icon-white"></i>
-                        </div>
-                        {{hasPower._2o.power()|power_name}}
-                    </div>
-                </div>
+                <div class="power-container"><!--
+                    --><div class="power-widget" ng-repeat="hasPower in c._2m.has_powers()"><!--
+                        --><div class="power-button power-info {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}"><!--
+                            --><i class="icon-info-sign icon-white"></i><!--
+                        --></div><!--
+                        --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
+                            -->{{hasPower._2o.power()|power_name}}</div><!--
+                    --></div><!--
+                --></div>
             </div>
         </div>
     </div>

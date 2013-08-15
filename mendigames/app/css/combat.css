@@ -45,37 +45,85 @@
   padding-left: 5px;
   padding-right: 3px; }
 
-.power-button {
-  display: inline-block; }
-  .power-button.at-will {
-    background-image: -webkit-linear-gradient(bottom, #3d6042, #4f7c56);
-    background-image: linear-gradient(to top, #3d6042, #4f7c56);
-    cursor: pointer; }
-    .power-button.at-will:hover {
-      background-color: #436949;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
-      background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
-      background-image: radial-gradient(  #436949, #314d35, #55855c); }
-
 .power-widget {
-  font-size: 0.9em;
-  font-weight: bold;
   display: inline-block;
-  color: white;
-  white-space: nowrap;
-  padding-left: 0.7em;
-  padding-right: 0.7em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border-style: solid;
   border-width: 1px;
+  border-style: solid;
   border-color: white; }
-  .power-widget.at-will {
-    background-color: #436949; }
-  .power-widget.daily {
-    background-color: #4d4d4f; }
-  .power-widget.encounter {
-    background-color: #961334; }
+  .power-widget .power-button {
+    display: inline-block;
+    margin: 0;
+    color: white;
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border: 0px; }
+    .power-widget .power-button.at-will {
+      background-image: -webkit-linear-gradient(bottom, #3d6042, #4f7c56);
+      background-image: linear-gradient(to top, #3d6042, #4f7c56);
+      cursor: pointer;
+      border-color: #395a3e; }
+      .power-widget .power-button.at-will:hover {
+        background-color: #436949;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
+        background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
+        background-image: radial-gradient(  #436949, #314d35, #55855c); }
+    .power-widget .power-button.daily {
+      background-image: -webkit-linear-gradient(bottom, #454547, #5c5c5e);
+      background-image: linear-gradient(to top, #454547, #5c5c5e);
+      cursor: pointer;
+      border-color: #404042; }
+      .power-widget .power-button.daily:hover {
+        background-color: #4d4d4f;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
+        background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
+        background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+    .power-widget .power-button.encounter {
+      background-image: -webkit-linear-gradient(bottom, #88112f, #b1163d);
+      background-image: linear-gradient(to top, #88112f, #b1163d);
+      cursor: pointer;
+      border-color: #7f102c; }
+      .power-widget .power-button.encounter:hover {
+        background-color: #961334;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
+        background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
+        background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
+    .power-widget .power-button.power-info {
+      border-right-style: solid;
+      border-right-width: 1px; }
+    .power-widget .power-button.power-name {
+      font-weight: bold; }
+      .power-widget .power-button.power-name.at-will.used {
+        background-image: -webkit-linear-gradient(bottom, #29412d, #3b5d40);
+        background-image: linear-gradient(to top, #29412d, #3b5d40);
+        cursor: pointer;
+        color: #57885e; }
+        .power-widget .power-button.power-name.at-will.used:hover {
+          background-color: #2f4a33;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #2f4a33), color-stop(50%, #1d2e20), color-stop(100%, #416647));
+          background-image: -webkit-radial-gradient(#2f4a33, #1d2e20, #416647);
+          background-image: radial-gradient(  #2f4a33, #1d2e20, #416647); }
+      .power-widget .power-button.power-name.daily.used {
+        background-image: -webkit-linear-gradient(bottom, #2c2c2d, #434345);
+        background-image: linear-gradient(to top, #2c2c2d, #434345);
+        cursor: pointer;
+        color: #666669; }
+        .power-widget .power-button.power-name.daily.used:hover {
+          background-color: #343435;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #343435), color-stop(50%, #1d1d1e), color-stop(100%, #4a4a4c));
+          background-image: -webkit-radial-gradient(#343435, #1d1d1e, #4a4a4c);
+          background-image: radial-gradient(  #343435, #1d1d1e, #4a4a4c); }
+      .power-widget .power-button.power-name.encounter.used {
+        background-image: -webkit-linear-gradient(bottom, #5b0c20, #84112e);
+        background-image: linear-gradient(to top, #5b0c20, #84112e);
+        cursor: pointer;
+        color: #c31944; }
+        .power-widget .power-button.power-name.encounter.used:hover {
+          background-color: #690d24;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #400816), color-stop(100%, #911232));
+          background-image: -webkit-radial-gradient(#690d24, #400816, #911232);
+          background-image: radial-gradient(  #690d24, #400816, #911232); }
 
 .button {
   text-align: center;

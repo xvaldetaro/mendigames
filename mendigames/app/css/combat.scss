@@ -75,37 +75,57 @@ $DAILY: #4d4d4f;
   padding-left: 5px;
   padding-right: 3px;
 }
-.power-button {
-  display: inline-block;
-  &.at-will {
-    @include button-cell($ATWILL);
-  }
-}
 .power-widget {
-  font-size: 0.9em;
-  font-weight: bold;
   display: inline-block;
-  color: white;
-  white-space: nowrap;
-  padding: {
-    left: 0.7em;
-    right: 0.7em;
-    top: 0.5em;
-    bottom: 0.5em;
-  }
   border: {
-    style: solid;
     width: 1px;
+    style: solid;
     color: white;
   }
-  &.at-will {
-    background-color: $ATWILL;
-  }
-  &.daily {
-    background-color: $DAILY;
-  }
-  &.encounter {
-    background-color: $ENCOUNTER;
+  .power-button {
+    display: inline-block;
+    margin: 0;
+    color: white;
+    padding: {
+      left: 0.7em;
+      right: 0.7em;
+      top: 0.5em;
+      bottom: 0.5em;
+    }
+    border: 0px;
+    &.at-will {
+      @include button-cell($ATWILL);
+      border-color: darken($ATWILL, 5%);
+    }
+    &.daily {
+      @include button-cell($DAILY);
+      border-color: darken($DAILY, 5%);
+    }
+    &.encounter {
+      @include button-cell($ENCOUNTER);
+      border-color: darken($ENCOUNTER, 5%);
+    }
+    &.power-info {
+      border-right: {
+        style: solid;
+        width: 1px;
+      }
+    }
+    &.power-name {
+      font-weight: bold;
+      &.at-will.used {
+        @include button-cell(darken($ATWILL, 10%));
+        color: lighten($ATWILL, 10%);
+      }
+      &.daily.used {
+        @include button-cell(darken($DAILY, 10%));
+        color: lighten($DAILY, 10%);
+      }
+      &.encounter.used {
+        @include button-cell(darken($ENCOUNTER, 10%));
+        color: lighten($ENCOUNTER, 10%);
+      }
+    }  
   }
 }
 .button {
