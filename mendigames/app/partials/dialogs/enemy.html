@@ -1,40 +1,33 @@
-<div class="modal-header">
-    <h3>Add new Enemy</h3>
+<div class="gui-row">
+    <div class="gui-row-title">
+        Create Enemies        
+    </div>
 </div>
-<div class="modal-body">
-    <form class="form-horizontal">
-    <div class="control-group">
-        <label class="control-label">Name x Count</label>
-        <div class="controls">
-            <input type="text" class="span2" ng-model="enemy.name">
-            x
-            <input type="text" class="span1" ng-model="enemy.count" maxlength="2">
-        </div>
+<div class="gui-row">
+    <div class="gui-group">
+        <div class="gui-label size-kilo">Name x Count</div>
+        <input type="text" class="input-medium" ng-model="enemy.name" maxlength="">x<input type="text" class="input-nano" ng-model="enemy.count" maxlength="2">
     </div>
-    <div class="control-group">
-        <label class="control-label">HitPoints</label>
-        <div class="controls">
-            <input type="{{hp_show}}" class="span1" ng-model="enemy.hit_points" maxlength="3">
-            <button type="button" class="btn btn-primary" ng-model="hp_show" btn-checkbox btn-checkbox-true="'text'" btn-checkbox-false="'password'">Show
-            </button>
-        </div>
+</div>
+<div class="gui-row">
+    <div class="gui-group">
+        <div class="gui-label size-kilo">Hit Points</div>
+        <input type="{{hp_show}}" class="input-micro" ng-model="enemy.hit_points" maxlength="3">
     </div>
-    <div class="control-group">
-        <label class="control-label">Initiative Mod</label>
-        <div class="controls">
-            <input type="text" class="span1" ng-model="enemy.init_mod">
-        </div>
+</div>
+<div class="gui-row">
+    <div class="gui-group">
+        <div class="gui-label size-kilo">Init Mod</div>
+        <input type="text" class="input-nano" ng-model="enemy.init_mod">
     </div>
-    <div class="control-group">
-        <label class="control-label">Action Points</label>
-        <div class="controls">
-            <input type="text" class="span1" ng-model="enemy.ap">
-        </div>
+</div>
+<div class="gui-row">
+    <div class="gui-group">
+        <div class="gui-label size-kilo">Action Points</div>
+        <input type="text" class="input-nano" ng-model="enemy.ap">
     </div>
-    <div class="control-group">
-    <div class="controls">
-      <button class="btn btn-danger" ng-click="close()">Add</button>
-    </div>
-    </div>
-    </form>
+</div>
+<div class="gui-row">
+    <div class="button" ng-click="close()">Add</div>
+    <div class="button button-cancel" ng-click="cancel()">Cancel</div>
 </div>

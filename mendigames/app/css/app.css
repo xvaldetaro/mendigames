@@ -1,6 +1,14 @@
 body {
   font-family: Verdana, sans-serif; }
 
+.modal {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  padding: 10px;
+  border-radius: 3px; }
+
 .tooltip {
   font-size: 1.5em; }
 
@@ -17,8 +25,26 @@ label {
 .input-micro {
   width: 41px; }
 
-.modal {
-  width: 620px; }
+.size-nano {
+  width: 20px; }
+
+.size-micro {
+  width: 40px; }
+
+.size-mili {
+  width: 60px; }
+
+.size-zero {
+  width: 80px; }
+
+.size-kilo {
+  width: 120px; }
+
+.size-mega {
+  width: 160px; }
+
+.size-giga {
+  width: 220px; }
 
 .modal-body {
   max-height: 700px; }
@@ -32,5 +58,8 @@ label {
 .inline {
   display: inline-block; }
 
-select {
-  height: 23px; }
+select, input[type="text"], input[type="password"] {
+  height: 23px;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0; }

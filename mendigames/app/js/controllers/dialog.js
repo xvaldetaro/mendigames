@@ -20,6 +20,9 @@ function($scope, dialog) {
         }
         dialog.close($scope.enemy);
     };
+    $scope.cancel = function() {
+        dialog.close();
+    };
     $scope.hp_show = 'password';
     $scope.enemy = {
         name: 'Enemy',

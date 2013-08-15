@@ -88,14 +88,6 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
             return "turn";
         return '';
     };
-    $scope.short_rest = function(c) {
-        Och.short_rest(c);
-        Log(c.name+' short rested');
-    };
-    $scope.extended_rest = function(c) {
-        Och.extended_rest(c);
-        Log(c.name+' extended rested');
-    };
     $scope.spend_ap = function(c) {
         Och.spend_ap(c);
         Log(c.name+' used an action point');
@@ -103,18 +95,6 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
     $scope.spend_hs = function(c) {
         Och.spend_hs(c);
         Log(c.name+' used a healing surge');
-    };
-    $scope.milestone = function(c) {
-        Och.milestone(c);
-        Log(c.name+' reached a milestone');
-    };
-    $scope.clear_conditions = function(c) {
-        Och.clear_conditions(c);
-        Log(c.name+' is clean');
-    };
-    $scope.delete_character = function(chi, c) {
-        Och.delete_character(c);
-        Log(c.name+' Removed!');
     };
     $scope.increase_sub_init = function(c) {
         Och.increase_sub_init(c);
@@ -178,9 +158,13 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
     };
 }])
 
-.controller('CharacterDetailCtrl', ['$scope', 'EM', 'Ohpo', 'Log',
-function($scope, EM, Ohpo, Log) {
+.controller('CharacterDetailCtrl', ['$scope', 'EM', 'Ohpo','Och', 'Log','$location',
+function($scope, EM, Ohpo, Och, Log, $location) {
     $scope.c = $scope.detailCharacter;
+
+    $scope.edit_character = function() {
+        $location.path('/campaign/'+$scope.campaignId+'/management/character/'+$scope.c.id+'/');
+    };
 
     $scope.use_power = function(hasPower){
         if(hasPower.used)
@@ -188,6 +172,27 @@ function($scope, EM, Ohpo, Log) {
         else
             Log($scope.c.name+' recharged: '+hasPower._2o.power().name);
         Ohpo.use_power(hasPower);
+    };
+
+    $scope.short_rest = function(c) {
+        Och.short_rest(c);
+        Log(c.name+' short rested');
+    };
+    $scope.extended_rest = function(c) {
+        Och.extended_rest(c);
+        Log(c.name+' extended rested');
+    };
+    $scope.milestone = function(c) {
+        Och.milestone(c);
+        Log(c.name+' reached a milestone');
+    };
+    $scope.clear_conditions = function(c) {
+        Och.clear_conditions(c);
+        Log(c.name+' is clean');
+    };
+    $scope.delete_character = function(chi, c) {
+        Och.delete_character(c);
+        Log(c.name+' Removed!');
     };
 }])
 

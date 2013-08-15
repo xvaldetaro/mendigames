@@ -32,17 +32,25 @@ $DAILY: #4d4d4f;
   div {
     display: inline-block;
     color: white;
-    &.gui-text {
-      color: $DARKFONT;
-      width: 4.5em;
-    }
-    &.gui-textlabel {
+    &.gui-label {
+      white-space: nowrap;
       color: $DARKFONT;
       min-width: 4.5em;
     }
     &.gui-group {
-      padding-left: 5px;
-      margin-right: 10px;
+      padding: {
+        left: 5px;
+        right: 5px;
+        top: 2px;
+        bottom: 2px;
+      }
+      border: {
+        width: 1px;
+        color: lighten(rgb(225,225,225), 15%);
+        style: solid;
+        radius: 3px;
+      }
+      margin-right: 2px;
       background-color: rgb(225,225,225);
     }
     &.gui-row-title {
@@ -70,6 +78,32 @@ $DAILY: #4d4d4f;
     padding: 0;
   }
 }
+
+.button {
+  text-align: center;
+  vertical-align: middle;
+  @include buttonify($DARKFONT);
+  color: white;
+  font-weight: bold;
+
+  padding: {
+    right: 5px;
+    left: 5px;
+    top: 1px;
+    bottom: 2px;
+  }
+  &.button-cancel {
+    @include buttonify(rgb(230,230,230));
+    color: $DARKFONT;
+  }
+  &.dice {
+    min-width: 2em;
+  }
+  &.icon {
+    width: 1.8em;
+  }
+}
+
 .power-container {
   background-color: rgb(245,245,245);
   padding-left: 5px;
@@ -126,19 +160,6 @@ $DAILY: #4d4d4f;
         color: lighten($ENCOUNTER, 10%);
       }
     }  
-  }
-}
-.button {
-  text-align: center;
-  vertical-align: middle;
-  @include buttonify($DARKFONT);
-  color: white;
-  font-weight: bold;
-  &.dice {
-    min-width: 2em;
-  }
-  &.icon {
-    width: 1.8em;
   }
 }
 
@@ -216,6 +237,15 @@ table.character-list {
       @include button-cell(rgb(245,245,245));
       min-width: 1em;
       text-align: center;
+    }
+  }
+  &.name {
+    font-weight: bold;
+    i,div {
+      display: inline-block;
+    }
+    i {
+      cursor: pointer;
     }
   }
 }

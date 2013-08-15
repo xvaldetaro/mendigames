@@ -11,15 +11,20 @@
   .gui-row div {
     display: inline-block;
     color: white; }
-    .gui-row div.gui-text {
-      color: #464646;
-      width: 4.5em; }
-    .gui-row div.gui-textlabel {
+    .gui-row div.gui-label {
+      white-space: nowrap;
       color: #464646;
       min-width: 4.5em; }
     .gui-row div.gui-group {
       padding-left: 5px;
-      margin-right: 10px;
+      padding-right: 5px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      border-width: 1px;
+      border-color: white;
+      border-style: solid;
+      border-radius: 3px;
+      margin-right: 2px;
       background-color: #e1e1e1; }
     .gui-row div.gui-row-title {
       padding-left: 5px;
@@ -39,6 +44,46 @@
     display: inline-block;
     margin: 0;
     padding: 0; }
+
+.button {
+  text-align: center;
+  vertical-align: middle;
+  background-image: -webkit-linear-gradient(bottom, #2f2f2f, #5d5d5d);
+  background-image: linear-gradient(to top, #2f2f2f, #5d5d5d);
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dddddd;
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 1px;
+  padding-bottom: 2px; }
+  .button:hover {
+    background-color: #464646;
+    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
+    background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
+    background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
+  .button.button-cancel {
+    background-image: -webkit-linear-gradient(bottom, #cfcfcf, #fdfdfd);
+    background-image: linear-gradient(to top, #cfcfcf, #fdfdfd);
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-radius: 3px;
+    color: #464646; }
+    .button.button-cancel:hover {
+      background-color: #e6e6e6;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #e6e6e6), color-stop(50%, #cfcfcf), color-stop(100%, #fdfdfd));
+      background-image: -webkit-radial-gradient(#e6e6e6, #cfcfcf, #fdfdfd);
+      background-image: radial-gradient(  #e6e6e6, #cfcfcf, #fdfdfd); }
+  .button.dice {
+    min-width: 2em; }
+  .button.icon {
+    width: 1.8em; }
 
 .power-container {
   background-color: whitesmoke;
@@ -124,28 +169,6 @@
           background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #400816), color-stop(100%, #911232));
           background-image: -webkit-radial-gradient(#690d24, #400816, #911232);
           background-image: radial-gradient(  #690d24, #400816, #911232); }
-
-.button {
-  text-align: center;
-  vertical-align: middle;
-  background-image: -webkit-linear-gradient(bottom, #2f2f2f, #5d5d5d);
-  background-image: linear-gradient(to top, #2f2f2f, #5d5d5d);
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #dddddd;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold; }
-  .button:hover {
-    background-color: #464646;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
-    background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
-    background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
-  .button.dice {
-    min-width: 2em; }
-  .button.icon {
-    width: 1.8em; }
 
 .characters-container {
   margin-top: 10px; }
@@ -242,6 +265,12 @@ table.character-list {
       background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
       background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
       background-image: radial-gradient(  whitesmoke, #dedede, white); }
+.board-cell.name {
+  font-weight: bold; }
+  .board-cell.name i, .board-cell.name div {
+    display: inline-block; }
+  .board-cell.name i {
+    cursor: pointer; }
 
 div.condition-box {
   display: inline-block;

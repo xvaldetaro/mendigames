@@ -1,14 +1,14 @@
 <div class="container-fluid">
-    <div ng-include src="'/valueic/mendigames/partials/navbar.html'"></div>
+    <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
     <div class="" ng-controller="MenuController">
         <div class="gui-row">
            <div class="gui-row-title">Dices</div> 
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-textlabel">Multiplier:</div>
+                <div class="gui-label">Multiplier:</div>
                 <select class="input-micro" ng-model="multiplier" ng-options="multiplier for multiplier in multipliers"></select>
-                <div class="gui-textlabel">Modifier:</div>
+                <div class="gui-label">Modifier:</div>
                 <select class="input-micro" ng-model="modifier" ng-options="modifier for modifier in modifiers"></select>
                 &nbsp;&nbsp;
                 <div class="inline">
@@ -21,36 +21,36 @@
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-text">{{characterList[campaign.turn].name}}</div>
+                <div class="gui-label">{{characterList[campaign.turn].name}}</div>
                 <div title="Next" class="button icon" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i></div>
                 <div title="Previous" class="button icon" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i></div>
                 <div title="Reorder" class="button icon" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
             </div>
             <div class="gui-group">
-                <div class="gui-text">Enemy</div>
+                <div class="gui-label">Enemy</div>
                 <div title="Clear Enemies" class="button icon" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i></div>
                 <div title="Add Enemies" class="button icon" ng-click="add_enemy()"><i class="icon-plus icon-white"></i></div>
             </div>
             <div class="gui-group">
-                <div class="gui-text">Finish</div>
+                <div class="gui-label">Finish</div>
                 <div title="Clear Conditions" class="button icon" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i></div>
                 <div title="Award Milestones" class="button icon" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i></div>
             </div>
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-text">Round: {{campaign.round}}</div>
+                <div class="gui-label">Round: {{campaign.round}}</div>
                 <div title="Previous" class="button icon" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i></div>
                 <div title="Next" class="button icon" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i></div>
                 <div title="Reset" class="button icon" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i></div>
             </div>
             <div class="gui-group">
-                <div class="gui-text">XP</div>
+                <div class="gui-label">XP</div>
                 <div title="Give XP to All" class="button icon" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i></div>
                 <div title="Split XP among All" class="button icon" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i></div>
             </div>
             <div class="gui-group">
-                <div class="gui-text">Rest</div>
+                <div class="gui-label">Rest</div>
                 <div title="Short Rest All" class="button icon" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i></div>
                 <div title="Extended Rest All" class="button icon" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i></div>
             </div>
@@ -77,29 +77,26 @@
                 <th title="Hit Points">HP</th>
                 <th title="Healing Surges">HS</th>
                 <th title="Action Points">AP</th>
-                <th title="Experience">XP</th>
                 <th>Defenses</th>
                 <th>Senses</th>
                 <th>Conditions</th>
             </tr>
             <tr ng-controller="CharacterController" ng-repeat="(ci, c) in characterList"> 
                 <td class="board-cell init">
-                    <div class="incell init">{{c.init}}</div>.<div class="incell subinit">{{c.sub_init}}</div>
+                    <div class="incell init" ng-click="init_dialog()">{{c.init}}</div>.<div class="incell subinit" ng-click="increase_sub_init(c)">{{c.sub_init}}</div>
                 </td>
-                <td class="button-cell name" ng-click="open_detail(c)">{{c.name}}</td>
-                <td class="button-cell hp">
+                <td class="button-cell name" ng-click="open_detail(c)">
+                    <div>{{c.name|trunc:10}}</div></td>
+                <td class="button-cell hp" ng-click="hp_dialog()">
                     <div ng-show="c.type != 'Enemy'">{{c|total_hp}}</div>
                     <div ng-show="c.type == 'Enemy' && !Oc.incapacitated(c)">{{c.used_hit_points}}</div>
                     <div ng-show="c.type == 'Enemy' && Oc.incapacitated(c)">XX</div>
                 </td>
-                <td class="button-cell hs">
+                <td class="button-cell hs" ng-click="spend_hs(c)">
                     {{c|total_hs}}
                 </td>
-                <td class="button-cell ap">
+                <td class="button-cell ap" ng-click="spend_ap(c)">
                     {{c|total_ap}}
-                </td>
-                <td class="button-cell xp">
-                    {{c.experience_points}}
                 </td>
                 <td class="text-center">
                     {{c.ac}}/{{c.fort}}/{{c.refl}}/{{c.will}}
@@ -118,19 +115,42 @@
             <div class="button" ng-click="open_list()"><i class="icon-arrow-left icon-white"></i>Character List</div>
             <div class="character-detail" ng-controller="CharacterDetailCtrl">
                 <div class="gui-row">
-                    <div class="gui-row-title">{{c.name}}</div>
+                    <div class="gui-row-title">{{c.name}} <i class="icon-pencil" tooltip="Edit Character" ng-click="edit_character()"></i><div class="dropdown">
+                            <a class="dropdown-toggle">
+                                <div class="name-container">
+                                    <i class="icon-th-list" tooltip="Menu"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-show="c.type == 'Player'">
+                                  <a ng-click="short_rest(c)">Short Rest</a>
+                                </li>
+                                <li ng-show="c.type == 'Player'">
+                                  <a ng-click="extended_rest(c)">Extended Rest</a>
+                                </li>
+                                <li ng-show="c.type == 'Player'">
+                                  <a ng-click="milestone(c)">Milestone</a>
+                                </li>
+                                <li ng-show="c.type == 'Enemy'">
+                                  <a ng-click="delete_character(ci, c)">Remove</a>
+                                </li>
+                                <li>
+                                  <a ng-click="clear_conditions(c)">Clear Conditions</a>
+                                </li>
+                            </ul>
+                        </div></div>
                 </div>
                 <div class="gui-row">
                     <div class="gui-group">
-                        <div class="gui-textlabel">Max Hit Points</div>
+                        <div class="gui-label">Max Hit Points</div>
                         <div class="gui-value">{{c.hit_points}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Max Healing Surges</div>
+                        <div class="gui-label">Max Healing Surges</div>
                         <div class="gui-value">{{c.healing_surges}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Experience</div>
+                        <div class="gui-label">Experience</div>
                         <div class="gui-value">{{c.experience_points}}</div>
                     </div>
                 </div>
@@ -139,19 +159,19 @@
                 </div>
                 <div class="gui-row">
                     <div class="gui-group">
-                        <div class="gui-textlabel">Armor Class</div>
+                        <div class="gui-label">Armor Class</div>
                         <div class="gui-value">{{c.ac}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Fortitude</div>
+                        <div class="gui-label">Fortitude</div>
                         <div class="gui-value">{{c.fort}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Reflexes</div>
+                        <div class="gui-label">Reflexes</div>
                         <div class="gui-value">{{c.refl}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Will</div>
+                        <div class="gui-label">Will</div>
                         <div class="gui-value">{{c.will}}</div>
                     </div>
                 </div>
@@ -160,11 +180,11 @@
                 </div>
                 <div class="gui-row">
                     <div class="gui-group">
-                        <div class="gui-textlabel">Insight</div>
+                        <div class="gui-label">Insight</div>
                         <div class="gui-value">{{c.insight}}</div>
                     </div>
                     <div class="gui-group">
-                        <div class="gui-textlabel">Perception</div>
+                        <div class="gui-label">Perception</div>
                         <div class="gui-value">{{c.perception}}</div>
                     </div>
                 </div>
@@ -177,7 +197,7 @@
                             --><i class="icon-info-sign icon-white"></i><!--
                         --></div><!--
                         --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
-                            -->{{hasPower._2o.power()|power_name}}</div><!--
+                            -->{{hasPower._2o.power().level}}&nbsp;{{hasPower._2o.power().name|trunc:12}}</div><!--
                     --></div><!--
                 --></div>
             </div>

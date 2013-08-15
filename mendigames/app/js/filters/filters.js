@@ -38,9 +38,9 @@ filter('total_hs', function(){
       return character.healing_surges-character.used_healing_surges;
   };
 }).
-filter('power_name', function(){
-  return function(power){
-      return power.name.slice(0,12);
+filter('trunc', function(){
+  return function(str, value){
+      return str.split(" ")[0].slice(0,value);
   };
 }).
 filter('condition_icon',function(){
