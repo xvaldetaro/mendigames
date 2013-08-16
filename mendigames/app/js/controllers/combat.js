@@ -2,9 +2,9 @@
 
 angular.module('mendigames')
 
-.controller('CombatCtrl', ['$scope', 'Log', '$timeout', '$routeParams', 'EM',
+.controller('CombatCtrl', ['$scope', 'Log', '$timeout', '$routeParams', 'EM','Wizards',
 'Ocam','$dialog',
-function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
+function($scope, Log, $timeout, $routeParams, EM, Wizards, Ocam, $dialog) {
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: {id: $routeParams.campaignId}},
         'condition': { _2o: [], _2m: [], query: {}},
@@ -67,11 +67,18 @@ function($scope, Log, $timeout, $routeParams, EM, Ocam, $dialog) {
             return 'detail';
         return 'list';
     };
+    $scope.compendium = function(model, entity, instance) {
+        Wizards(model, entity, instance).then(function(){
+            $scope.modalInstance = instance;
+            $scope.wizardsModal = true;
+        });
+    };
+    $scope.wizardsModal = false;
 }])
 
-.controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log',
+.controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log','Ocam',
 'InputDialog',
-function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
+function($scope, $rootScope, $dialog, Och, Log, Ocam, InputDialog) {
     $scope.Och = Och;
     $scope.change_xp = function () {
         InputDialog('input',{title: 'Give Experience Points', label: 'how many?', size: 'mini'})
@@ -138,6 +145,11 @@ function($scope, $rootScope, $dialog, Och, Log, InputDialog) {
           }
         });
     };
+
+    $scope.delete_character = function(chi, c) {
+        Ocam.delete_character(c);
+        Log(c.name+' Removed!');
+    };
     $scope.remove_condition = function(hci){
         var name = $scope.c._2m.has_conditions()[hci]._2o.condition().name;
         Och.remove_condition($scope.c, hci);
@@ -167,7 +179,7 @@ function($scope, EM, Ohpo, Och, Log, $location) {
     };
 
     $scope.use_power = function(hasPower){
-        if(hasPower.used)
+        if(!hasPower.used)
             Log($scope.c.name+' used: '+hasPower._2o.power().name);
         else
             Log($scope.c.name+' recharged: '+hasPower._2o.power().name);
@@ -190,15 +202,10 @@ function($scope, EM, Ohpo, Och, Log, $location) {
         Och.clear_conditions(c);
         Log(c.name+' is clean');
     };
-    $scope.delete_character = function(chi, c) {
-        Och.delete_character(c);
-        Log(c.name+' Removed!');
-    };
 }])
 
 .controller('MenuController', ['$scope', 'EM','U','Log','$dialog','Ocam','InputDialog',
-'Wizards',
-function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
+function($scope, EM, U, Log, $dialog, Ocam, InputDialog) {
     $scope.$on('EM.new_list.condition', function(){
         $scope.conditionList = EM.listSlice('condition');
     });
@@ -230,13 +237,6 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
     };
     $scope.reorder = function(){ Ocam.reorder($scope.campaign, $scope.characterList); };
 
-    $scope.compendium = function(condition) {
-        Wizards('glossary', 'condition', condition).then(function(){
-            $scope.modalCondition = condition;
-            $scope.wizardsModal = true;
-        });
-    };
-
     $scope.diceMult = 1;
     $scope.diceMod = 0;
     $scope.roll = function(dice) {
@@ -258,7 +258,7 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog, Wizards) {
         function make_enemy(dialogData, index) {
             return {
                     name: dialogData.name+index,
-                    init: U.roll(dialogData.init_mod, 20).result,
+                    init: U.roll(dialogData.init_mod, 20,1).result,
                     hit_points: dialogData.hit_points,
                     ap: -1*(dialogData.ap-1),
                     type: 'Enemy',

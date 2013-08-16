@@ -21,51 +21,42 @@
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-label">{{characterList[campaign.turn].name}}</div>
+                <div class="gui-label size-zero"><b>{{characterList[campaign.turn].name|trunc:7}}</b></div>
                 <div title="Next" class="button icon" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i></div>
                 <div title="Previous" class="button icon" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i></div>
                 <div title="Reorder" class="button icon" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
-            </div>
-            <div class="gui-group">
-                <div class="gui-label">Enemy</div>
+            </div><div class="gui-group">
+                <div class="gui-label size-mili">Enemy</div>
                 <div title="Clear Enemies" class="button icon" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i></div>
                 <div title="Add Enemies" class="button icon" ng-click="add_enemy()"><i class="icon-plus icon-white"></i></div>
-            </div>
-            <div class="gui-group">
-                <div class="gui-label">Finish</div>
-                <div title="Clear Conditions" class="button icon" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i></div>
-                <div title="Award Milestones" class="button icon" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i></div>
+            </div><div class="gui-group">
+                <div class="gui-label size-micro">Rest</div>
+                <div title="Short Rest All" class="button icon" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i></div>
+                <div title="Extended Rest All" class="button icon" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i></div>
             </div>
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-label">Round: {{campaign.round}}</div>
+                <div class="gui-label size-zero">Round: <b>{{campaign.round}}</b></div>
                 <div title="Previous" class="button icon" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i></div>
                 <div title="Next" class="button icon" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i></div>
                 <div title="Reset" class="button icon" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i></div>
-            </div>
-            <div class="gui-group">
-                <div class="gui-label">XP</div>
+            </div><div class="gui-group">
+                <div class="gui-label size-mili">Finish</div>
+                <div title="Clear Conditions" class="button icon" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i></div>
+                <div title="Award Milestones" class="button icon" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i></div>
+            </div><div class="gui-group">
+                <div class="gui-label size-micro">XP</div>
                 <div title="Give XP to All" class="button icon" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i></div>
                 <div title="Split XP among All" class="button icon" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i></div>
-            </div>
-            <div class="gui-group">
-                <div class="gui-label">Rest</div>
-                <div title="Short Rest All" class="button icon" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i></div>
-                <div title="Extended Rest All" class="button icon" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i></div>
             </div>
         </div>
         <div class="gui-row">
            <div class="gui-row-title">Conditions</div> 
         </div>
         <div class="gui-row" btf-dragon="(ci, condition) in conditionList" btf-double-dragon btf-dragon-accepts="ret_false">
-            <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="compendium(condition)">
+            <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="compendium('glossary', 'condition', condition)">
                 <i class="{{condition|condition_icon}} icon-white"></i>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="" modal="wizardsModal" close="wizardsModal = false;">
-            <div ng-bind-html="modalCondition.html_description" id="detail">
             </div>
         </div>
     </div>
@@ -81,21 +72,25 @@
                 <th>Senses</th>
                 <th>Conditions</th>
             </tr>
-            <tr ng-controller="CharacterController" ng-repeat="(ci, c) in characterList"> 
+            <tr class="{{c.type}} {{has_turn()}}" ng-controller="CharacterController" ng-repeat="(ci, c) in characterList"> 
                 <td class="board-cell init">
-                    <div class="incell init" ng-click="init_dialog()">{{c.init}}</div>.<div class="incell subinit" ng-click="increase_sub_init(c)">{{c.sub_init}}</div>
+                    <div class="incell-button" ng-click="init_dialog()">{{c.init}}</div>.<div class="incell-button" ng-click="increase_sub_init(c)">{{c.sub_init}}</div>
                 </td>
-                <td class="button-cell name" ng-click="open_detail(c)">
-                    <div>{{c.name|trunc:10}}</div></td>
+                <td ng-show="c.type != 'Enemy'">
+                    <i ng-click="open_detail(c)" class="icon-user" tooltip="Open Sheet"></i>&nbsp;{{c.name|trunc:10}}</td>
+                <td ng-show="c.type == 'Enemy'">
+                    <i ng-click="delete_character(ci, c)" class="icon-ban-circle" tooltip="Remove Enemy"></i>&nbsp;{{c.name|trunc:10}}</td>
                 <td class="button-cell hp" ng-click="hp_dialog()">
-                    <div ng-show="c.type != 'Enemy'">{{c|total_hp}}</div>
-                    <div ng-show="c.type == 'Enemy' && !Oc.incapacitated(c)">{{c.used_hit_points}}</div>
-                    <div ng-show="c.type == 'Enemy' && Oc.incapacitated(c)">XX</div>
+                    <i ng-show="Och.bloodied(c)" class="icon-tint"></i>
+                    <div ng-show="c.type != 'Enemy'">{{c|total_hp}}
+                    </div><div ng-show="c.type == 'Enemy' && !Och.incapacitated(c)">-{{c.used_hit_points}}
+                    </div><div ng-show="c.type == 'Enemy' && Och.incapacitated(c)">XX
+                    </div>
                 </td>
-                <td class="button-cell hs" ng-click="spend_hs(c)">
+                <td class="button-cell" ng-click="spend_hs(c)">
                     {{c|total_hs}}
                 </td>
-                <td class="button-cell ap" ng-click="spend_ap(c)">
+                <td class="button-cell" ng-click="spend_ap(c)">
                     {{c|total_ap}}
                 </td>
                 <td class="text-center">
@@ -192,18 +187,41 @@
                     <div class="gui-row-title">Powers</div>
                 </div>
                 <div class="power-container"><!--
-                    --><div class="power-widget" ng-repeat="hasPower in c._2m.has_powers()"><!--
-                        --><div class="power-button power-info {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}"><!--
-                            --><i class="icon-info-sign icon-white"></i><!--
-                        --></div><!--
-                        --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
-                            -->{{hasPower._2o.power().level}}&nbsp;{{hasPower._2o.power().name|trunc:12}}</div><!--
+                --><div class="power-widget" ng-repeat="hasPower in c._2m.has_powers()" ng-show="hasPower._2o.power().usage == 'W'"><!--
+                    --><div class="power-button power-info {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="compendium('power','power',hasPower._2o.power())"><!--
+                        --><i class="icon-info-sign icon-white"></i><!--
                     --></div><!--
-                --></div>
+                    --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
+                        -->{{hasPower._2o.power().level}}&nbsp;{{hasPower._2o.power().name|trunc:12}}</div><!--
+                --></div><!--
+            --></div>
+                <div class="power-container"><!--
+                --><div class="power-widget" ng-repeat="hasPower in c._2m.has_powers()" ng-show="hasPower._2o.power().usage == 'E'"><!--
+                    --><div class="power-button power-info {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="compendium('power','power',hasPower._2o.power())"><!--
+                        --><i class="icon-info-sign icon-white"></i><!--
+                    --></div><!--
+                    --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
+                        -->{{hasPower._2o.power().level}}&nbsp;{{hasPower._2o.power().name|trunc:12}}</div><!--
+                --></div><!--
+            --></div>
+                <div class="power-container"><!--
+                --><div class="power-widget" ng-repeat="hasPower in c._2m.has_powers()" ng-show="hasPower._2o.power().usage == 'D'"><!--
+                    --><div class="power-button power-info {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="compendium('power','power',hasPower._2o.power())"><!--
+                        --><i class="icon-info-sign icon-white"></i><!--
+                    --></div><!--
+                    --><div class="power-button power-name {{hasPower._2o.power()|power_type}} {{hasPower|power_style}}" ng-click="use_power(hasPower)"><!--
+                        -->{{hasPower._2o.power().level}}&nbsp;{{hasPower._2o.power().name|trunc:12}}</div><!--
+                --></div><!--
+            --></div>
             </div>
         </div>
     </div>
     <div id="console">
         <div ng-repeat="line in log">{{line}}</div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="" modal="wizardsModal" close="wizardsModal = false;">
+    <div ng-bind-html="modalInstance.html_description" id="detail">
     </div>
 </div>

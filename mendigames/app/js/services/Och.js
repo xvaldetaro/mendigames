@@ -11,8 +11,8 @@ function(EM, U) {
         c.used_hit_points = c.used_hit_points-parseInt(value);
         if(c.used_hit_points < 0)
             c.used_hit_points = 0;
-        else if(c.used_hit_points > c.hit_points+c.hit_points/3)
-            c.used_hit_points = c.hit_points+c.hit_points/3;
+        else if(c.used_hit_points > c.hit_points+Math.floor(c.hit_points/3))
+            c.used_hit_points = c.hit_points+Math.floor(c.hit_points/3);
     }
     function change_hp(c, value){
         _change_hp(c,value);

@@ -5,8 +5,10 @@ angular.module('mendigames')
 .factory('Ocam', ['EM','Och','Ocont','$q','U',
 function(EM, Och, Ocont, $q, U) {
     function delete_character(c) {
-        return $q.all([EM.remove('character', c),
-            EM.remove('container', c._2o.container())]);
+        if(c._2o.container)
+            return $q.all([EM.remove('character', c),
+                EM.remove('container', c._2o.container())]);
+        return EM.remove('character', c);
     }
     function add_character(cDict){
         var container = {

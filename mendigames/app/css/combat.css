@@ -13,8 +13,7 @@
     color: white; }
     .gui-row div.gui-label {
       white-space: nowrap;
-      color: #464646;
-      min-width: 4.5em; }
+      color: #464646; }
     .gui-row div.gui-group {
       padding-left: 5px;
       padding-right: 5px;
@@ -99,83 +98,86 @@
     display: inline-block;
     margin: 0;
     color: white;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    width: 138px;
+    white-space: nowrap;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     border: 0px; }
     .power-widget .power-button.at-will {
-      background-image: -webkit-linear-gradient(bottom, #3d6042, #4f7c56);
-      background-image: linear-gradient(to top, #3d6042, #4f7c56);
+      background-image: -webkit-linear-gradient(bottom, #395a3e, #49734f);
+      background-image: linear-gradient(to top, #395a3e, #49734f);
       cursor: pointer;
       border-color: #395a3e; }
       .power-widget .power-button.at-will:hover {
         background-color: #436949;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
-        background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
-        background-image: radial-gradient(  #436949, #314d35, #55855c); }
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #395a3e), color-stop(100%, #4d7953));
+        background-image: -webkit-radial-gradient(#436949, #395a3e, #4d7953);
+        background-image: radial-gradient(  #436949, #395a3e, #4d7953); }
     .power-widget .power-button.daily {
-      background-image: -webkit-linear-gradient(bottom, #454547, #5c5c5e);
-      background-image: linear-gradient(to top, #454547, #5c5c5e);
+      background-image: -webkit-linear-gradient(bottom, #404042, #555557);
+      background-image: linear-gradient(to top, #404042, #555557);
       cursor: pointer;
       border-color: #404042; }
       .power-widget .power-button.daily:hover {
         background-color: #4d4d4f;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
-        background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
-        background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #404042), color-stop(100%, #5a5a5c));
+        background-image: -webkit-radial-gradient(#4d4d4f, #404042, #5a5a5c);
+        background-image: radial-gradient(  #4d4d4f, #404042, #5a5a5c); }
     .power-widget .power-button.encounter {
-      background-image: -webkit-linear-gradient(bottom, #88112f, #b1163d);
-      background-image: linear-gradient(to top, #88112f, #b1163d);
+      background-image: -webkit-linear-gradient(bottom, #7f102c, #a41539);
+      background-image: linear-gradient(to top, #7f102c, #a41539);
       cursor: pointer;
       border-color: #7f102c; }
       .power-widget .power-button.encounter:hover {
         background-color: #961334;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
-        background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
-        background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #7f102c), color-stop(100%, #ad163c));
+        background-image: -webkit-radial-gradient(#961334, #7f102c, #ad163c);
+        background-image: radial-gradient(  #961334, #7f102c, #ad163c); }
     .power-widget .power-button.power-info {
+      width: auto;
       border-right-style: solid;
       border-right-width: 1px; }
     .power-widget .power-button.power-name {
       font-weight: bold; }
       .power-widget .power-button.power-name.at-will.used {
-        background-image: -webkit-linear-gradient(bottom, #29412d, #3b5d40);
-        background-image: linear-gradient(to top, #29412d, #3b5d40);
+        background-image: -webkit-linear-gradient(bottom, #253b28, #35543a);
+        background-image: linear-gradient(to top, #253b28, #35543a);
         cursor: pointer;
         color: #57885e; }
         .power-widget .power-button.power-name.at-will.used:hover {
           background-color: #2f4a33;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #2f4a33), color-stop(50%, #1d2e20), color-stop(100%, #416647));
-          background-image: -webkit-radial-gradient(#2f4a33, #1d2e20, #416647);
-          background-image: radial-gradient(  #2f4a33, #1d2e20, #416647); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #2f4a33), color-stop(50%, #253b28), color-stop(100%, #395a3e));
+          background-image: -webkit-radial-gradient(#2f4a33, #253b28, #395a3e);
+          background-image: radial-gradient(  #2f4a33, #253b28, #395a3e); }
       .power-widget .power-button.power-name.daily.used {
-        background-image: -webkit-linear-gradient(bottom, #2c2c2d, #434345);
-        background-image: linear-gradient(to top, #2c2c2d, #434345);
+        background-image: -webkit-linear-gradient(bottom, #272728, #3b3b3d);
+        background-image: linear-gradient(to top, #272728, #3b3b3d);
         cursor: pointer;
         color: #666669; }
         .power-widget .power-button.power-name.daily.used:hover {
           background-color: #343435;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #343435), color-stop(50%, #1d1d1e), color-stop(100%, #4a4a4c));
-          background-image: -webkit-radial-gradient(#343435, #1d1d1e, #4a4a4c);
-          background-image: radial-gradient(  #343435, #1d1d1e, #4a4a4c); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #343435), color-stop(50%, #272728), color-stop(100%, #404042));
+          background-image: -webkit-radial-gradient(#343435, #272728, #404042);
+          background-image: radial-gradient(  #343435, #272728, #404042); }
       .power-widget .power-button.power-name.encounter.used {
-        background-image: -webkit-linear-gradient(bottom, #5b0c20, #84112e);
-        background-image: linear-gradient(to top, #5b0c20, #84112e);
+        background-image: -webkit-linear-gradient(bottom, #520a1c, #760f29);
+        background-image: linear-gradient(to top, #520a1c, #760f29);
         cursor: pointer;
         color: #c31944; }
         .power-widget .power-button.power-name.encounter.used:hover {
           background-color: #690d24;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #400816), color-stop(100%, #911232));
-          background-image: -webkit-radial-gradient(#690d24, #400816, #911232);
-          background-image: radial-gradient(  #690d24, #400816, #911232); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #520a1c), color-stop(100%, #7f102c));
+          background-image: -webkit-radial-gradient(#690d24, #520a1c, #7f102c);
+          background-image: radial-gradient(  #690d24, #520a1c, #7f102c); }
 
 .characters-container {
   margin-top: 10px; }
 
 table.character-list {
   width: 100%;
-  border-color: #e1e1e1;
+  border-color: #bebebe;
   border-style: solid;
   border-width: 1px;
   border-bottom: 0px;
@@ -184,94 +186,94 @@ table.character-list {
   table.character-list tr {
     padding-top: 2px;
     padding-bottom: 2px;
-    border-bottom-color: #e1e1e1;
+    border-bottom-color: #bebebe;
     border-bottom-style: solid;
     border-bottom-width: 1px; }
-  table.character-list td, table.character-list th {
-    padding-left: 4px;
-    padding-right: 4px;
-    border-right-color: #e1e1e1;
-    border-right-style: solid;
-    border-right-width: 1px; }
-  table.character-list th {
-    background-color: #464646;
-    color: white; }
-
-.button-cell {
-  font-weight: bold;
-  color: #464646;
-  background-image: -webkit-linear-gradient(bottom, #ededed, white);
-  background-image: linear-gradient(to top, #ededed, white);
-  cursor: pointer; }
-  .button-cell:hover {
-    background-color: whitesmoke;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
-    background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
-    background-image: radial-gradient(  whitesmoke, #dedede, white); }
-  .button-cell.hp {
-    background-image: -webkit-linear-gradient(bottom, #f2c0c0, #fae7e7);
-    background-image: linear-gradient(to top, #f2c0c0, #fae7e7);
-    cursor: pointer;
-    color: #5e1414; }
-    .button-cell.hp:hover {
-      background-color: #f5cdcd;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f5cdcd), color-stop(50%, #eda7a7), color-stop(100%, #fdf3f3));
-      background-image: -webkit-radial-gradient(#f5cdcd, #eda7a7, #fdf3f3);
-      background-image: radial-gradient(  #f5cdcd, #eda7a7, #fdf3f3); }
-  .button-cell.hs {
-    background-image: -webkit-linear-gradient(bottom, #c0c0f2, #e7e7fa);
-    background-image: linear-gradient(to top, #c0c0f2, #e7e7fa);
-    cursor: pointer;
-    color: #14145e; }
-    .button-cell.hs:hover {
-      background-color: #cdcdf5;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #cdcdf5), color-stop(50%, #a7a7ed), color-stop(100%, #f3f3fd));
-      background-image: -webkit-radial-gradient(#cdcdf5, #a7a7ed, #f3f3fd);
-      background-image: radial-gradient(  #cdcdf5, #a7a7ed, #f3f3fd); }
-  .button-cell.ap {
-    background-image: -webkit-linear-gradient(bottom, #f2f2c0, #fafae7);
-    background-image: linear-gradient(to top, #f2f2c0, #fafae7);
-    cursor: pointer;
-    color: #5e5e14; }
-    .button-cell.ap:hover {
-      background-color: #f5f5cd;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #f5f5cd), color-stop(50%, #ededa7), color-stop(100%, #fdfdf3));
-      background-image: -webkit-radial-gradient(#f5f5cd, #ededa7, #fdfdf3);
-      background-image: radial-gradient(  #f5f5cd, #ededa7, #fdfdf3); }
-  .button-cell.xp {
-    background-image: -webkit-linear-gradient(bottom, #c0f2c0, #e7fae7);
-    background-image: linear-gradient(to top, #c0f2c0, #e7fae7);
-    cursor: pointer;
-    color: #145e14; }
-    .button-cell.xp:hover {
-      background-color: #cdf5cd;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #cdf5cd), color-stop(50%, #a7eda7), color-stop(100%, #f3fdf3));
-      background-image: -webkit-radial-gradient(#cdf5cd, #a7eda7, #f3fdf3);
-      background-image: radial-gradient(  #cdf5cd, #a7eda7, #f3fdf3); }
-
-.board-cell div {
-  display: inline-block; }
-.board-cell.init {
-  white-space: nowrap;
-  font-weight: bold; }
-  .board-cell.init .incell {
-    color: #464646;
-    background-image: -webkit-linear-gradient(bottom, #ededed, white);
-    background-image: linear-gradient(to top, #ededed, white);
-    cursor: pointer;
-    min-width: 1em;
-    text-align: center; }
-    .board-cell.init .incell:hover {
-      background-color: whitesmoke;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #dedede), color-stop(100%, white));
-      background-image: -webkit-radial-gradient(whitesmoke, #dedede, white);
-      background-image: radial-gradient(  whitesmoke, #dedede, white); }
-.board-cell.name {
-  font-weight: bold; }
-  .board-cell.name i, .board-cell.name div {
-    display: inline-block; }
-  .board-cell.name i {
-    cursor: pointer; }
+    table.character-list tr.turn {
+      border: 3px solid #646464; }
+    table.character-list tr td, table.character-list tr th {
+      white-space: nowrap;
+      font-weight: bold;
+      padding-left: 4px;
+      padding-right: 4px;
+      border-right-color: #bebebe;
+      border-right-style: solid;
+      border-right-width: 1px; }
+      table.character-list tr td i, table.character-list tr th i {
+        cursor: pointer; }
+    table.character-list tr th {
+      background-color: #464646;
+      color: white; }
+    table.character-list tr td.button-cell {
+      font-weight: bold; }
+      table.character-list tr td.button-cell.hp div {
+        display: inline-block; }
+    table.character-list tr.Enemy td {
+      color: maroon;
+      background-color: #ffe6e6; }
+      table.character-list tr.Enemy td.button-cell {
+        background-image: -webkit-linear-gradient(bottom, #ffcccc, #fff5f5);
+        background-image: linear-gradient(to top, #ffcccc, #fff5f5);
+        cursor: pointer; }
+        table.character-list tr.Enemy td.button-cell:hover {
+          background-color: #ffe6e6;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #ffe6e6), color-stop(50%, #ffcccc), color-stop(100%, white));
+          background-image: -webkit-radial-gradient(#ffe6e6, #ffcccc, white);
+          background-image: radial-gradient(  #ffe6e6, #ffcccc, white); }
+      table.character-list tr.Enemy td .incell-button {
+        display: inline-block;
+        background-color: #ffe6e6;
+        cursor: pointer;
+        border-radius: 3px;
+        border-color: #fff5f5;
+        border-style: solid;
+        border-width: 1px;
+        min-width: 1em;
+        text-align: center; }
+    table.character-list tr.Player td {
+      color: #003d7b;
+      background-color: #e1f0ff; }
+      table.character-list tr.Player td.button-cell {
+        background-image: -webkit-linear-gradient(bottom, #c7e3ff, aliceblue);
+        background-image: linear-gradient(to top, #c7e3ff, aliceblue);
+        cursor: pointer; }
+        table.character-list tr.Player td.button-cell:hover {
+          background-color: #e1f0ff;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #e1f0ff), color-stop(50%, #c7e3ff), color-stop(100%, #fafdff));
+          background-image: -webkit-radial-gradient(#e1f0ff, #c7e3ff, #fafdff);
+          background-image: radial-gradient(  #e1f0ff, #c7e3ff, #fafdff); }
+      table.character-list tr.Player td .incell-button {
+        display: inline-block;
+        background-color: #e1f0ff;
+        cursor: pointer;
+        border-radius: 3px;
+        border-color: aliceblue;
+        border-style: solid;
+        border-width: 1px;
+        min-width: 1em;
+        text-align: center; }
+    table.character-list tr.Neutral td {
+      color: #434343;
+      background-color: whitesmoke; }
+      table.character-list tr.Neutral td.button-cell {
+        background-image: -webkit-linear-gradient(bottom, #e8e8e8, #fdfdfd);
+        background-image: linear-gradient(to top, #e8e8e8, #fdfdfd);
+        cursor: pointer; }
+        table.character-list tr.Neutral td.button-cell:hover {
+          background-color: whitesmoke;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #e8e8e8), color-stop(100%, white));
+          background-image: -webkit-radial-gradient(whitesmoke, #e8e8e8, white);
+          background-image: radial-gradient(  whitesmoke, #e8e8e8, white); }
+      table.character-list tr.Neutral td .incell-button {
+        display: inline-block;
+        background-color: whitesmoke;
+        cursor: pointer;
+        border-radius: 3px;
+        border-color: #fdfdfd;
+        border-style: solid;
+        border-width: 1px;
+        min-width: 1em;
+        text-align: center; }
 
 div.condition-box {
   display: inline-block;

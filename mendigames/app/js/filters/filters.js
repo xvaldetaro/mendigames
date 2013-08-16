@@ -40,7 +40,14 @@ filter('total_hs', function(){
 }).
 filter('trunc', function(){
   return function(str, value){
-      return str.split(" ")[0].slice(0,value);
+    if(!str)
+      return;
+    if(str.length <= value)
+      return str;
+
+    var tStr = str.slice(0,value-3)+'...';
+    tStr += str.slice(str.length-3);
+    return tStr;
   };
 }).
 filter('plus_sign', function(){

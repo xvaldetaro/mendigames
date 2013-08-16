@@ -36,3 +36,11 @@ $IFRONT: white;
   background-color: darken($color, 20%);
   color: darken($color, 15%);
 }
+@mixin round-border($color) {
+  border: {
+    color: $color;
+    style: solid;
+    width: 1px;
+    radius: 3px;
+  }
+}

@@ -3,10 +3,10 @@
 @import 'mixins.scss';
 
 @mixin button-cell($color) {
-  @include background-image(linear-gradient(to top, darken($color,3%),lighten($color,6%)));
+  @include background-image(linear-gradient(to top, darken($color,5%),lighten($color,3%)));
   cursor: pointer;
   &:hover {
-      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
+      @include radial-gradient($color, darken($color,5%),lighten($color,5%));
   }
 }
 
@@ -35,7 +35,6 @@ $DAILY: #4d4d4f;
     &.gui-label {
       white-space: nowrap;
       color: $DARKFONT;
-      min-width: 4.5em;
     }
     &.gui-group {
       padding: {
@@ -120,11 +119,13 @@ $DAILY: #4d4d4f;
     display: inline-block;
     margin: 0;
     color: white;
+    width: 138px;
+    white-space: nowrap;
     padding: {
-      left: 0.7em;
-      right: 0.7em;
-      top: 0.5em;
-      bottom: 0.5em;
+      left: 5px;
+      right: 5px;
+      top: 3px;
+      bottom: 3px;
     }
     border: 0px;
     &.at-will {
@@ -140,6 +141,7 @@ $DAILY: #4d4d4f;
       border-color: darken($ENCOUNTER, 5%);
     }
     &.power-info {
+      width: auto;
       border-right: {
         style: solid;
         width: 1px;
@@ -168,9 +170,10 @@ $DAILY: #4d4d4f;
 }
 
 table.character-list {
+  $BORDERCOLOR: rgb(190,190,190); 
   width: 100%;
   border: {
-    color: rgb(225,225,225);
+    color: $BORDERCOLOR;
     style: solid;
     width: 1px;
     bottom: 0px;
@@ -183,73 +186,83 @@ table.character-list {
       bottom: 2px;
     }
     border-bottom: {
-      color: rgb(225,225,225);
+      color: $BORDERCOLOR;
       style: solid;
       width: 1px;
     }
-  }
-  td,th {
-    padding: {
-      left: 4px;
-      right: 4px;
+    &.turn {
+      border: 3px solid rgb(100,100,100);
     }
-    border-right: {
-      color: rgb(225,225,225);
-      style: solid;
-      width: 1px;
+    td,th {
+      white-space: nowrap;
+      font-weight: bold;
+      i {
+        cursor: pointer;
+      }
+      padding: {
+        left: 4px;
+        right: 4px;
+      }
+      border-right: {
+        color: $BORDERCOLOR;
+        style: solid;
+        width: 1px;
+      }
     }
-  }
-  th{
-    background-color: $DARKFONT;
-    color: white;
-  }
-}
-.button-cell {
-  font-weight: bold;
-  color: $DARKFONT;
-  @include button-cell(rgb(245,245,245));
-  &.hp {
-    @include button-cell(rgb(245,205,205));
-    color: rgb(94,20,20);
-  }
-  &.hs {
-    @include button-cell(rgb(205,205,245));
-    color: rgb(20,20,94);
-  }
-  &.ap {
-    @include button-cell(rgb(245,245,205));
-    color: rgb(94,94,20);
-  }
-  &.xp {
-    @include button-cell(rgb(205,245,205));
-    color: rgb(20,94,20);
+    th {
+      background-color: $DARKFONT;
+      color: white;
+    }
+    @mixin character-cell($color) {
+      color: darken($color, 70%);
+      background-color: $color;
+      &.button-cell {
+        @include button-cell($color);
+      }
+      .incell-button {
+        display: inline-block;
+        background-color: $color;
+        cursor: pointer;
+        border: {
+          radius: 3px;
+          color: lighten($color,3%);
+          style: solid;
+          width: 1px;
+        }
+        min-width: 1em;
+        text-align: center;
+      }
+    }
+    $ENEMY: rgb(255,230,230);
+    $PLAYER: rgb(225,240,255);
+    $NEUTRAL: rgb(245,245,245);
+
+    td.button-cell {
+      font-weight: bold;
+      &.hp {
+        div {
+          display: inline-block;
+        }
+      }
+    }
+    &.Enemy {
+      td {
+        @include character-cell($ENEMY);
+      }
+    }
+    &.Player {
+      td {
+        @include character-cell($PLAYER);
+      }
+    }
+    &.Neutral {
+      td {
+        @include character-cell($NEUTRAL);
+      }
+    }
   }
 }
 
-.board-cell {
-  div {
-    display: inline-block;
-  }
-  &.init {
-    white-space: nowrap;
-    font-weight: bold;
-    .incell {
-      color: $DARKFONT;
-      @include button-cell(rgb(245,245,245));
-      min-width: 1em;
-      text-align: center;
-    }
-  }
-  &.name {
-    font-weight: bold;
-    i,div {
-      display: inline-block;
-    }
-    i {
-      cursor: pointer;
-    }
-  }
-}
 div.condition-box {
   display: inline-block;
   text-align: center;
