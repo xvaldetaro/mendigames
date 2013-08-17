@@ -1,140 +1,172 @@
-<div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span4 trade-section">
-            <button ng-click="new_container()" class="btn">New</button>
-            <tabset vertical="false" type="'tabs'" >
-                <tab class="pointer" ng-repeat="cont in othContList" heading="{{cont.name}}" active="cont.active">
-                    <div ng-controller="ContainerCtrl">
-                        <button ng-click="delete_container()" class="btn">Delete</button>
-                        <button ng-click="loot_gold(cont)" class="btn">Loot Gold:{{cont.gold}}</button>
-                        <button ng-click="loot_all()" class="btn">Loot All</button>
-                        <div class="row-fluid inventory-table-header">
-                            <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                            <div class="span3 inventory-cell" ng-click="set_predicate('category')">Type</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
-                            <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('amount')">x</div>
-                        </div>
-                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items()" btf-dragon-drop-function="item_drop">
-                            <div class="row-fluid inventory-row">
-                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</div>
-                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.mundane().name}}</div>
-                                <div class="span1 inventory-cell">{{item.level}}</div>
-                                <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
-                                <div class="span1 inventory-cell">{{item.weight}}</div>
-                                <div class="span2 inventory-cell">{{item.cost}}</div>
-                                <div class="span1 inventory-cell last-cell" ng-click="split_item(item)">x {{item.amount}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </tab>
-            </tabset>
-        </div>
-        <div class="span4 trade-section">
-            <form class="form-inline">
-                <label class="checkbox">Buy Price: <select class="input-small" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select></label>
-                <label class="checkbox">Sell Price: <select class="input-small" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select></label>
-            </form>
-            <button ng-click="split_gold()" class="btn">Split Gold</button>
-            <button ng-click="mass_give_gold()" class="btn">Mass Give Gold</button>
-            <tabset vertical="false" type="'tabs'" >
-                <tab class="pointer" ng-repeat="cont in plContList" heading="{{cont.name}}" active="cont.active">
-                    <div ng-controller="InventoryCtrl">
-                        <button ng-click="change_gold(0)" class="btn">Gold:{{cont.gold}}</button>
-                        <div class="row-fluid inventory-table-header">
-                            <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                            <div class="span3 inventory-cell" ng-click="set_predicate('category')">Type</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
-                            <div class="span2 inventory-cell" ng-click="set_predicate('cost')">G</div>
-                            <div class="span1 inventory-cell" ng-click="set_predicate('amount')">x</div>
-                        </div>
-                        <div class="inventory-table-body" btf-dragon="item in cont._2m.items()" btf-dragon-drop-function="item_drop">
-                            <div class="row-fluid inventory-row">
-                                <div class="span4 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</div>
-                                <div class="span3 inventory-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.mundane().name}}</div>
-                                <div class="span1 inventory-cell">{{item.level}}</div>
-                                <div class="span1 inventory-cell">{{item._2o.magic().rarity}}</div>
-                                <div class="span1 inventory-cell">{{item.weight}}</div>
-                                <div class="span2 inventory-cell">{{item.cost}}</div>
-                                <div class="span1 inventory-cell last-cell" ng-click="split_item(item)">x {{item.amount}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </tab>
-            </tabset>
-        </div>
-        <div class="span4 trade-section" ng-controller="ItemFinderCtrl">
-            <div class="btn-group" ng-init="magic = true;">
-                <button type="button" class="btn btn-primary" ng-model="magic" btn-radio="true">Magic</button>
-                <button type="button" class="btn btn-inverse" ng-model="magic" btn-radio="false">Mundane</button>
-            </div>
-            <div class="magic-item-finder" ng-show='magic' ng-controller="MagicItemFinderCtrl">
-                <div class="inventory-config">
-                    <form class="form-inline">
-                        <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
-                        <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
-                        <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
-                        <label class="checkbox">Level: <input type="text" ng-model="levelStart" class="size-nano"></label><label>to<input type="text" ng-model="levelStop" class="size-nano"></label>
-                        <label class="checkbox">Cost: <input type="text" ng-model="costStart" class="size-nano"></label><label>to<input type="text" ng-model="costStop" class="size-nano"></label>
-                        <button ng-click="item_finder_search(1)" class="btn">Search</button>
-                    </form>
-                    <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
-                </div>
-                <div class="inventory-table-header minus-scrollbar">
-                    <div class="row-fluid">
-                        <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Category</div>
-                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Types</div>
-                        <div class="span1 inventory-cell" ng-click="set_predicate('level')">L</div>
-                        <div class="span1 inventory-cell" ng-click="set_predicate('rarity')">R</div>
-                        <div class="span1 inventory-cell" ng-click="set_predicate('cost')">G</div>
+<div class="cage">
+    <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
+    <div class="xpan10">
+        <div class="gui-box">
+            <div class="xpan5">
+                <div class="gui-row">
+                    <div class="gui-row-title">
+                        Prices
                     </div>
                 </div>
-                <div class="inventory-table-body" btf-dragon="magic in itemFinder.results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
-                    <div class="row-fluid inventory-row">
-                        <div class="span4 inventory-cell" ng-click="compendium(magic)">{{magic.name}}</div>
-                        <div class="span3 inventory-cell">{{magic._2o.category().name}}</div>
-                        <div class="span3 inventory-cell" ng-click="fill_subtypes(magic)">{{magic._2m.subtypes() | subtypes}}</div>
-                        <div class="span1 inventory-cell">{{magic | level_plus}}</div>
-                        <div class="span1 inventory-cell">{{magic.rarity}}</div>
-                        <div class="span1 inventory-cell last-cell">{{magic | cost_plus}}</div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label">Buy:</div>
+                        <select class="size-mili" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Sell:</div>
+                        <select class="size-mili" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select>
                     </div>
                 </div>
-            </div>
-            <div class="mundane-item-finder" ng-show='!magic' ng-controller="MundaneItemFinderCtrl">
-                <div class="inventory-config">
-                    <form class="form-inline">
-                        <input type="text" class="input-medium" ng-model="itemName" placeholder="Item name">
-                        <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
-                        <select class="input-small" ng-model="subtype" ng-options="st.name for st in category._2m.subtypes()"><option value="">-Subtype-</option></select>
-                        <button ng-click="item_finder_search()" class="btn">Search</button>
-                    </form>
-                </div>
-                <div class="inventory-table-header minus-scrollbar">
-                    <div class="row-fluid">
-                        <div class="span4 inventory-cell" ng-click="set_predicate('name')">Name</div>
-                        <div class="span3 inventory-cell" ng-click="set_predicate('category')">Category</div>
-                        <div class="span3 inventory-cell" ng-click="set_predicate('subtype')">Subtype</div>
-                        <div class="span1 inventory-cell" ng-click="set_predicate('weight')">W</div>
-                        <div class="span1 inventory-cell" ng-click="set_predicate('cost')">G</div>
+            </div><div class="xpan5">
+                <div class="gui-row">
+                    <div class="gui-row-title">
+                        Mass Gold
                     </div>
                 </div>
-                <div class="inventory-table-body" btf-dragon="mundane in results | orderBy:predicate:predicate_reverse | filter:itemFinder_filter" btf-double-dragon btf-dragon-drop-function="item_drop">
-                    <div class="row-fluid inventory-row">
-                        <div class="span4 inventory-cell" ng-click="fetch_from_compendium(mundane)">{{mundane.name}}</div>
-                        <div class="span3 inventory-cell">{{get_category(mundane).name}}</div>
-                        <div class="span3 inventory-cell">{{get_subtype(mundane).name}}</div>
-                        <div class="span1 inventory-cell">{{mundane.weight}}</div>
-                        <div class="span1 inventory-cell last-cell">{{mundane.cost}}</div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label size-mili">Split</div>
+                        <div title="Split Gold among All" class="button" ng-click="split_gold()"><i class="icon-fullscreen icon-white"></i></div>
+                    </div><div class="gui-group">
+                        <div class="gui-label size-mili">Give</div>
+                        <div title="Give Gold to All" class="button" ng-click="mass_give_gold()"><i class="icon-plus icon-white"></i></div>
+                    </div>
+                </div>
+            </div><div class="xpan10">
+                <div class="gui-row">
+                    <div class="gui-row-title">
+                        Container Management        
+                    </div>
+                </div>
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label size-mili">New</div>
+                        <div class="button" ng-click="new_container()"><i class="icon-plus icon-white"></i></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="xpan5" ng-controller="InventoryCtrl">
+        <div class="gui-box">
+            <div class="gui-row">
+                <div class="gui-row-title">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle">
+                            <i class="icon-refresh" tooltip="Change Inventory"></i>&nbsp;
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="cont in plContList">
+                              <a ng-click="change_player_container(cont)">{{cont.name}}</a>
+                            </li>
+                        </ul>
+                    </div>{{plCont.name|trunc:12}}'s Inventory
+                </div>
+            </div>
+            <div class="gui-row">
+                <div class="gui-group">
+                    <div class="gui-label size-zero">Gold: {{plCont.gold}}</div>
+                    <div class="button" ng-click="change_gold()" tooltip="Change Gold"><i class="icon-edit icon-white"></i></div>
+                </div>
+            </div>
+            <div class="gui-row">
+                <table class="gui-table">
+                    <tr>
+                        <th>Item</th><th>G</th><th>W</th><th>x</th>
+                    </tr>
+                    <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
+                        <tr>
+                            <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="gui-box">
+            <div class="gui-row">
+                <div class="gui-row-title">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle">
+                            <i class="icon-refresh" tooltip="Change Container"></i>&nbsp;
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="cont in othContList">
+                              <a ng-click="change_other_container(cont)">{{cont.name}}</a>
+                            </li>
+                        </ul>
+                    </div>Container {{othCont.name|trunc:12}}
+                </div>
+            </div>
+            <div class="gui-row">
+                <div class="gui-group">
+                    <div class="gui-label size-zero">Gold: {{othCont.gold}}</div>
+                    <div class="button" ng-click="loot_gold()"><i class="icon-fullscreen icon-white"></i></div>
+                </div>
+                <div class="gui-group">
+                    <div class="gui-label size-micro">Delete</div>
+                    <div class="button" ng-click="delete_container()"><i class="icon-ban-circle icon-white"></i></div>
+                </div>
+            </div>
+            <div class="gui-row">
+                <table class="gui-table">
+                    <tr>
+                        <th>Item</th><th>G</th><th>W</th><th>x</th>
+                    </tr>
+                    <tbody btf-dragon="item in othCont._2m.items()" btf-dragon-drop-function="item_drop">
+                        <tr>
+                            <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><div class="xpan5" ng-controller="ItemFinderCtrl">
+        <div class="gui-box" ng-controller="MagicItemFinderCtrl">
+            <div class="gui-row">
+                <div class="gui-row-title">Magic Item Search</div>
+            </div>
+            <div class="gui-row">
+                <div class="gui-group">
+                    <input placeholder="Item Name" type="text" class="size-kilo" ng-model="itemName">&nbsp;
+                </div><div class="gui-group">
+                    <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
+                </div><div class="gui-group">
+                    <div class="gui-label size-micro">Level:
+                    </div><input type="text" ng-model="levelStart" class="size-nano"
+                    ><div class="gui-label size-nano">&nbsp;to
+                    </div><input type="text" ng-model="levelStop" class="size-nano">
+                </div><div class="gui-group">
+                    <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
+                </div><div class="gui-group">
+                    <div class="gui-label size-micro">Cost:
+                    </div><input type="text" ng-model="costStart" class="size-nano"
+                    ><div class="gui-label size-nano">&nbsp;to
+                    </div><input type="text" ng-model="costStop" class="size-nano">
+                </div><div class="gui-group">
+                    <div ng-click="item_finder_search(1)" class="button size-zero">Search</div>
+                </div>
+            </div>
+            <div class="gui-row">
+                <table class="gui-table">
+                    <tr>
+                        <th>Item</th><th>Cat</th><th>G</th><th>R</th>
+                    </tr>
+                    <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
+                        <tr>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:10}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> 
 </div>
-

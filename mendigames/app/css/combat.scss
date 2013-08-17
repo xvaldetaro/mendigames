@@ -2,106 +2,10 @@
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
 
-@mixin button-cell($color) {
-  @include background-image(linear-gradient(to top, darken($color,5%),lighten($color,3%)));
-  cursor: pointer;
-  &:hover {
-      @include radial-gradient($color, darken($color,5%),lighten($color,5%));
-  }
-}
-
 $DARKFONT: rgb(70,70,70);
 $ENCOUNTER: #961334;
 $ATWILL: darken(#619869,15%);
 $DAILY: #4d4d4f;
-
-.gui-row {
-  text-align: left;
-  vertical-align: middle;
-  background-color: rgb(245,245,245);
-  padding: {
-    left: 5px;
-    top: 1px;
-    bottom: 1px;
-  }
-
-  span {
-    width: 5em;
-  }
-
-  div {
-    display: inline-block;
-    color: white;
-    &.gui-label {
-      white-space: nowrap;
-      color: $DARKFONT;
-    }
-    &.gui-group {
-      padding: {
-        left: 5px;
-        right: 5px;
-        top: 2px;
-        bottom: 2px;
-      }
-      border: {
-        width: 1px;
-        color: lighten(rgb(225,225,225), 15%);
-        style: solid;
-        radius: 3px;
-      }
-      margin-right: 2px;
-      background-color: rgb(225,225,225);
-    }
-    &.gui-row-title {
-      padding-left: 5px;
-      font-weight: bold;
-      color: $DARKFONT;
-    }
-    &.gui-value {
-      padding-left: 5px;
-      padding-right: 5px;
-      background-color: $DARKFONT;
-      text-align: center;
-      vertical-align: middle;
-      color: white;
-      font-weight: bold;
-    }
-  }
-
-  p {
-    display: inline-block;
-  }
-  select {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-.button {
-  text-align: center;
-  vertical-align: middle;
-  @include buttonify($DARKFONT);
-  color: white;
-  font-weight: bold;
-
-  padding: {
-    right: 5px;
-    left: 5px;
-    top: 1px;
-    bottom: 2px;
-  }
-  &.button-cancel {
-    @include buttonify(rgb(230,230,230));
-    color: $DARKFONT;
-  }
-  &.dice {
-    min-width: 2em;
-  }
-  &.icon {
-    width: 1.8em;
-  }
-}
 
 .power-container {
   background-color: rgb(245,245,245);
@@ -128,18 +32,6 @@ $DAILY: #4d4d4f;
       bottom: 3px;
     }
     border: 0px;
-    &.at-will {
-      @include button-cell($ATWILL);
-      border-color: darken($ATWILL, 5%);
-    }
-    &.daily {
-      @include button-cell($DAILY);
-      border-color: darken($DAILY, 5%);
-    }
-    &.encounter {
-      @include button-cell($ENCOUNTER);
-      border-color: darken($ENCOUNTER, 5%);
-    }
     &.power-info {
       width: auto;
       border-right: {
@@ -150,15 +42,15 @@ $DAILY: #4d4d4f;
     &.power-name {
       font-weight: bold;
       &.at-will.used {
-        @include button-cell(darken($ATWILL, 10%));
+        @include buttonify(darken($ATWILL, 10%));
         color: lighten($ATWILL, 10%);
       }
       &.daily.used {
-        @include button-cell(darken($DAILY, 10%));
+        @include buttonify(darken($DAILY, 10%));
         color: lighten($DAILY, 10%);
       }
       &.encounter.used {
-        @include button-cell(darken($ENCOUNTER, 10%));
+        @include buttonify(darken($ENCOUNTER, 10%));
         color: lighten($ENCOUNTER, 10%);
       }
     }  
@@ -170,94 +62,21 @@ $DAILY: #4d4d4f;
 }
 
 table.character-list {
-  $BORDERCOLOR: rgb(190,190,190); 
-  width: 100%;
-  border: {
-    color: $BORDERCOLOR;
-    style: solid;
-    width: 1px;
-    bottom: 0px;
-    right: 0px;
-    radius: 3px;
-  }
   tr {
-    padding: {
-      top: 2px;
-      bottom: 2px;
-    }
-    border-bottom: {
-      color: $BORDERCOLOR;
-      style: solid;
-      width: 1px;
-    }
     &.turn {
       border: 3px solid rgb(100,100,100);
     }
-    td,th {
-      white-space: nowrap;
-      font-weight: bold;
-      i {
-        cursor: pointer;
-      }
-      padding: {
-        left: 4px;
-        right: 4px;
-      }
-      border-right: {
-        color: $BORDERCOLOR;
-        style: solid;
-        width: 1px;
-      }
-    }
-    th {
-      background-color: $DARKFONT;
-      color: white;
-    }
-    @mixin character-cell($color) {
-      color: darken($color, 70%);
-      background-color: $color;
-      &.button-cell {
-        @include button-cell($color);
-      }
-      .incell-button {
-        display: inline-block;
-        background-color: $color;
-        cursor: pointer;
-        border: {
-          radius: 3px;
-          color: lighten($color,3%);
-          style: solid;
-          width: 1px;
-        }
-        min-width: 1em;
-        text-align: center;
-      }
-    }
+    
     $ENEMY: rgb(255,230,230);
     $PLAYER: rgb(225,240,255);
-    $NEUTRAL: rgb(245,245,245);
-
-    td.button-cell {
-      font-weight: bold;
-      &.hp {
-        div {
-          display: inline-block;
-        }
-      }
-    }
     &.Enemy {
       td {
-        @include character-cell($ENEMY);
+        @include color-cell($ENEMY);
       }
     }
     &.Player {
       td {
-        @include character-cell($PLAYER);
-      }
-    }
-    &.Neutral {
-      td {
-        @include character-cell($NEUTRAL);
+        @include color-cell($PLAYER);
       }
     }
   }
@@ -276,10 +95,11 @@ div.condition-box {
   font-weight: bold;
   width: 1.3em;
   @include buttonify($DARKFONT);
+  @include borderfy(rgb(221,221,221));
 }
 
 #console {
-  @include borderfy();
+  @include borderfy(rgb(221,221,221));
   @include background-image(radial-gradient(rgb(248,236,194),darken(rgb(248,236,194),10%)));
   overflow: auto;
   overflow-x: hidden;

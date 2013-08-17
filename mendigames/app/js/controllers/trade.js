@@ -38,9 +38,9 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
             }
         }
         $scope.plContList = containers.player;
-        $scope.plContList[activePlayer].active = true;
+        $scope.plCont = $scope.plContList[activePlayer];
         $scope.othContList = containers.other;
-        $scope.othContList[activeContainer].active = true;
+        $scope.othCont = $scope.othContList[activeContainer];
     });
     $scope.$on('EM.new_list.campaign', function(){
         $scope.campaign = EM.by_key('campaign', $scope.campaignId);
@@ -48,6 +48,12 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
     // Bootstrap the scope
     EM.start(entitiesMetadata, syncEntities);
 
+    $scope.change_player_container = function(cont) {
+        $scope.plCont = cont;
+    };
+    $scope.change_other_container = function(cont) {
+        $scope.othCont = cont;
+    };
     $scope.split_gold = function () {
         InputDialog('input',{title: 'Split Gold', label: 'Split how much?', size: 'mini'})
         .then(function(result){
@@ -116,16 +122,16 @@ function($scope, Ocont, Oit, EM, InputDialog) {
         .then(function(result){
             if(!result)
                 return;
-            Ocont.change_gold($scope.cont, result);
+            Ocont.change_gold($scope.plCont, result);
         });
     };
     // itemBase can be decorator, template or item
     $scope.item_drop = function(something) {
         var cost_adjustment = $scope.buy_adjustment.value;
         if(something.container)
-            return Ocont.buy_item($scope.cont, something, cost_adjustment);
+            return Ocont.buy_item($scope.plCont, something, cost_adjustment);
         $scope.create_item(something).then(function(item) {
-            Ocont.buy_item($scope.cont, item, cost_adjustment);
+            Ocont.buy_item($scope.plCont, item, cost_adjustment);
         });
     };
 }])
@@ -133,7 +139,7 @@ function($scope, Ocont, Oit, EM, InputDialog) {
 .controller('ContainerCtrl', ['$scope','Ocont', 'Oit', 'Ocam', 'EM', 'InputDialog',
 function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
     $scope.delete_container = function() {
-        Ocam.remove_container($scope.cont);
+        Ocam.remove_container($scope.othCont);
     };
     $scope.loot_gold = function() {
         InputDialog('loot_gold',{containerList: $scope.plContList})
@@ -141,10 +147,10 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
             if(!result)
                 return;
             if(result.all)
-                Ocam.split_gold($scope.plContList, $scope.cont.gold);
+                Ocam.split_gold($scope.plContList, $scope.othCont.gold);
             else
-                Ocont.change_gold(result.container, $scope.cont.gold);
-            Ocont.change_gold($scope.cont, -1*$scope.cont.gold);
+                Ocont.change_gold(result.container, $scope.othCont.gold);
+            Ocont.change_gold($scope.othCont, -1*$scope.othCont.gold);
         });
     };
     $scope.split_item = function(item) {

@@ -17,10 +17,13 @@ function(EM, Och, Ocont, $q, U) {
             gold: cDict.gold
         };
 
-        return EM.add('container', container).then(function(cont){
-            cDict.container = cont.id;
+        if(cDict.type=='Player')
+            return EM.add('container', container).then(function(cont){
+                cDict.container = cont.id;
+                return EM.add('character', cDict);
+            });
+        else
             return EM.add('character', cDict);
-        });
     }
     function remove_container(container) {
         return EM.remove('container', container);
@@ -151,6 +154,9 @@ function(EM, Och, Ocont, $q, U) {
     function mass_milestone(characterList){
         return _call_for_character(characterList, 'milestone');
     }
+    function mass_heal(characterList){
+        return _call_for_character(characterList, 'full_heal');
+    }
     function mass_short_rest(cam, characterList){
         return _call_for_character(characterList, '_short_rest_stats').then(function(){
             EM.update_list('has_power',
@@ -180,6 +186,7 @@ function(EM, Och, Ocont, $q, U) {
         mass_short_rest: mass_short_rest,
         mass_extended_rest: mass_extended_rest,
         mass_milestone: mass_milestone,
+        mass_heal: mass_heal,
         categorize_containers: categorize_containers,
         add_container: add_container,
         remove_container: remove_container,

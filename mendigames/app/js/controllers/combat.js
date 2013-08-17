@@ -307,6 +307,9 @@ function($scope, EM, U, Log, $dialog, Ocam, InputDialog) {
     $scope.mass_milestone = function(){
         Ocam.mass_milestone($scope.characterList);
     };
+    $scope.mass_heal = function(){
+        Ocam.mass_heal($scope.characterList);
+    };
     $scope.ret_false = function(){
         return false;
     };

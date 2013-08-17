@@ -18,6 +18,10 @@ function(EM, U) {
         _change_hp(c,value);
         return save(c);
     }
+    function full_heal(c){
+        c.used_hit_points = c.used_hit_points = 0;
+        return save(c);
+    }
     function set_init(c, value){
         c.init = parseInt(value);
         c.sub_init = 0;
@@ -150,6 +154,7 @@ function(EM, U) {
     return {
         save: save,
         change_hp: change_hp,
+        full_heal: full_heal,
         set_init: set_init,
         roll_init: roll_init,
         change_xp: change_xp,

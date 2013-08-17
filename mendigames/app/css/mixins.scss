@@ -3,12 +3,6 @@ $BLOCKBORDER: rgb(221,221,221);
 $FRONT: rgb(51,51,51);
 $IFRONT: white;
 
-@mixin borderfy () {
-  border-color: $BLOCKBORDER;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-}
 @mixin buttonify($color) {
   @include background-image(linear-gradient(to top, darken($color,9%),lighten($color,9%)));
   cursor: pointer;
@@ -20,27 +14,35 @@ $IFRONT: white;
   border-color: $BLOCKBORDER;
   border-radius: 3px;
 }
-@mixin sq_buttonify($color) {
-  @include background-image(linear-gradient(to top, darken($color,9%),lighten($color,9%)));
-  cursor: pointer;
-  &:hover{
-      @include radial-gradient($color, darken($color,9%),lighten($color,9%));
-  }
+
+@mixin borderfy($color) {
+  border-width: 1px;
+  border-style: solid;
+  border-color: $color;
+  border-radius: 3px;
 }
-@mixin flatify($color) {
-  background-image: none;
+
+@mixin color-cell($color) {
+  color: darken($color, 70%);
   background-color: $color;
-}
-@mixin mutify($color) {
-  background-image: none;
-  background-color: darken($color, 20%);
-  color: darken($color, 15%);
-}
-@mixin round-border($color) {
-  border: {
-    color: $color;
-    style: solid;
-    width: 1px;
-    radius: 3px;
+  &.button-cell {
+    @include background-image(linear-gradient(to top, darken($color,5%),lighten($color,3%)));
+    cursor: pointer;
+    &:hover {
+        @include radial-gradient($color, darken($color,5%),lighten($color,5%));
+    }
+  }
+  .incell-button {
+    display: inline-block;
+    background-color: $color;
+    cursor: pointer;
+    border: {
+      radius: 3px;
+      color: lighten($color,3%);
+      style: solid;
+      width: 1px;
+    }
+    min-width: 1em;
+    text-align: center;
   }
 }

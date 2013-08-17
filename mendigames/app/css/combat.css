@@ -1,89 +1,4 @@
 /* app css stylesheet */
-.gui-row {
-  text-align: left;
-  vertical-align: middle;
-  background-color: whitesmoke;
-  padding-left: 5px;
-  padding-top: 1px;
-  padding-bottom: 1px; }
-  .gui-row span {
-    width: 5em; }
-  .gui-row div {
-    display: inline-block;
-    color: white; }
-    .gui-row div.gui-label {
-      white-space: nowrap;
-      color: #464646; }
-    .gui-row div.gui-group {
-      padding-left: 5px;
-      padding-right: 5px;
-      padding-top: 2px;
-      padding-bottom: 2px;
-      border-width: 1px;
-      border-color: white;
-      border-style: solid;
-      border-radius: 3px;
-      margin-right: 2px;
-      background-color: #e1e1e1; }
-    .gui-row div.gui-row-title {
-      padding-left: 5px;
-      font-weight: bold;
-      color: #464646; }
-    .gui-row div.gui-value {
-      padding-left: 5px;
-      padding-right: 5px;
-      background-color: #464646;
-      text-align: center;
-      vertical-align: middle;
-      color: white;
-      font-weight: bold; }
-  .gui-row p {
-    display: inline-block; }
-  .gui-row select {
-    display: inline-block;
-    margin: 0;
-    padding: 0; }
-
-.button {
-  text-align: center;
-  vertical-align: middle;
-  background-image: -webkit-linear-gradient(bottom, #2f2f2f, #5d5d5d);
-  background-image: linear-gradient(to top, #2f2f2f, #5d5d5d);
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #dddddd;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold;
-  padding-right: 5px;
-  padding-left: 5px;
-  padding-top: 1px;
-  padding-bottom: 2px; }
-  .button:hover {
-    background-color: #464646;
-    background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #464646), color-stop(50%, #2f2f2f), color-stop(100%, #5d5d5d));
-    background-image: -webkit-radial-gradient(#464646, #2f2f2f, #5d5d5d);
-    background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
-  .button.button-cancel {
-    background-image: -webkit-linear-gradient(bottom, #cfcfcf, #fdfdfd);
-    background-image: linear-gradient(to top, #cfcfcf, #fdfdfd);
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-radius: 3px;
-    color: #464646; }
-    .button.button-cancel:hover {
-      background-color: #e6e6e6;
-      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #e6e6e6), color-stop(50%, #cfcfcf), color-stop(100%, #fdfdfd));
-      background-image: -webkit-radial-gradient(#e6e6e6, #cfcfcf, #fdfdfd);
-      background-image: radial-gradient(  #e6e6e6, #cfcfcf, #fdfdfd); }
-  .button.dice {
-    min-width: 2em; }
-  .button.icon {
-    width: 1.8em; }
-
 .power-container {
   background-color: whitesmoke;
   padding-left: 5px;
@@ -105,36 +20,6 @@
     padding-top: 3px;
     padding-bottom: 3px;
     border: 0px; }
-    .power-widget .power-button.at-will {
-      background-image: -webkit-linear-gradient(bottom, #395a3e, #49734f);
-      background-image: linear-gradient(to top, #395a3e, #49734f);
-      cursor: pointer;
-      border-color: #395a3e; }
-      .power-widget .power-button.at-will:hover {
-        background-color: #436949;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #395a3e), color-stop(100%, #4d7953));
-        background-image: -webkit-radial-gradient(#436949, #395a3e, #4d7953);
-        background-image: radial-gradient(  #436949, #395a3e, #4d7953); }
-    .power-widget .power-button.daily {
-      background-image: -webkit-linear-gradient(bottom, #404042, #555557);
-      background-image: linear-gradient(to top, #404042, #555557);
-      cursor: pointer;
-      border-color: #404042; }
-      .power-widget .power-button.daily:hover {
-        background-color: #4d4d4f;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #404042), color-stop(100%, #5a5a5c));
-        background-image: -webkit-radial-gradient(#4d4d4f, #404042, #5a5a5c);
-        background-image: radial-gradient(  #4d4d4f, #404042, #5a5a5c); }
-    .power-widget .power-button.encounter {
-      background-image: -webkit-linear-gradient(bottom, #7f102c, #a41539);
-      background-image: linear-gradient(to top, #7f102c, #a41539);
-      cursor: pointer;
-      border-color: #7f102c; }
-      .power-widget .power-button.encounter:hover {
-        background-color: #961334;
-        background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #7f102c), color-stop(100%, #ad163c));
-        background-image: -webkit-radial-gradient(#961334, #7f102c, #ad163c);
-        background-image: radial-gradient(  #961334, #7f102c, #ad163c); }
     .power-widget .power-button.power-info {
       width: auto;
       border-right-style: solid;
@@ -142,138 +27,97 @@
     .power-widget .power-button.power-name {
       font-weight: bold; }
       .power-widget .power-button.power-name.at-will.used {
-        background-image: -webkit-linear-gradient(bottom, #253b28, #35543a);
-        background-image: linear-gradient(to top, #253b28, #35543a);
+        background-image: -webkit-linear-gradient(bottom, #1d2e20, #416647);
+        background-image: linear-gradient(to top, #1d2e20, #416647);
         cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
         color: #57885e; }
         .power-widget .power-button.power-name.at-will.used:hover {
           background-color: #2f4a33;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #2f4a33), color-stop(50%, #253b28), color-stop(100%, #395a3e));
-          background-image: -webkit-radial-gradient(#2f4a33, #253b28, #395a3e);
-          background-image: radial-gradient(  #2f4a33, #253b28, #395a3e); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #2f4a33), color-stop(50%, #1d2e20), color-stop(100%, #416647));
+          background-image: -webkit-radial-gradient(#2f4a33, #1d2e20, #416647);
+          background-image: radial-gradient(  #2f4a33, #1d2e20, #416647); }
       .power-widget .power-button.power-name.daily.used {
-        background-image: -webkit-linear-gradient(bottom, #272728, #3b3b3d);
-        background-image: linear-gradient(to top, #272728, #3b3b3d);
+        background-image: -webkit-linear-gradient(bottom, #1d1d1e, #4a4a4c);
+        background-image: linear-gradient(to top, #1d1d1e, #4a4a4c);
         cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
         color: #666669; }
         .power-widget .power-button.power-name.daily.used:hover {
           background-color: #343435;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #343435), color-stop(50%, #272728), color-stop(100%, #404042));
-          background-image: -webkit-radial-gradient(#343435, #272728, #404042);
-          background-image: radial-gradient(  #343435, #272728, #404042); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #343435), color-stop(50%, #1d1d1e), color-stop(100%, #4a4a4c));
+          background-image: -webkit-radial-gradient(#343435, #1d1d1e, #4a4a4c);
+          background-image: radial-gradient(  #343435, #1d1d1e, #4a4a4c); }
       .power-widget .power-button.power-name.encounter.used {
-        background-image: -webkit-linear-gradient(bottom, #520a1c, #760f29);
-        background-image: linear-gradient(to top, #520a1c, #760f29);
+        background-image: -webkit-linear-gradient(bottom, #400816, #911232);
+        background-image: linear-gradient(to top, #400816, #911232);
         cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
         color: #c31944; }
         .power-widget .power-button.power-name.encounter.used:hover {
           background-color: #690d24;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #520a1c), color-stop(100%, #7f102c));
-          background-image: -webkit-radial-gradient(#690d24, #520a1c, #7f102c);
-          background-image: radial-gradient(  #690d24, #520a1c, #7f102c); }
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #400816), color-stop(100%, #911232));
+          background-image: -webkit-radial-gradient(#690d24, #400816, #911232);
+          background-image: radial-gradient(  #690d24, #400816, #911232); }
 
 .characters-container {
   margin-top: 10px; }
 
-table.character-list {
-  width: 100%;
-  border-color: #bebebe;
-  border-style: solid;
-  border-width: 1px;
-  border-bottom: 0px;
-  border-right: 0px;
-  border-radius: 3px; }
-  table.character-list tr {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border-bottom-color: #bebebe;
-    border-bottom-style: solid;
-    border-bottom-width: 1px; }
-    table.character-list tr.turn {
-      border: 3px solid #646464; }
-    table.character-list tr td, table.character-list tr th {
-      white-space: nowrap;
-      font-weight: bold;
-      padding-left: 4px;
-      padding-right: 4px;
-      border-right-color: #bebebe;
-      border-right-style: solid;
-      border-right-width: 1px; }
-      table.character-list tr td i, table.character-list tr th i {
-        cursor: pointer; }
-    table.character-list tr th {
-      background-color: #464646;
-      color: white; }
-    table.character-list tr td.button-cell {
-      font-weight: bold; }
-      table.character-list tr td.button-cell.hp div {
-        display: inline-block; }
-    table.character-list tr.Enemy td {
-      color: maroon;
-      background-color: #ffe6e6; }
-      table.character-list tr.Enemy td.button-cell {
-        background-image: -webkit-linear-gradient(bottom, #ffcccc, #fff5f5);
-        background-image: linear-gradient(to top, #ffcccc, #fff5f5);
-        cursor: pointer; }
-        table.character-list tr.Enemy td.button-cell:hover {
-          background-color: #ffe6e6;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #ffe6e6), color-stop(50%, #ffcccc), color-stop(100%, white));
-          background-image: -webkit-radial-gradient(#ffe6e6, #ffcccc, white);
-          background-image: radial-gradient(  #ffe6e6, #ffcccc, white); }
-      table.character-list tr.Enemy td .incell-button {
-        display: inline-block;
-        background-color: #ffe6e6;
-        cursor: pointer;
-        border-radius: 3px;
-        border-color: #fff5f5;
-        border-style: solid;
-        border-width: 1px;
-        min-width: 1em;
-        text-align: center; }
-    table.character-list tr.Player td {
-      color: #003d7b;
-      background-color: #e1f0ff; }
-      table.character-list tr.Player td.button-cell {
-        background-image: -webkit-linear-gradient(bottom, #c7e3ff, aliceblue);
-        background-image: linear-gradient(to top, #c7e3ff, aliceblue);
-        cursor: pointer; }
-        table.character-list tr.Player td.button-cell:hover {
-          background-color: #e1f0ff;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #e1f0ff), color-stop(50%, #c7e3ff), color-stop(100%, #fafdff));
-          background-image: -webkit-radial-gradient(#e1f0ff, #c7e3ff, #fafdff);
-          background-image: radial-gradient(  #e1f0ff, #c7e3ff, #fafdff); }
-      table.character-list tr.Player td .incell-button {
-        display: inline-block;
-        background-color: #e1f0ff;
-        cursor: pointer;
-        border-radius: 3px;
-        border-color: aliceblue;
-        border-style: solid;
-        border-width: 1px;
-        min-width: 1em;
-        text-align: center; }
-    table.character-list tr.Neutral td {
-      color: #434343;
-      background-color: whitesmoke; }
-      table.character-list tr.Neutral td.button-cell {
-        background-image: -webkit-linear-gradient(bottom, #e8e8e8, #fdfdfd);
-        background-image: linear-gradient(to top, #e8e8e8, #fdfdfd);
-        cursor: pointer; }
-        table.character-list tr.Neutral td.button-cell:hover {
-          background-color: whitesmoke;
-          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, whitesmoke), color-stop(50%, #e8e8e8), color-stop(100%, white));
-          background-image: -webkit-radial-gradient(whitesmoke, #e8e8e8, white);
-          background-image: radial-gradient(  whitesmoke, #e8e8e8, white); }
-      table.character-list tr.Neutral td .incell-button {
-        display: inline-block;
-        background-color: whitesmoke;
-        cursor: pointer;
-        border-radius: 3px;
-        border-color: #fdfdfd;
-        border-style: solid;
-        border-width: 1px;
-        min-width: 1em;
-        text-align: center; }
+table.character-list tr.turn {
+  border: 3px solid #646464; }
+table.character-list tr.Enemy td {
+  color: maroon;
+  background-color: #ffe6e6; }
+  table.character-list tr.Enemy td.button-cell {
+    background-image: -webkit-linear-gradient(bottom, #ffcccc, #fff5f5);
+    background-image: linear-gradient(to top, #ffcccc, #fff5f5);
+    cursor: pointer; }
+    table.character-list tr.Enemy td.button-cell:hover {
+      background-color: #ffe6e6;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #ffe6e6), color-stop(50%, #ffcccc), color-stop(100%, white));
+      background-image: -webkit-radial-gradient(#ffe6e6, #ffcccc, white);
+      background-image: radial-gradient(  #ffe6e6, #ffcccc, white); }
+  table.character-list tr.Enemy td .incell-button {
+    display: inline-block;
+    background-color: #ffe6e6;
+    cursor: pointer;
+    border-radius: 3px;
+    border-color: #fff5f5;
+    border-style: solid;
+    border-width: 1px;
+    min-width: 1em;
+    text-align: center; }
+table.character-list tr.Player td {
+  color: #003d7b;
+  background-color: #e1f0ff; }
+  table.character-list tr.Player td.button-cell {
+    background-image: -webkit-linear-gradient(bottom, #c7e3ff, aliceblue);
+    background-image: linear-gradient(to top, #c7e3ff, aliceblue);
+    cursor: pointer; }
+    table.character-list tr.Player td.button-cell:hover {
+      background-color: #e1f0ff;
+      background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #e1f0ff), color-stop(50%, #c7e3ff), color-stop(100%, #fafdff));
+      background-image: -webkit-radial-gradient(#e1f0ff, #c7e3ff, #fafdff);
+      background-image: radial-gradient(  #e1f0ff, #c7e3ff, #fafdff); }
+  table.character-list tr.Player td .incell-button {
+    display: inline-block;
+    background-color: #e1f0ff;
+    cursor: pointer;
+    border-radius: 3px;
+    border-color: aliceblue;
+    border-style: solid;
+    border-width: 1px;
+    min-width: 1em;
+    text-align: center; }
 
 div.condition-box {
   display: inline-block;
@@ -293,6 +137,10 @@ div.condition-box {
   border-width: 1px;
   border-style: solid;
   border-color: #dddddd;
+  border-radius: 3px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dddddd;
   border-radius: 3px; }
   div.condition-box:hover {
     background-color: #464646;
@@ -301,9 +149,9 @@ div.condition-box {
     background-image: radial-gradient(  #464646, #2f2f2f, #5d5d5d); }
 
 #console {
-  border-color: #dddddd;
-  border-style: solid;
   border-width: 1px;
+  border-style: solid;
+  border-color: #dddddd;
   border-radius: 3px;
   background-image: -webkit-radial-gradient( #f8ecc2, #f3de94);
   background-image: radial-gradient(   #f8ecc2, #f3de94);

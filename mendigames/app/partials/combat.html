@@ -17,38 +17,50 @@
             </div>
         </div>
         <div class="gui-row">
-           <div class="gui-row-title">Combat</div> 
+           <div class="gui-row-title">Combat manager:</div> 
         </div>
         <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-label size-zero"><b>{{characterList[campaign.turn].name|trunc:7}}</b></div>
-                <div title="Next" class="button icon" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i></div>
-                <div title="Previous" class="button icon" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i></div>
-                <div title="Reorder" class="button icon" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
+                <div class="gui-label size-kilo">{{characterList[campaign.turn].name|trunc:12}}
+                </div><div title="Next" class="button" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i>
+                </div><div title="Previous" class="button" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i>
+                </div><div title="Reorder" class="button" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
             </div><div class="gui-group">
-                <div class="gui-label size-mili">Enemy</div>
-                <div title="Clear Enemies" class="button icon" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i></div>
-                <div title="Add Enemies" class="button icon" ng-click="add_enemy()"><i class="icon-plus icon-white"></i></div>
+                <div class="gui-label size-mili">Round: <b>{{campaign.round}}</b>
+                </div><div title="Previous" class="button" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i>
+                </div><div title="Next" class="button" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i>
+                </div><div title="Reset" class="button" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i>
+                </div>
             </div><div class="gui-group">
-                <div class="gui-label size-micro">Rest</div>
-                <div title="Short Rest All" class="button icon" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i></div>
-                <div title="Extended Rest All" class="button icon" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i></div>
+                <div class="gui-label size-mili">Enemy
+                </div><div title="Clear Enemies" class="button" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i>
+                </div><div title="Add Enemies" class="button" ng-click="add_enemy()"><i class="icon-plus icon-white"></i>
+                </div>
             </div>
         </div>
         <div class="gui-row">
+           <div class="gui-row-title">Mass Control:</div> 
+        </div>
+        <div class="gui-row">
             <div class="gui-group">
-                <div class="gui-label size-zero">Round: <b>{{campaign.round}}</b></div>
-                <div title="Previous" class="button icon" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i></div>
-                <div title="Next" class="button icon" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i></div>
-                <div title="Reset" class="button icon" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i></div>
+                <div class="gui-label size-kilo">After Combat
+                </div><div title="Clear Conditions" class="button" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i>
+                </div><div title="Award Milestones" class="button" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i>
+                </div>
             </div><div class="gui-group">
-                <div class="gui-label size-mili">Finish</div>
-                <div title="Clear Conditions" class="button icon" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i></div>
-                <div title="Award Milestones" class="button icon" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i></div>
+                <div class="gui-label size-micro">Rest
+                </div><div title="Short Rest All" class="button" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i>
+                </div><div title="Extended Rest All" class="button" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i>
+                </div>
             </div><div class="gui-group">
-                <div class="gui-label size-micro">XP</div>
-                <div title="Give XP to All" class="button icon" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i></div>
-                <div title="Split XP among All" class="button icon" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i></div>
+                <div class="gui-label size-micro">Heal
+                </div><div title="Full Heal All" class="button" ng-click="mass_heal()"><i class="icon-heart icon-white"></i>
+                </div>
+            </div><div class="gui-group">
+                <div class="gui-label size-micro">XP
+                </div><div title="Give XP to All" class="button" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i>
+                </div><div title="Split XP among All" class="button" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i>
+                </div>
             </div>
         </div>
         <div class="gui-row">
@@ -61,7 +73,7 @@
         </div>
     </div>
     <div class="characters-container" ng-switch="character_container_display()">
-        <table ng-switch-when="list" class="character-list">
+        <table ng-switch-when="list" class="gui-table character-list">
             <tr>
                 <th>Init</th>
                 <th>Name</th>
@@ -73,19 +85,19 @@
                 <th>Conditions</th>
             </tr>
             <tr class="{{c.type}} {{has_turn()}}" ng-controller="CharacterController" ng-repeat="(ci, c) in characterList"> 
-                <td class="board-cell init">
+                <td>
                     <div class="incell-button" ng-click="init_dialog()">{{c.init}}</div>.<div class="incell-button" ng-click="increase_sub_init(c)">{{c.sub_init}}</div>
                 </td>
                 <td ng-show="c.type != 'Enemy'">
                     <i ng-click="open_detail(c)" class="icon-user" tooltip="Open Sheet"></i>&nbsp;{{c.name|trunc:10}}</td>
                 <td ng-show="c.type == 'Enemy'">
                     <i ng-click="delete_character(ci, c)" class="icon-ban-circle" tooltip="Remove Enemy"></i>&nbsp;{{c.name|trunc:10}}</td>
-                <td class="button-cell hp" ng-click="hp_dialog()">
-                    <i ng-show="Och.bloodied(c)" class="icon-tint"></i>
-                    <div ng-show="c.type != 'Enemy'">{{c|total_hp}}
-                    </div><div ng-show="c.type == 'Enemy' && !Och.incapacitated(c)">-{{c.used_hit_points}}
-                    </div><div ng-show="c.type == 'Enemy' && Och.incapacitated(c)">XX
-                    </div>
+                <td class="button-cell" ng-click="hp_dialog()">
+                    <div class="inline" ng-show="c.type != 'Enemy'">{{c|total_hp}}
+                    </div><div class="inline" ng-show="c.type == 'Enemy' && !Och.incapacitated(c)">-{{c.used_hit_points}}
+                    </div><div class="inline" ng-show="c.type == 'Enemy' && Och.incapacitated(c)">XX
+                    </div><i ng-show="Och.bloodied(c)" class="icon-tint inline">
+                    </i>
                 </td>
                 <td class="button-cell" ng-click="spend_hs(c)">
                     {{c|total_hs}}

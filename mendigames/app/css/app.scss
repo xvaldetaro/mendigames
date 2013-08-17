@@ -1,6 +1,12 @@
+@import 'bourbon/bourbon';
+@import 'mixins.scss';
+
 body {
   font-family: Verdana, sans-serif;
 }
+
+
+$DARKFONT: rgb(70,70,70);
 
 @media (min-width: 10px) {
   .modal {
@@ -71,8 +77,12 @@ label {
   display: inline-block;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 select,input[type="text"],input[type="password"] {
-  height: 23px;
+  height: 25px;
   margin-bottom: 0;
   padding: {
     top: 0;
@@ -124,4 +134,151 @@ select,input[type="text"],input[type="password"] {
   display: inline-block;
   vertical-align: top;
   width: 90%;
+}
+
+.gui-row {
+  text-align: left;
+  vertical-align: middle;
+  background-color: rgb(245,245,245);
+  padding: {
+    left: 5px;
+    top: 1px;
+    bottom: 1px;
+  }
+
+  span {
+    width: 5em;
+  }
+
+  div {
+    display: inline-block;
+    color: white;
+    &.gui-label {
+      white-space: nowrap;
+      padding-right: 5px;
+      color: $DARKFONT;
+    }
+    &.gui-group {
+      padding: {
+        left: 5px;
+        right: 5px;
+        top: 2px;
+        bottom: 2px;
+      }
+      border: {
+        width: 1px;
+        color: lighten(rgb(225,225,225), 15%);
+        style: solid;
+        radius: 3px;
+      }
+      margin-right: 2px;
+      background-color: rgb(225,225,225);
+    }
+    &.gui-row-title {
+      padding-left: 5px;
+      font-weight: bold;
+      color: $DARKFONT;
+    }
+    &.gui-value {
+      padding-left: 5px;
+      padding-right: 5px;
+      background-color: $DARKFONT;
+      text-align: center;
+      vertical-align: middle;
+      color: white;
+      font-weight: bold;
+    }
+  }
+
+  p {
+    display: inline-block;
+  }
+  select {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.gui-box {
+  border: {
+    style: solid;
+    width: 1px;
+    radius: 3px;
+  }  
+}
+
+.button {
+  text-align: center;
+  vertical-align: middle;
+  @include buttonify($DARKFONT);
+  color: white;
+  font-weight: bold;
+
+  padding: {
+    right: 5px;
+    left: 5px;
+    top: 1px;
+    bottom: 2px;
+  }
+  &.button-cancel {
+    @include buttonify(rgb(230,230,230));
+    color: $DARKFONT;
+  }
+  &.dice {
+    min-width: 2em;
+  }
+  &.icon {
+    width: 1.8em;
+  }
+}
+
+table.gui-table {
+  $BORDERCOLOR: rgb(190,190,190); 
+  $ALMOSTWHITE: rgb(245,245,245);
+  width: 100%;
+  border: {
+    color: $BORDERCOLOR;
+    style: solid;
+    width: 1px;
+    bottom: 0px;
+    right: 0px;
+    radius: 3px;
+  }
+  tr {
+    padding: {
+      top: 2px;
+      bottom: 2px;
+    }
+    border-bottom: {
+      color: $BORDERCOLOR;
+      style: solid;
+      width: 1px;
+    }
+    &.turn {
+      border: 3px solid rgb(100,100,100);
+    }
+    td,th {
+      font-weight: bold;
+      i {
+        cursor: pointer;
+      }
+      padding: {
+        left: 4px;
+        right: 4px;
+      }
+      border-right: {
+        color: $BORDERCOLOR;
+        style: solid;
+        width: 1px;
+      }
+    }
+    th {
+      background-color: $DARKFONT;
+      color: white;
+    }
+    td {
+      @include color-cell($ALMOSTWHITE);
+    }
+  }
 }
