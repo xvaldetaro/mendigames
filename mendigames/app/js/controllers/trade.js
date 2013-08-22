@@ -171,9 +171,9 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
     $scope.item_drop = function(something) {
         var cost_adjustment = $scope.buy_adjustment.value;
         if(something.container)
-            return Ocont.sell_item_transfer($scope.cont, something, cost_adjustment);
+            return Ocont.sell_item_transfer($scope.othCont, something, cost_adjustment);
         $scope.create_item(something).then(function(item) {
-            Ocont.put_item($scope.cont, item, cost_adjustment);
+            Ocont.put_item($scope.othCont, item, cost_adjustment);
         });
     };
 }])
@@ -216,9 +216,9 @@ function($scope, EM, Ocont, Oit, $http, Wizards, $dialog, BASEURL) {
 
     function got_item_finder(list){
         $scope.itemFinder = list.data.data;
-        var results = $scope.itemFinder.results;
-        for(var i=0, len=results.length; i<len; i++) {
-            EM.merge_related('magic', results[i]);
+        $scope.results = $scope.itemFinder.results;
+        for(var i=0, len=$scope.results.length; i<len; i++) {
+            EM.merge_related('magic', $scope.results[i]);
         }
         $scope.pageCount = Math.ceil($scope.itemFinder.count/100);
     }

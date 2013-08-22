@@ -1,2 +1,11 @@
 .item-name-cell {
   white-space: normal; }
+
+.item-table {
+  font-size: 0.8em; }
+  .item-table td {
+    font-weight: normal; }
+
+.item-finder-table {
+  height: 400px;
+  overflow-y: auto; }

@@ -11,10 +11,8 @@ body {
     width: 500px;
     border-radius: 3px; } }
 .cage {
-  position: fixed;
-  top: 0px;
-  left: 50%;
-  margin-left: -267.5px;
+  margin-left: auto;
+  margin-right: auto;
   width: 535px; }
 
 .content {
@@ -59,6 +57,16 @@ label {
 
 .nowrap {
   white-space: nowrap; }
+
+.cursor-pointer {
+  cursor: pointer; }
+
+.cursor-move {
+  cursor: move; }
+
+.scroll-y {
+  overflow-y: scroll;
+  height: 400px; }
 
 select, input[type="text"], input[type="password"] {
   height: 25px;
@@ -111,23 +119,18 @@ select, input[type="text"], input[type="password"] {
   vertical-align: top;
   width: 90%; }
 
-.gui-row {
-  text-align: left;
-  vertical-align: middle;
-  background-color: whitesmoke;
-  padding-left: 5px;
-  padding-top: 1px;
-  padding-bottom: 1px; }
-  .gui-row span {
-    width: 5em; }
-  .gui-row div {
-    display: inline-block;
-    color: white; }
-    .gui-row div.gui-label {
-      white-space: nowrap;
-      padding-right: 5px;
-      color: #464646; }
-    .gui-row div.gui-group {
+.gui-box {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px; }
+  .gui-box .gui-row {
+    text-align: left;
+    vertical-align: middle;
+    background-color: whitesmoke;
+    padding-left: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px; }
+    .gui-box .gui-row .gui-group {
       padding-left: 5px;
       padding-right: 5px;
       padding-top: 2px;
@@ -136,31 +139,33 @@ select, input[type="text"], input[type="password"] {
       border-color: white;
       border-style: solid;
       border-radius: 3px;
+      display: inline-block;
       margin-right: 2px;
       background-color: #e1e1e1; }
-    .gui-row div.gui-row-title {
+      .gui-box .gui-row .gui-group .gui-label {
+        white-space: nowrap;
+        padding-right: 5px;
+        color: #464646; }
+      .gui-box .gui-row .gui-group .gui-value {
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: #464646;
+        text-align: center;
+        vertical-align: middle;
+        color: white;
+        font-weight: bold; }
+      .gui-box .gui-row .gui-group div {
+        display: inline-block; }
+      .gui-box .gui-row .gui-group p {
+        display: inline-block; }
+      .gui-box .gui-row .gui-group select {
+        display: inline-block;
+        margin: 0;
+        padding: 0; }
+    .gui-box .gui-row .gui-row-title {
       padding-left: 5px;
       font-weight: bold;
       color: #464646; }
-    .gui-row div.gui-value {
-      padding-left: 5px;
-      padding-right: 5px;
-      background-color: #464646;
-      text-align: center;
-      vertical-align: middle;
-      color: white;
-      font-weight: bold; }
-  .gui-row p {
-    display: inline-block; }
-  .gui-row select {
-    display: inline-block;
-    margin: 0;
-    padding: 0; }
-
-.gui-box {
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px; }
 
 .button {
   text-align: center;

@@ -5,3 +5,14 @@
   white-space: normal;
 }
 
+.item-table {
+	font-size: 0.8em;
+	td {
+		font-weight: normal;
+	}
+}
+
+.item-finder-table {
+	height: 400px;
+	overflow-y: auto;
+}

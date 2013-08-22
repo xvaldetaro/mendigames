@@ -49,6 +49,16 @@ filter('trunc', function(){
     tStr += str.slice(str.length-3);
     return tStr;
   };
+})
+.filter('category_short', function(){
+  return function(str, value){
+    if(!str)
+      return;
+    var split = str.split(" ");
+    if(split.length == 1)
+      return split[0].slice(0,2);
+    return split[0][0] + split[1][0];
+  };
 }).
 filter('plus_sign', function(){
   return function(value){

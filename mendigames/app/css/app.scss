@@ -23,12 +23,9 @@ $DARKFONT: rgb(70,70,70);
 }
 
 .cage {
-  $WIDTHCAGE : 535px;
-  position: fixed;
-  top: 0px;
-  left: 50%;
-  margin-left: -($WIDTHCAGE/2);
-  width: $WIDTHCAGE;
+  margin-left: auto;
+  margin-right: auto;
+  width: 535px;
 }
 
 .content {
@@ -79,6 +76,19 @@ label {
 
 .nowrap {
   white-space: nowrap;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-move {
+  cursor: move; 
+}
+
+.scroll-y {
+  overflow-y: scroll;
+  height: 400px;
 }
 
 select,input[type="text"],input[type="password"] {
@@ -136,29 +146,22 @@ select,input[type="text"],input[type="password"] {
   width: 90%;
 }
 
-.gui-row {
-  text-align: left;
-  vertical-align: middle;
-  background-color: rgb(245,245,245);
-  padding: {
-    left: 5px;
-    top: 1px;
-    bottom: 1px;
-  }
-
-  span {
-    width: 5em;
-  }
-
-  div {
-    display: inline-block;
-    color: white;
-    &.gui-label {
-      white-space: nowrap;
-      padding-right: 5px;
-      color: $DARKFONT;
+.gui-box {
+  border: {
+    style: solid;
+    width: 1px;
+    radius: 3px;
+  }  
+  .gui-row {
+    text-align: left;
+    vertical-align: middle;
+    background-color: rgb(245,245,245);
+    padding: {
+      left: 5px;
+      top: 1px;
+      bottom: 1px;
     }
-    &.gui-group {
+    .gui-group {
       padding: {
         left: 5px;
         right: 5px;
@@ -171,41 +174,42 @@ select,input[type="text"],input[type="password"] {
         style: solid;
         radius: 3px;
       }
+      display: inline-block;
       margin-right: 2px;
       background-color: rgb(225,225,225);
+      
+      .gui-label {
+        white-space: nowrap;
+        padding-right: 5px;
+        color: $DARKFONT;
+      }
+      .gui-value {
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: $DARKFONT;
+        text-align: center;
+        vertical-align: middle;
+        color: white;
+        font-weight: bold;
+      }
+      div {
+        display: inline-block;
+      }
+      p {
+        display: inline-block;
+      }
+      select {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+      }
     }
-    &.gui-row-title {
+    .gui-row-title {
       padding-left: 5px;
       font-weight: bold;
       color: $DARKFONT;
     }
-    &.gui-value {
-      padding-left: 5px;
-      padding-right: 5px;
-      background-color: $DARKFONT;
-      text-align: center;
-      vertical-align: middle;
-      color: white;
-      font-weight: bold;
-    }
   }
-
-  p {
-    display: inline-block;
-  }
-  select {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-.gui-box {
-  border: {
-    style: solid;
-    width: 1px;
-    radius: 3px;
-  }  
 }
 
 .button {

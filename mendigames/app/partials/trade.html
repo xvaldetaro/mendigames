@@ -47,8 +47,8 @@
             </div>
         </div>
     </div>
-    <div class="xpan5" ng-controller="InventoryCtrl">
-        <div class="gui-box">
+    <div class="xpan5">
+        <div class="gui-box" ng-controller="InventoryCtrl">
             <div class="gui-row">
                 <div class="gui-row-title">
                     <div class="dropdown">
@@ -70,12 +70,12 @@
                 </div>
             </div>
             <div class="gui-row">
-                <table class="gui-table">
+                <table class="gui-table item-table">
                     <tr>
                         <th>Item</th><th>G</th><th>W</th><th>x</th>
                     </tr>
                     <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
-                        <tr>
+                        <tr class="cursor-move">
                             <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
@@ -85,7 +85,7 @@
                 </table>
             </div>
         </div>
-        <div class="gui-box">
+        <div class="gui-box" ng-controller="ContainerCtrl">
             <div class="gui-row">
                 <div class="gui-row-title">
                     <div class="dropdown">
@@ -111,12 +111,12 @@
                 </div>
             </div>
             <div class="gui-row">
-                <table class="gui-table">
+                <table class="gui-table item-table">
                     <tr>
                         <th>Item</th><th>G</th><th>W</th><th>x</th>
                     </tr>
                     <tbody btf-dragon="item in othCont._2m.items()" btf-dragon-drop-function="item_drop">
-                        <tr>
+                        <tr class="cursor-move">
                             <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
@@ -152,17 +152,17 @@
                     <div ng-click="item_finder_search(1)" class="button size-zero">Search</div>
                 </div>
             </div>
-            <div class="gui-row">
-                <table class="gui-table">
+            <div class="gui-row scroll-y">
+                <table class="gui-table item-table">
                     <tr>
                         <th>Item</th><th>Cat</th><th>G</th><th>R</th>
                     </tr>
-                    <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
-                        <tr>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:10}}</td>
+                    <tbody btf-dragon="item in results" btf-dragon-drop-function="item_drop">
+                        <tr class="cursor-move">
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.category().name | category_short}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.rarity}}</td>
                         </tr>
                     </tbody>
                 </table>
