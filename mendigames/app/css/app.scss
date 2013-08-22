@@ -3,10 +3,36 @@
 
 body {
   font-family: Verdana, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
 }
 
+h1 {
+  font-size: 20px;
+  line-height: 26px;
+}
+h2 {
+  font-size: 18px;
+  line-height: 24px;
+}
+h3 {
+  font-size: 16px;
+  line-height: 22px;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+legend {
+  margin-bottom: 0;
+  border-bottom: 0;
+  width: auto;
+  line-height: 1.8em;
+}
 
 $DARKFONT: rgb(70,70,70);
+$WELLBG: rgb(245,245,245);
 
 @media (min-width: 10px) {
   .modal {
@@ -78,6 +104,14 @@ label {
   white-space: nowrap;
 }
 
+.nopadding {
+  padding: 0 !important;
+}
+
+.nomargin {
+  margin: 0 !important;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -146,70 +180,97 @@ select,input[type="text"],input[type="password"] {
   width: 90%;
 }
 
-.gui-box {
-  border: {
-    style: solid;
-    width: 1px;
-    radius: 3px;
-  }  
-  .gui-row {
-    text-align: left;
-    vertical-align: middle;
-    background-color: rgb(245,245,245);
-    padding: {
-      left: 5px;
-      top: 1px;
-      bottom: 1px;
-    }
-    .gui-group {
-      padding: {
-        left: 5px;
-        right: 5px;
-        top: 2px;
-        bottom: 2px;
-      }
-      border: {
-        width: 1px;
-        color: lighten(rgb(225,225,225), 15%);
-        style: solid;
-        radius: 3px;
-      }
-      display: inline-block;
-      margin-right: 2px;
-      background-color: rgb(225,225,225);
-      
-      .gui-label {
-        white-space: nowrap;
-        padding-right: 5px;
-        color: $DARKFONT;
-      }
-      .gui-value {
-        padding-left: 5px;
-        padding-right: 5px;
-        background-color: $DARKFONT;
-        text-align: center;
-        vertical-align: middle;
-        color: white;
-        font-weight: bold;
-      }
-      div {
-        display: inline-block;
-      }
-      p {
-        display: inline-block;
-      }
-      select {
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-      }
-    }
-    .gui-row-title {
-      padding-left: 5px;
-      font-weight: bold;
-      color: $DARKFONT;
+.gui-box-header {
+  @include background-image(linear-gradient(to bottom, #fafafa,#eaeaea));
+  background-repeat: repeat-x;
+  border: 1px solid #d5d5d5;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-weight: bold;
+  color: $DARKFONT;
+  h3 {
+    margin: {
+      left: 10px;
+      right: 10px;
+      top:3px;
+      bottom:3px;
     }
   }
+}
+.gui-box-body {
+  background-color: #fff;
+  border: solid #d5d5d5;
+  border-width: 0 1px 1px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.gui-row {
+  text-align: left;
+  vertical-align: middle;
+  border: {
+    width: 1px;
+    color: darken($WELLBG, 15%);
+    style: solid;
+    left:0;
+    right:0;
+    top: 0;
+  }
+  padding: {
+    left: 10px;
+    right: 10px;
+    bottom: 3px;
+    top: 3px;
+  }
+}
+.gui-row-header {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.gui-group {
+  $GROUPCOLOR: rgb(245,245,245);
+  padding: {
+    left: 3px;
+    right: 3px;
+    top: 2px;
+    bottom: 2px;
+  }
+  border: {
+    width: 1px;
+    color: darken($GROUPCOLOR, 5%);
+    style: solid;
+    radius: 3px;
+  }
+  display: inline-block;
+  margin-right: 5px;
+  background-color: $GROUPCOLOR;
+
+  div {
+    display: inline-block;
+  }
+  p {
+    display: inline-block;
+  }
+  select {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.gui-label {
+  white-space: nowrap;
+  padding-right: 5px;
+  color: $DARKFONT;
+}
+.gui-value {
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: $DARKFONT;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
+  font-weight: bold;
 }
 
 .button {
@@ -230,7 +291,8 @@ select,input[type="text"],input[type="password"] {
     color: $DARKFONT;
   }
   &.dice {
-    min-width: 2em;
+    font-size: 0.8em;
+    min-width: 1.5em;
   }
   &.icon {
     width: 1.8em;

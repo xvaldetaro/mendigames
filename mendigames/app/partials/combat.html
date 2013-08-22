@@ -1,74 +1,82 @@
 <div class="cage">
     <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
-    <div class="" ng-controller="MenuController">
-        <div class="gui-row">
-           <div class="gui-row-title">Dices</div> 
-        </div>
-        <div class="gui-row">
-            <div class="gui-group">
-                <div class="gui-label">Multiplier:</div>
-                <select class="size-micro" ng-model="selectedMultiplier" ng-options="multiplier for multiplier in multipliers"></select>
-                <div class="gui-label">Modifier:</div>
-                <select class="size-micro" ng-model="selectedModifier" ng-options="modifier for modifier in modifiers"></select>
-            </div><div class="gui-group">
-                <div class="inline">
-                    <div ng-repeat="dice in dices" class="button dice" ng-click="roll(dice)">{{dice}}</div>
+    <div ng-controller="MenuController">
+        <div class="xpan10">
+            <div class="gui-box-header"><h3>Dice Roller</h3></div>
+            <div class="gui-box-body">
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">Multiplier</div>
+                        <select class="size-micro" ng-model="selectedMultiplier" ng-options="multiplier for multiplier in multipliers"></select>
+                    </div><div class="gui-group">
+                        <div class="gui-label size-zero">Modifier</div>
+                        <select class="size-micro" ng-model="selectedModifier" ng-options="modifier for modifier in modifiers"></select>
+                    </div><div class="gui-group">
+                        <div class="inline">
+                            <div ng-repeat="dice in dices" class="button dice" ng-click="roll(dice)">{{dice}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="gui-row">
-           <div class="gui-row-title">Combat manager:</div> 
-        </div>
-        <div class="gui-row">
-            <div class="gui-group">
-                <div class="gui-label size-kilo">{{characterList[campaign.turn].name|trunc:12}}
-                </div><div title="Next" class="button" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i>
-                </div><div title="Previous" class="button" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i>
-                </div><div title="Reorder" class="button" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
-            </div><div class="gui-group">
-                <div class="gui-label size-mili">Round: <b>{{campaign.round}}</b>
-                </div><div title="Previous" class="button" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i>
-                </div><div title="Next" class="button" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i>
-                </div><div title="Reset" class="button" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i>
-                </div>
-            </div><div class="gui-group">
-                <div class="gui-label size-mili">Enemy
-                </div><div title="Clear Enemies" class="button" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i>
-                </div><div title="Add Enemies" class="button" ng-click="add_enemy()"><i class="icon-plus icon-white"></i>
-                </div>
-            </div>
-        </div>
-        <div class="gui-row">
-           <div class="gui-row-title">Mass Control:</div> 
-        </div>
-        <div class="gui-row">
-            <div class="gui-group">
-                <div class="gui-label size-kilo">After Combat
-                </div><div title="Clear Conditions" class="button" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i>
-                </div><div title="Award Milestones" class="button" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i>
-                </div>
-            </div><div class="gui-group">
-                <div class="gui-label size-micro">Rest
-                </div><div title="Short Rest All" class="button" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i>
-                </div><div title="Extended Rest All" class="button" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i>
-                </div>
-            </div><div class="gui-group">
-                <div class="gui-label size-micro">Heal
-                </div><div title="Full Heal All" class="button" ng-click="mass_heal()"><i class="icon-heart icon-white"></i>
-                </div>
-            </div><div class="gui-group">
-                <div class="gui-label size-micro">XP
-                </div><div title="Give XP to All" class="button" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i>
-                </div><div title="Split XP among All" class="button" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i>
+        </div><div class="xpan10">
+            <div class="gui-box-header"><h3>Combat Manager</h3></div>
+            <div class="gui-box-body">
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">{{characterList[campaign.turn].name|trunc:12}}
+                        </div><div title="Next" class="button" ng-click="next_turn()"><i class="icon-arrow-down icon-white"></i>
+                        </div><div title="Previous" class="button" ng-click="previous_turn()"><i class="icon-arrow-up icon-white"></i>
+                        </div><div title="Reorder" class="button" ng-click="reorder()"><i class="icon-list icon-white"></i></div>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Round <b>{{campaign.round}}</b>
+                        </div><div title="Previous" class="button" ng-click="previous_round()"><i class="icon-arrow-left icon-white"></i>
+                        </div><div title="Next" class="button" ng-click="next_round()"><i class="icon-arrow-right icon-white"></i>
+                        </div><div title="Reset" class="button" ng-click="set_round(0)"><i class="icon-ban-circle icon-white"></i>
+                        </div>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Enemy
+                        </div><div title="Clear Enemies" class="button" ng-click="clear_enemies()"><i class="icon-minus icon-white"></i>
+                        </div><div title="Add Enemies" class="button" ng-click="add_enemy()"><i class="icon-plus icon-white"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="gui-row">
-           <div class="gui-row-title">Conditions</div> 
-        </div>
-        <div class="gui-row" btf-dragon="(ci, condition) in conditionList" btf-double-dragon btf-dragon-accepts="ret_false">
-            <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="compendium('glossary', 'condition', condition)">
-                <i class="{{condition|condition_icon}} icon-white"></i>
+        </div><div class="xpan10">
+            <div class="gui-box-header"><h3>Mass Control</h3></div>
+            <div class="gui-box-body">
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <div class="gui-label">After Combat
+                        </div><div title="Clear Conditions" class="button" ng-click="mass_clear_conditions()"><i class="icon-trash icon-white"></i>
+                        </div><div title="Award Milestones" class="button" ng-click="mass_milestone()"><i class="icon-flag icon-white"></i>
+                        </div>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Rest
+                        </div><div title="Short Rest All" class="button" ng-click="mass_short_rest()"><i class="icon-road icon-white"></i>
+                        </div><div title="Extended Rest All" class="button" ng-click="mass_extended_rest()"><i class="icon-home icon-white"></i>
+                        </div>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Heal
+                        </div><div title="Full Heal All" class="button" ng-click="mass_heal()"><i class="icon-heart icon-white"></i>
+                        </div>
+                    </div><div class="gui-group">
+                        <div class="gui-label">XP
+                        </div><div title="Give XP to All" class="button" ng-click="mass_give_xp()"><i class="icon-plus icon-white"></i>
+                        </div><div title="Split XP among All" class="button" ng-click="split_xp()"><i class="icon-fullscreen icon-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><div class="xpan10">
+            <div class="gui-box-header"><h3>Conditions</h3></div>
+            <div class="gui-box-body">
+                <div class="gui-row">
+                    <div class="gui-group" btf-dragon="(ci, condition) in conditionList" btf-double-dragon btf-dragon-accepts="ret_false">
+                        <div class="condition-box" tooltip-popup-delay='400' tooltip="{{condition.name}}" ng-click="compendium('glossary', 'condition', condition)">
+                            <i class="{{condition|condition_icon}} icon-white"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

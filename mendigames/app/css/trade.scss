@@ -1,6 +1,8 @@
 @import 'bourbon/bourbon';
 @import 'mixins.scss';
 
+$DARKFONT: rgb(70,70,70);
+
 .item-name-cell {
   white-space: normal;
 }
@@ -12,7 +14,15 @@
 	}
 }
 
-.item-finder-table {
-	height: 400px;
-	overflow-y: auto;
+.container-section {
+	@include borderfy($DARKFONT);
+}
+
+.container-section-header {
+	padding-left: 5px;
+  padding-right: 5px;
+  background-color: $DARKFONT;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
 }

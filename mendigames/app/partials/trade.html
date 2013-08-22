@@ -1,67 +1,39 @@
 <div class="cage">
     <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
-    <div class="xpan10">
-        <div class="gui-box">
-            <div class="xpan5">
-                <div class="gui-row">
-                    <div class="gui-row-title">
-                        Prices
-                    </div>
-                </div>
-                <div class="gui-row">
-                    <div class="gui-group">
-                        <div class="gui-label">Buy:</div>
-                        <select class="size-mili" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select>
-                    </div><div class="gui-group">
-                        <div class="gui-label">Sell:</div>
-                        <select class="size-mili" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select>
-                    </div>
-                </div>
-            </div><div class="xpan5">
-                <div class="gui-row">
-                    <div class="gui-row-title">
-                        Mass Gold
-                    </div>
-                </div>
-                <div class="gui-row">
-                    <div class="gui-group">
-                        <div class="gui-label size-mili">Split</div>
-                        <div title="Split Gold among All" class="button" ng-click="split_gold()"><i class="icon-fullscreen icon-white"></i></div>
-                    </div><div class="gui-group">
-                        <div class="gui-label size-mili">Give</div>
-                        <div title="Give Gold to All" class="button" ng-click="mass_give_gold()"><i class="icon-plus icon-white"></i></div>
-                    </div>
-                </div>
-            </div><div class="xpan10">
-                <div class="gui-row">
-                    <div class="gui-row-title">
-                        Container Management        
-                    </div>
-                </div>
-                <div class="gui-row">
-                    <div class="gui-group">
-                        <div class="gui-label size-mili">New</div>
-                        <div class="button" ng-click="new_container()"><i class="icon-plus icon-white"></i></div>
-                    </div>
+    <div class="xpan5">
+        <div class="gui-box-header"><h3>Players</h3></div>
+        <div class="gui-box-body" ng-controller="InventoryCtrl">
+            <div class="gui-row">
+                <div class="gui-row-header">Prices</div>
+                <div class="gui-group">
+                    <div class="gui-label">Buy</div>
+                    <select class="size-mili" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select>
+                </div><div class="gui-group">
+                    <div class="gui-label">Sell</div>
+                    <select class="size-mili" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="xpan5">
-        <div class="gui-box" ng-controller="InventoryCtrl">
             <div class="gui-row">
-                <div class="gui-row-title">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle">
-                            <i class="icon-refresh" tooltip="Change Inventory"></i>&nbsp;
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="cont in plContList">
-                              <a ng-click="change_player_container(cont)">{{cont.name}}</a>
-                            </li>
-                        </ul>
-                    </div>{{plCont.name|trunc:12}}'s Inventory
+                <div class="gui-row-header">Mass Gold</div>
+                <div class="gui-group">
+                    <div class="gui-label size-mili">Split</div>
+                    <div title="Split Gold among All" class="button" ng-click="split_gold()"><i class="icon-fullscreen icon-white"></i></div>
+                </div><div class="gui-group">
+                    <div class="gui-label size-mili">Give</div>
+                    <div title="Give Gold to All" class="button" ng-click="mass_give_gold()"><i class="icon-plus icon-white"></i></div>
                 </div>
+            </div>
+            <div class="gui-row">
+                <div class="dropdown inline">
+                    <a class="dropdown-toggle">
+                        <i class="icon-refresh" tooltip="Change Inventory"></i>&nbsp;
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="cont in plContList">
+                          <a ng-click="change_player_container(cont)">{{cont.name}}</a>
+                        </li>
+                    </ul>
+                </div>{{plCont.name|trunc:12}}'s Inventory
             </div>
             <div class="gui-row">
                 <div class="gui-group">
@@ -85,32 +57,34 @@
                 </table>
             </div>
         </div>
-        <div class="gui-box" ng-controller="ContainerCtrl">
-            <div class="gui-row">
-                <div class="gui-row-title">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle">
-                            <i class="icon-refresh" tooltip="Change Container"></i>&nbsp;
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="cont in othContList">
-                              <a ng-click="change_other_container(cont)">{{cont.name}}</a>
-                            </li>
-                        </ul>
-                    </div>Container {{othCont.name|trunc:12}}
+        <div class="gui-box-header"><h3>Containers</h3></div>
+        <div class="gui-box-body" ng-controller="ContainerCtrl">
+            <div class="gui-group">
+                <div class="gui-label">New</div>
+                <div class="button" ng-click="new_container()"><i class="icon-plus icon-white"></i></div>
+            </div><div class="gui-group">
+                <div class="gui-label">Choose</div>
+                <div class="dropdown inline">
+                    <a class="dropdown-toggle">
+                        <div class="button"><i class="icon-th-list icon-white"></i></div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="cont in othContList">
+                          <a ng-click="change_other_container(cont)">{{cont.name}}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="gui-row">
+            <div class="container-section">
+                <div class="container-section-header">
+                    <div class="pull-left cursor-pointer"><i class="icon-arrow-left icon-white"></i></div>
+                    {{othCont.name|trunc:12}}&nbsp;<i class="icon-ban-circle icon-white cursor-pointer" tooltip="Delete Container" ng-click="delete_container()"></i>
+                    <div class="pull-right cursor-pointer"><i class="icon-arrow-right icon-white"></i></div>
+                </div>
                 <div class="gui-group">
                     <div class="gui-label size-zero">Gold: {{othCont.gold}}</div>
                     <div class="button" ng-click="loot_gold()"><i class="icon-fullscreen icon-white"></i></div>
                 </div>
-                <div class="gui-group">
-                    <div class="gui-label size-micro">Delete</div>
-                    <div class="button" ng-click="delete_container()"><i class="icon-ban-circle icon-white"></i></div>
-                </div>
-            </div>
-            <div class="gui-row">
                 <table class="gui-table item-table">
                     <tr>
                         <th>Item</th><th>G</th><th>W</th><th>x</th>
@@ -127,11 +101,10 @@
             </div>
         </div>
     </div><div class="xpan5" ng-controller="ItemFinderCtrl">
-        <div class="gui-box" ng-controller="MagicItemFinderCtrl">
+        <div class="gui-box-header"><h3>Item Finder</h3></div>
+        <div class="gui-box-body" ng-controller="MagicItemFinderCtrl">
             <div class="gui-row">
-                <div class="gui-row-title">Magic Item Search</div>
-            </div>
-            <div class="gui-row">
+                <div class="gui-row-header">Magic Item Search</div>
                 <div class="gui-group">
                     <input placeholder="Item Name" type="text" class="size-kilo" ng-model="itemName">&nbsp;
                 </div><div class="gui-group">
