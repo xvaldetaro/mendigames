@@ -1,103 +1,120 @@
 <div class="cage">
     <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
     <div class="xpan5">
-        <div class="gui-box-header"><h3>Players</h3></div>
-        <div class="gui-box-body" ng-controller="InventoryCtrl">
-            <div class="gui-row">
-                <div class="gui-row-header">Prices</div>
-                <div class="gui-group">
-                    <div class="gui-label">Buy</div>
-                    <select class="size-mili" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select>
-                </div><div class="gui-group">
-                    <div class="gui-label">Sell</div>
-                    <select class="size-mili" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select>
-                </div>
-            </div>
-            <div class="gui-row">
-                <div class="gui-row-header">Mass Gold</div>
-                <div class="gui-group">
-                    <div class="gui-label size-mili">Split</div>
-                    <div title="Split Gold among All" class="button" ng-click="split_gold()"><i class="icon-fullscreen icon-white"></i></div>
-                </div><div class="gui-group">
-                    <div class="gui-label size-mili">Give</div>
-                    <div title="Give Gold to All" class="button" ng-click="mass_give_gold()"><i class="icon-plus icon-white"></i></div>
-                </div>
-            </div>
-            <div class="gui-row">
+        <div ng-controller="InventoryCtrl">
+            <div class="gui-box-header">
                 <div class="dropdown inline">
                     <a class="dropdown-toggle">
-                        <i class="icon-refresh" tooltip="Change Inventory"></i>&nbsp;
+                        <i class="icon-th-list inline" tooltip="Player Menu"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li ng-repeat="cont in plContList">
-                          <a ng-click="change_player_container(cont)">{{cont.name}}</a>
+                        <li>
+                          <a ng-click="split_gold()"><i class="icon-fullscreen"></i>Split Gold among Everyone</a>
                         </li>
-                    </ul>
-                </div>{{plCont.name|trunc:12}}'s Inventory
-            </div>
-            <div class="gui-row">
-                <div class="gui-group">
-                    <div class="gui-label size-zero">Gold: {{plCont.gold}}</div>
-                    <div class="button" ng-click="change_gold()" tooltip="Change Gold"><i class="icon-edit icon-white"></i></div>
-                </div>
-            </div>
-            <div class="gui-row">
-                <table class="gui-table item-table">
-                    <tr>
-                        <th>Item</th><th>G</th><th>W</th><th>x</th>
-                    </tr>
-                    <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
-                        <tr class="cursor-move">
-                            <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="gui-box-header"><h3>Containers</h3></div>
-        <div class="gui-box-body" ng-controller="ContainerCtrl">
-            <div class="gui-group">
-                <div class="gui-label">New</div>
-                <div class="button" ng-click="new_container()"><i class="icon-plus icon-white"></i></div>
-            </div><div class="gui-group">
-                <div class="gui-label">Choose</div>
-                <div class="dropdown inline">
-                    <a class="dropdown-toggle">
-                        <div class="button"><i class="icon-th-list icon-white"></i></div>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="cont in othContList">
-                          <a ng-click="change_other_container(cont)">{{cont.name}}</a>
+                        <li>
+                          <a ng-click="mass_give_gold()"><i class="icon-plus"></i>Give Gold to Everyone</a>
                         </li>
                     </ul>
                 </div>
+                <h3 class="inline">Players</h3>
             </div>
-            <div class="container-section">
-                <div class="container-section-header">
-                    <div class="pull-left cursor-pointer"><i class="icon-arrow-left icon-white"></i></div>
-                    {{othCont.name|trunc:12}}&nbsp;<i class="icon-ban-circle icon-white cursor-pointer" tooltip="Delete Container" ng-click="delete_container()"></i>
-                    <div class="pull-right cursor-pointer"><i class="icon-arrow-right icon-white"></i></div>
+            <div class="gui-box-body">
+                <div class="gui-row">
+                    <div class="gui-row-header">Prices</div>
+                    <div class="gui-group">
+                        <div class="gui-label">Buy</div>
+                        <select class="size-mili" ng-model="buy_adjustment" ng-options="price.text for price in prices"></select>
+                    </div><div class="gui-group">
+                        <div class="gui-label">Sell</div>
+                        <select class="size-mili" ng-model="sell_adjustment" ng-options="price.text for price in prices"></select>
+                    </div>
                 </div>
-                <div class="gui-group">
-                    <div class="gui-label size-zero">Gold: {{othCont.gold}}</div>
-                    <div class="button" ng-click="loot_gold()"><i class="icon-fullscreen icon-white"></i></div>
-                </div>
-                <table class="gui-table item-table">
-                    <tr>
-                        <th>Item</th><th>G</th><th>W</th><th>x</th>
-                    </tr>
-                    <tbody btf-dragon="item in othCont._2m.items()" btf-dragon-drop-function="item_drop">
-                        <tr class="cursor-move">
-                            <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
-                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                <div class="container-section">
+                    <div class="container-section-header">
+                        <div class="pull-left cursor-pointer"><i class="icon-arrow-left icon-white"></i></div>
+                        {{plCont.name|trunc:12}}&nbsp;
+                        <div class="dropdown inline">
+                            <a class="dropdown-toggle">
+                                <i class="icon-share-alt icon-white" tooltip="Choose Player"></i>&nbsp;
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="cont in plContList">
+                                  <a ng-click="change_player_container(cont)">{{cont.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right cursor-pointer"><i class="icon-arrow-right icon-white"></i></div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">Gold: {{plCont.gold}}</div>
+                        <div class="button" ng-click="change_gold()" tooltip="Change Gold"><i class="icon-edit icon-white"></i></div>
+                    </div>
+                    <table class="gui-table item-table">
+                        <tr>
+                            <th>Item</th><th>G</th><th>W</th><th>x</th>
                         </tr>
-                    </tbody>
-                </table>
+                        <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
+                            <tr class="cursor-move">
+                                <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><div>&nbsp;</div>
+        <div ng-controller="ContainerCtrl">
+            <div class="gui-box-header">
+                <div class="dropdown inline">
+                    <a class="dropdown-toggle">
+                        <i class="icon-th-list inline" tooltip="Container Menu"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="new_container()"><i class="icon-plus"></i>New Container</a>
+                        </li>
+                    </ul>
+                </div>
+                <h3 class="inline">Containers</h3>
+            </div>
+            <div class="gui-box-body">
+                <div class="container-section">
+                    <div class="container-section-header">
+                        <div class="pull-left cursor-pointer"><i class="icon-arrow-left icon-white"></i></div>
+                        {{othCont.name|trunc:12}}&nbsp;
+                        <div class="dropdown inline">
+                            <a class="dropdown-toggle">
+                                <i class="icon-share-alt icon-white" tooltip="Choose Container"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="cont in othContList">
+                                  <a ng-click="change_other_container(cont)">{{cont.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <i class="icon-ban-circle icon-white cursor-pointer" tooltip="Delete Container" ng-click="delete_container()"></i>
+                        <div class="pull-right cursor-pointer"><i class="icon-arrow-right icon-white"></i></div>
+                    </div>
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">Gold: {{othCont.gold}}</div>
+                        <div class="button" ng-click="loot_gold()" tooltip="Loot Gold"><i class="icon-fullscreen icon-white"></i></div>
+                    </div>
+                    <table class="gui-table item-table">
+                        <tr>
+                            <th>Item</th><th>G</th><th>W</th><th>x</th>
+                        </tr>
+                        <tbody btf-dragon="item in othCont._2m.items()" btf-dragon-drop-function="item_drop">
+                            <tr class="cursor-move">
+                                <td class="item-name-cell" ng-click="fetch_from_compendium(hi._2o.item())">{{item.name|trunc:18}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
+                                <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.amount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div><div class="xpan5" ng-controller="ItemFinderCtrl">
@@ -125,7 +142,7 @@
                     <div ng-click="item_finder_search(1)" class="button size-zero">Search</div>
                 </div>
             </div>
-            <div class="gui-row scroll-y">
+            <div class="scroll-y">
                 <table class="gui-table item-table">
                     <tr>
                         <th>Item</th><th>Cat</th><th>G</th><th>R</th>
