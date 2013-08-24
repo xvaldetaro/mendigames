@@ -187,6 +187,8 @@ function($scope, EM, Ocont) {
     $scope.item_drop = function(item) {
         Ocont.sell_item_destroy(item, $scope.sell_adjustment.value);
     };
+
+    $scope.magic = true;
 }])
 
 .controller('MagicItemFinderCtrl', ['$scope','EM','Ocont','Oit','$http','Wizards',

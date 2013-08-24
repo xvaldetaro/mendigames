@@ -14,3 +14,4 @@ load_prod_env
 local
 libpeerconnection.log
 mendigames/tmp_karma*
+fabtemplates

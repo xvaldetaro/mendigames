@@ -1,10 +1,11 @@
 from fabric.api import *
 
 def redb():
-    local('mysql -u root -h localhost -P 3306 -p mysql < dropdb_mysql')
-    local('mysql -u root -h localhost -P 3306 -p mysql < createdb_mysql')
-    local('rm -rf mendigames/migrations')
-    local('python manage.py syncdb')
+    with settings(warn_only=True):
+        local('mysql -u root -h localhost -P 3306 -p mysql < dropdb_mysql')
+        local('mysql -u root -h localhost -P 3306 -p mysql < createdb_mysql')
+        local('rm -rf mendigames/migrations')
+        local('python manage.py syncdb')
 
 def fix():
     local('python manage.py loaddata fix.json')

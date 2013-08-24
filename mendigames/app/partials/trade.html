@@ -118,28 +118,38 @@
             </div>
         </div>
     </div><div class="xpan5" ng-controller="ItemFinderCtrl">
-        <div class="gui-box-header"><h3>Item Finder</h3></div>
-        <div class="gui-box-body" ng-controller="MagicItemFinderCtrl">
+        <div class="gui-box-header">
+            <div class="dropdown inline">
+                <a class="dropdown-toggle">
+                    <i class="icon-th-list inline" tooltip="Player Menu"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                      <a ng-click="magic = true;"><i class="icon-star"></i>Magic</a>
+                    </li>
+                    <li>
+                      <a ng-click="magic = false;"><i class="icon-leaf"></i>Mundane</a>
+                    </li>
+                </ul>
+            </div>
+            <h3 class="inline">Item Finder</h3>
+        </div>
+        <div class="gui-box-body" ng-controller="MagicItemFinderCtrl" ng-show="magic">
             <div class="gui-row">
                 <div class="gui-row-header">Magic Item Search</div>
                 <div class="gui-group">
-                    <input placeholder="Item Name" type="text" class="size-kilo" ng-model="itemName">&nbsp;
-                </div><div class="gui-group">
+                    <input placeholder="Item Name" type="text" class="size-mega" ng-model="itemName">
                     <select class="input-small" ng-model="rarity" ng-options="rar.name for rar in rarityList"><option value="">-Rarity-</option></select>
-                </div><div class="gui-group">
                     <div class="gui-label size-micro">Level:
                     </div><input type="text" ng-model="levelStart" class="size-nano"
                     ><div class="gui-label size-nano">&nbsp;to
                     </div><input type="text" ng-model="levelStop" class="size-nano">
-                </div><div class="gui-group">
                     <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
-                </div><div class="gui-group">
                     <div class="gui-label size-micro">Cost:
                     </div><input type="text" ng-model="costStart" class="size-nano"
                     ><div class="gui-label size-nano">&nbsp;to
                     </div><input type="text" ng-model="costStop" class="size-nano">
-                </div><div class="gui-group">
-                    <div ng-click="item_finder_search(1)" class="button size-zero">Search</div>
+                    <div ng-click="item_finder_search(1)" class="button size-zero pull-right">Search</div>
                 </div>
             </div>
             <div class="scroll-y">
@@ -153,6 +163,32 @@
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.category().name | category_short}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
                             <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.rarity}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="gui-box-body" ng-controller="MundaneItemFinderCtrl" ng-show="!magic">
+            <div class="gui-row">
+                <div class="gui-row-header">Mundane Item Search</div>
+                <div class="gui-group">
+                    <input placeholder="Item Name" type="text" class="size-kilo" ng-model="itemName">&nbsp;
+                    <select class="input-small" ng-model="category" ng-options="cat.name for cat in categoryList"><option value="">-Category-</option></select>
+                    <select class="input-small" ng-model="subtype" ng-options="st.name for st in category._2m.subtypes()"><option value="">-Subtype-</option></select>
+                    <div ng-click="item_finder_search()" class="button size-zero pull-right">Search</div>
+                </div>
+            </div>
+            <div class="scroll-y">
+                <table class="gui-table item-table">
+                    <tr>
+                        <th>Item</th><th>Cat</th><th>G</th><th>W</th>
+                    </tr>
+                    <tbody btf-dragon="item in results" btf-dragon-drop-function="item_drop">
+                        <tr class="cursor-move">
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.name}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item._2o.category().name | category_short}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.cost}}</td>
+                            <td ng-click="fetch_from_compendium(hi._2o.item())">{{item.weight}}</td>
                         </tr>
                     </tbody>
                 </table>
