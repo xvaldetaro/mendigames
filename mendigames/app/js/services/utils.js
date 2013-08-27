@@ -10,35 +10,10 @@ angular.module('mendigames')
 .factory('Wizards', ['$rootScope', '$http','EM','$log','$q',
 function($rootScope, $http, EM, $log, $q){
     return function(model, entity, instance) {
-        var deferred = $q.defer();
-        if(instance.html_description) {
-            $log.log('Got from db');
-            deferred.resolve();
-        } else {
-            return $http({
-                url: '/dndinsider/compendium/display.aspx?page='+model+'&id='+instance.wizards_id,
-                method: 'GET',
-                dataType: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            }).
-            then(function(data){
-                var fakedom = $('<div></div>');
-                fakedom.html(data.data.replace('<img src="images/bullet.gif" alt=""/>',
-                    '<i class="icon-star"></i>'));
-                var html_description = $('div[id|="detail"]', fakedom).html();
-                if(entity){
-                    instance.html_description = html_description;
-                    EM.update(entity, instance);
-                }
-                deferred.resolve();
-            },function(error) {
-                window.open(
-                  'http://127.0.0.1/dndinsider/compendium/login.aspx',
-                  '_blank'
-                );
-                deferred.reject();
-            });
-        }
-        return deferred.promise;
+        window.open(
+          'http://www.wizards.com/dndinsider/compendium/display.aspx?page='+model+'&id='+instance.wizards_id,
+          '_blank'
+        );
     };
 }])
 

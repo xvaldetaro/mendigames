@@ -1,0 +1,19 @@
+@import 'bourbon/bourbon';
+@import 'mixins.scss';
+
+table.power-list {
+  tr {
+    $ENCOUNTER: rgb(255,230,230);
+    $ATWILL: rgb(230,255,230);
+    &.encounter {
+      td {
+        @include color-cell($ENCOUNTER);
+      }
+    }
+    &.at-will {
+      td {
+        @include color-cell($ATWILL);
+      }
+    }
+  }
+}

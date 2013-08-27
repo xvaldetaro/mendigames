@@ -1,105 +1,126 @@
-<div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
-<div class="container">
-    <form class="form-horizontal">
-        <legend>Stats</legend>
-        <div class="control-group">
-            <label class="control-label">Name</label>
-            <div class="controls">
-                <input type="text" class="input-large" ng-model="c.name" maxlength="" placeholder="">
+<div class="cage">
+    <div ng-include src="'/static/mendigames/partials/navbar.html'"></div>
+    <div class="gui-box-header"><h3>Basic Information</h3></div>
+    <div class="gui-box-body">
+        <div class="gui-row">
+            <div class="gui-group">
+                <div class="gui-label">Character Name</div>
+                <input type="text" class="size-giga" ng-model="c.name" maxlength="" placeholder="">
+            </div>
+            <div class="gui-group">
+                <div class="gui-label">Type</div>
+                <select class="size-zero" ng-model="c.type" ng-options="cType for cType in cTypes"></select>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label">Healing Surges</label>
-            <div class="controls">
+        <div class="gui-row">
+            <div class="gui-row-header">Misc</div>
+            <div class="gui-group">
+                <div class="gui-label">Hit Points</div>
+                <input type="text" class="size-micro" ng-model="c.hit_points" maxlength="" placeholder="">
+            </div>
+            <div class="gui-group">
+                <div class="gui-label">Healing Surges</div>
                 <input type="text" class="size-nano" ng-model="c.healing_surges" maxlength="" placeholder="">
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Hit Points</label>
-            <div class="controls">
-                <input type="text" class="input-mini" ng-model="c.hit_points" maxlength="" placeholder="">
+        </div><div class="gui-row">
+            <div class="gui-row-header">Defenses</div>
+            <div class="gui-group">
+                <div class="gui-label size-zero">Fortitude</div>
+                <input type="text" class="size-nano" ng-model="c.fort" maxlength="" placeholder="">
+            </div>
+            <div class="gui-group">
+                <div class="gui-label size-zero">Reflex</div>
+                <input type="text" class="size-nano" ng-model="c.refl" maxlength="" placeholder="">
+            </div>
+            <div class="gui-group">
+                <div class="gui-label size-zero">Will</div>
+                <input type="text" class="size-nano" ng-model="c.will" maxlength="" placeholder="">
+            </div>
+        </div><div class="gui-row">
+            <div class="gui-row-header">Senses</div>
+            <div class="gui-group">
+                <div class="gui-label size-zero">Insight</div>
+                <input type="text" class="size-nano" ng-model="c.insight" maxlength="" placeholder="">
+            </div>
+            <div class="gui-group">
+                <div class="gui-label size-zero">Perception</div>
+                <input type="text" class="size-nano" ng-model="c.perception" maxlength="" placeholder="">
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label">Type</label>
-            <div class="controls">
-                <select class="" ng-model="c.type" ng-options="cType for cType in cTypes"></select>
-            </div>
-        </div>
-        <legend>Powers</legend>
-        <div class="row-fluid" ng-controller="ManagementCharacterPowerCtrl">
-            <div class="span6 well">
-                <div>
-                    <h5 class="inline">{{c.name}}'s Powers</h5>
-                    <div class="btn pull-right" ng-click="remove_all()"><i class="icon-trash"></i>Remove All</div>
+    </div>
+    <div class="gui-box-body" ng-controller="ManagementCharacterPowerCtrl">
+        <div class="xpan5">
+            <div class="gui-box-header">
+                <div class="dropdown inline">
+                    <a class="dropdown-toggle">
+                        <i class="icon-th-list inline" tooltip="Powers Menu"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="remove_all()"><i class="icon-ban-circle"></i>Remove All</a>
+                        </li>
+                    </ul>
                 </div>
-                <table class="table table-striped" btf-dragon-drop-function="'power_drop'" class="droppable-area">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Level</th>
-                            <th>Usage</th>
-                            <th>Action</th>
-                            <th>Remove?</th>
+                <h3 class="inline">{{c.name}}'s Powers</h3>
+            </div>
+            <div class="gui-box-body">
+                <table class="gui-table power-list">
+                    <tr>
+                        <th>Name</th><th>L</th><th><i class="icon-trash icon-white" ng-click="delete_power(pi)"></i></th>
+                    </tr>
+                    <tbody>
+                        <tr ng-repeat="(pi, power) in cPowers" class="{{power|power_type}}">
+                            <td  class="cursor-pointer" ng-click="compendium(power)">{{power.name}}</td>
+                            <td>{{power.level}}</td>
+                            <td><i class="icon-trash" ng-click="delete_power(pi)"></i></td>
                         </tr>
-                    </thead>
-                   <tbody>
-                       <tr ng-repeat="(pi, power) in cPowers">
-                           <td>{{power.name}}</td>
-                           <td>{{power.level}}</td>
-                           <td>{{power.usage}}</td>
-                           <td>{{power.action}}</td>
-                           <td><i class="icon-trash" ng-click="delete_power(pi)"></i></td>
-                       </tr>
-                   </tbody> 
+                    </tbody>
                 </table>
             </div>
-            <div class="span6 well">
-                <div>
-                    <h5 class="inline">Power Compendium</h5><div class="btn pull-right" ng-click="from_summary()">Paste Summary</div>
-                    <div class="btn pull-right" ng-click="add_all()"><i class="icon-arrow-left"></i>Add All</div>
+        </div><div class="xpan5">
+            <div class="gui-box-header">
+                <div class="dropdown inline">
+                    <a class="dropdown-toggle">
+                        <i class="icon-th-list inline" tooltip="Powers Menu"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="from_summary()"><i class="icon-list-alt"></i>Paste Summary</a>
+                        </li>
+                        <li>
+                          <a ng-click="add_all()"><i class="icon-arrow-left"></i>Add All</a>
+                        </li>
+                    </ul>
                 </div>
-                <form class="form-search">
-                  <input type="text" ng-model="pName" class="input-medium search-query">
-                    <select class="input-small" ng-model="pUsage" ng-options="usage.name for usage in pUsages"><option value="">-Usage-</option></select>
-                    <select class="input-small" ng-model="pAction" ng-options="action.name for action in pActions"><option value="">-Action-</option></select>
-                    Level:
-                    <input type="text" class="size-nano" ng-model="pLevel" maxlength="" placeholder="">
-                  <button ng-click="search()" class="btn">Search</button>
-                </form>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Add</th>
-                            <th>Name</th>
-                            <th>Level</th>
-                            <th>Usage</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                   <tbody btf-dragon="(pi, power) in powers" btf-double-dragon class="droppable-area">
-                       <tr>
+                <h3 class="inline">Power Compendium</h3>
+            </div>
+            <div class="gui-box-body" ng-controller="ManagementCharacterPowerCtrl">
+                <div class="gui-row">
+                    <div class="gui-group">
+                        <input type="text" ng-model="pName" class="size-zero search-query" placeholder="Power Name">
+                        <select class="size-zero" ng-model="pUsage" ng-options="usage.name for usage in pUsages"><option value="">-Usage-</option></select>
+                        <select class="size-kilo" ng-model="pAction" ng-options="action.name for action in pActions"><option value="">-Action-</option></select>
+                        Level:
+                        <input type="text" class="size-nano" ng-model="pLevel" maxlength="" placeholder="">
+                        <div ng-click="search()" class="button pull-right size-mili">Search</div>
+                    </div>
+                </div>
+                <table class="gui-table power-list">
+                    <tr>
+                        <th><i class="icon-arrow-left icon-white" ng-click="delete_power(pi)"></i></th><th>Name</th><th>L</th>
+                    </tr>
+                    <tbody>
+                        <tr ng-repeat="(pi, power) in powers" class="{{power|power_type}}">
                            <td><i class="icon-arrow-left" ng-click="add_power(power)"></i></td>
-                           <td ng-click="compendium(power)">{{power.name}}</td>
+                           <td class="cursor-pointer" ng-click="compendium(power)">{{power.name}}</td>
                            <td>{{power.level}}</td>
-                           <td>{{power.usage}}</td>
-                           <td>{{power.action}}</td>
                        </tr>
-                   </tbody> 
+                    </tbody>
                 </table>
-                <pagination num-pages="pageCount" current-page="currentPage" max-size="5" class="pagination-small" boundary-links="true" on-select-page="goto_page(page)"></pagination>
-            </div>
-            <!-- Modal -->
-            <div class="wizards-modal" modal="wizardsModal" close="wizardsModal = false;">
-                <div ng-bind-html="modalPower.html_description" id="detail">
-                </div>
             </div>
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <button class="btn btn-success" ng-click="save()">Save</button>
-                <button class="btn" ng-click="cancel()">Cancel</button>
-            </div>
-        </div>
-    </form>
+    </div>
+    <div>&nbsp;</div>
+    <div class="button" ng-click="save()">Save</div>
+    <div class="button button-cancel" ng-click="cancel()">Cancel</div>
 </div>

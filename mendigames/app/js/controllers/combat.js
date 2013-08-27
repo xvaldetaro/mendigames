@@ -68,12 +68,8 @@ function($scope, Log, $timeout, $routeParams, EM, Wizards, Ocam, $dialog) {
         return 'list';
     };
     $scope.compendium = function(model, entity, instance) {
-        Wizards(model, entity, instance).then(function(){
-            $scope.modalInstance = instance;
-            $scope.wizardsModal = true;
-        });
+        Wizards(model, entity, instance);
     };
-    $scope.wizardsModal = false;
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log','Ocam',

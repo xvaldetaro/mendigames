@@ -25,6 +25,9 @@ legend {
   width: auto;
   line-height: 1.8em; }
 
+.navbar {
+  margin-bottom: 0px; }
+
 @media (min-width: 10px) {
   .modal {
     position: fixed;
@@ -33,15 +36,15 @@ legend {
     margin-left: -261px;
     padding: 10px;
     width: 500px;
-    border-radius: 3px; } }
+    border-radius: 3px; }
+
+  body {
+    padding-right: 0;
+    padding-left: 0; } }
 .cage {
   margin-left: auto;
   margin-right: auto;
   width: 535px; }
-
-.content {
-  padding-left: 1.4em;
-  margin-right: 1.4em; }
 
 label {
   cursor: default; }
@@ -99,10 +102,13 @@ label {
   height: 400px; }
 
 select, input[type="text"], input[type="password"] {
-  height: 25px;
+  height: 22px;
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0; }
+
+select {
+  height: 25px; }
 
 .xpan1 {
   display: inline-block;

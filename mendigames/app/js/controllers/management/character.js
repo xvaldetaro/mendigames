@@ -188,10 +188,7 @@ function($scope, $routeParams, EM, Och, InputDialog, Ocam, $http, Wizards) {
     };
 
     $scope.compendium = function(power) {
-        Wizards('power', 'power', power).then(function(){
-            $scope.modalPower = power;
-            $scope.wizardsModal = true;
-        });
+        Wizards('power', 'power', power);
     };
 
     $scope.from_summary = function() {

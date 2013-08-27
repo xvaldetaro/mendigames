@@ -3,8 +3,8 @@
 angular.module('mendigames')
 
 .controller('TradeCtrl', ['$scope','$routeParams','EM','Wizards','InputDialog',
-'Ocam', 'Oit','$q',
-function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
+'Ocam', 'Ocont','Oit','$q',
+function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
@@ -104,6 +104,23 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Oit, $q) {
         }
         return deferred.promise;
     };
+    $scope.split_item = function(item) {
+        if(item.amount < 2)
+            return;
+        var amounts = [];
+        for(var i=1; i<item.amount; i++) {
+            amounts.push(i);
+        }
+        InputDialog('split_item',{amounts: amounts})
+        .then(function(result){
+            if(!result)
+                return;
+            Ocont.split_item(item, result);
+        });
+    };
+    $scope.compendium = function(model, entity, instance) {
+        Wizards(model, entity, instance);
+    };
     $scope.prices = [
         {text:'Free',value:0},
         {text:'25%',value:0.25},
@@ -153,20 +170,6 @@ function($scope, Ocont, Oit, Ocam, EM, InputDialog) {
             Ocont.change_gold($scope.othCont, -1*$scope.othCont.gold);
         });
     };
-    $scope.split_item = function(item) {
-        if(item.amount < 2)
-            return;
-        var amounts = [];
-        for(var i=1; i<item.amount; i++) {
-            amounts.push(i);
-        }
-        InputDialog('split_item',{amounts: amounts})
-        .then(function(result){
-            if(!result)
-                return;
-            Ocont.split_item(item, result);
-        });
-    };
     // itemBase can be decorator, template or item
     $scope.item_drop = function(something) {
         var cost_adjustment = $scope.buy_adjustment.value;
@@ -200,7 +203,7 @@ function($scope, EM, Ocont, Oit, $http, Wizards, $dialog, BASEURL) {
         {name: 'Rare', value: 'R'},
     ];
 
-    $scope.compendium = function(magic) {
+    $scope.magic_detail = function(magic) {
         var subtypes = magic._2m.subtypes();
         if(!subtypes || subtypes.length < 1) {
             Wizards('item', 'magic', magic).then(function(){

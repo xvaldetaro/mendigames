@@ -136,7 +136,7 @@ angular.module('btford.dragon-drop', []).
       var dropArea = getElementBehindPoint(floaty, ev.clientX, ev.clientY);
 
       var accepts = function () {
-        return (dropArea.attr('btf-dragon')||dropArea.attr('btf-droppable')) &&
+        return (dropArea.attr('btf-dragon')||dropArea.attr('btf-dragon-drop-function')) &&
         ( !dropArea.attr('btf-dragon-accepts') ||
           dropArea.scope().$eval(dropArea.attr('btf-dragon-accepts'))(dragValue) );
       };
@@ -150,14 +150,14 @@ angular.module('btford.dragon-drop', []).
 
       if (dropArea.length > 0) {
         var targetScope = dropArea.scope();var expression = dropArea.attr('btf-dragon');
-        var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
-        var targetList = targetScope.$eval(match[2]);
         var fn;
         if(dropFunction && dragOrigin != targetList) {
           fn = function () {
             dropFunction(dragValue, dragKey);
           };
         } else {
+          var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
+          var targetList = targetScope.$eval(match[2]);
           fn = function () {
             add(targetList, dragValue, dragKey);
           };
