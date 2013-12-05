@@ -13,7 +13,7 @@
     display: inline-block;
     margin: 0;
     color: white;
-    width: 138px;
+    width: 135px;
     white-space: nowrap;
     padding-left: 5px;
     padding-right: 5px;
@@ -24,6 +24,48 @@
       width: auto;
       border-right-style: solid;
       border-right-width: 1px; }
+      .power-widget .power-button.power-info.at-will {
+        background-image: -webkit-linear-gradient(bottom, #314d35, #55855c);
+        background-image: linear-gradient(to top, #314d35, #55855c);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-info.at-will:hover {
+          background-color: #436949;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
+          background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
+          background-image: radial-gradient(  #436949, #314d35, #55855c); }
+      .power-widget .power-button.power-info.daily {
+        background-image: -webkit-linear-gradient(bottom, #363638, #646466);
+        background-image: linear-gradient(to top, #363638, #646466);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-info.daily:hover {
+          background-color: #4d4d4f;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
+          background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
+          background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+      .power-widget .power-button.power-info.encounter {
+        background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
+        background-image: linear-gradient(to top, #6d0e26, #bf1842);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-info.encounter:hover {
+          background-color: #961334;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
+          background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
+          background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
     .power-widget .power-button.power-name {
       font-weight: bold; }
       .power-widget .power-button.power-name.at-will.used {
@@ -68,6 +110,48 @@
           background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #690d24), color-stop(50%, #400816), color-stop(100%, #911232));
           background-image: -webkit-radial-gradient(#690d24, #400816, #911232);
           background-image: radial-gradient(  #690d24, #400816, #911232); }
+      .power-widget .power-button.power-name.at-will.available {
+        background-image: -webkit-linear-gradient(bottom, #314d35, #55855c);
+        background-image: linear-gradient(to top, #314d35, #55855c);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-name.at-will.available:hover {
+          background-color: #436949;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #436949), color-stop(50%, #314d35), color-stop(100%, #55855c));
+          background-image: -webkit-radial-gradient(#436949, #314d35, #55855c);
+          background-image: radial-gradient(  #436949, #314d35, #55855c); }
+      .power-widget .power-button.power-name.daily.available {
+        background-image: -webkit-linear-gradient(bottom, #363638, #646466);
+        background-image: linear-gradient(to top, #363638, #646466);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-name.daily.available:hover {
+          background-color: #4d4d4f;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #4d4d4f), color-stop(50%, #363638), color-stop(100%, #646466));
+          background-image: -webkit-radial-gradient(#4d4d4f, #363638, #646466);
+          background-image: radial-gradient(  #4d4d4f, #363638, #646466); }
+      .power-widget .power-button.power-name.encounter.available {
+        background-image: -webkit-linear-gradient(bottom, #6d0e26, #bf1842);
+        background-image: linear-gradient(to top, #6d0e26, #bf1842);
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dddddd;
+        border-radius: 3px;
+        color: white; }
+        .power-widget .power-button.power-name.encounter.available:hover {
+          background-color: #961334;
+          background-image: -webkit-gradient(radial, center center, 0, center center, 460, color-stop(0%, #961334), color-stop(50%, #6d0e26), color-stop(100%, #bf1842));
+          background-image: -webkit-radial-gradient(#961334, #6d0e26, #bf1842);
+          background-image: radial-gradient(  #961334, #6d0e26, #bf1842); }
 
 .characters-container {
   margin-top: 10px; }
