@@ -4,8 +4,8 @@
             Set Initiative
         </div>
     </div>
-    <div class="gui-row">
-        <div ng-repeat="number in numbers" ng-click="setClose(number)" class="button dice">
+    <div class="gui-row inline">
+        <div ng-repeat="number in numbers" ng-click="setClose(number)" class="button mod">
             {{number}}
         </div>    
     </div>
@@ -15,8 +15,8 @@
             Roll Initiative
         </div>
     </div>
-    <div class="gui-row">
-        <div ng-repeat="mod in mods" ng-click="rollClose(mod,20)" class="button dice">
+    <div class="gui-row inline">
+        <div ng-repeat="mod in mods" ng-click="rollClose(mod,20)" class="button mod">
             {{mod|plus_sign}}
         </div>    
     </div>

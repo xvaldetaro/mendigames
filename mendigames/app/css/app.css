@@ -273,6 +273,9 @@ select {
     min-width: 1.5em; }
   .button.icon {
     width: 1.8em; }
+  .button.mod {
+    display: inline-block;
+    width: 2em; }
 
 table.gui-table {
   width: 100%;

@@ -289,12 +289,13 @@ class wizards():
                 name__exact='Equipment').delete()
 
 w = wizards("/home/xande/Documents")
-w.persist_all_trait_sources()
-w.persist_all_powers()
-# w.persist_monsters()
+#w.persist_all_trait_sources()
+#w.persist_powers('daily', 'D')
+#w.persist_powers('encounter', 'E')
+#w.persist_monsters()
 #w.persist_conditions()
-#w.persist_item_categories(categories)
-#w.persist_items()
+w.persist_item_categories(categories)
+w.persist_items()
 
 
 #w.print_dict_choices('creature', 'monster', 'CombatRole', 'Unknown')

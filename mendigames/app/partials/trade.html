@@ -32,14 +32,14 @@
                 <div class="container-section" btf-dragon-drop-function="item_drop" ng-controller="InventoryCtrl">
                     <div class="container-section-header">
                         <div class="pull-left cursor-pointer"><i class="icon-arrow-left icon-white"></i></div>
-                        {{plCont.name|trunc:12}}&nbsp;
+                        {{plCont._2o.character().name|trunc:12}}&nbsp;
                         <div class="dropdown inline">
                             <a class="dropdown-toggle">
                                 <i class="icon-share-alt icon-white" tooltip="Choose Player"></i>&nbsp;
                             </a>
                             <ul class="dropdown-menu">
                                 <li ng-repeat="cont in plContList">
-                                  <a ng-click="change_player_container(cont)">{{cont.name}}</a>
+                                  <a ng-click="change_player_container(cont)">{{cont._2o.character().name}}</a>
                                 </li>
                             </ul>
                         </div>
@@ -49,13 +49,16 @@
                         <div class="gui-label size-zero">Gold: {{plCont.gold}}</div>
                         <div class="button" ng-click="change_gold()" tooltip="Change Gold"><i class="icon-edit icon-white"></i></div>
                     </div>
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">Weight: {{plCont|weight}}</div>
+                    </div>
                     <table class="gui-table item-table">
                         <tr>
                             <th>Item</th><th>G</th><th>W</th><th>x</th>
                         </tr>
                         <tbody btf-dragon="item in plCont._2m.items()" btf-dragon-drop-function="item_drop">
                             <tr class="cursor-pointer">
-                                <td class="item-name-cell" ng-click="item_detail(item)">{{item.name|trunc:18}}</td>
+                                <td class="item-name-cell" ng-click="compendium('item', 'mundane', item)">{{item.name|trunc:18}}</td>
                                 <td>{{item.cost}}</td>
                                 <td>{{item.weight}}</td>
                                 <td ng-click="split_item(item)">{{item.amount}}</td>
@@ -101,13 +104,16 @@
                         <div class="gui-label size-zero">Gold: {{othCont.gold}}</div>
                         <div class="button" ng-click="loot_gold()" tooltip="Loot Gold"><i class="icon-fullscreen icon-white"></i></div>
                     </div>
+                    <div class="gui-group">
+                        <div class="gui-label size-zero">Weight: {{othCont|weight}}</div>
+                    </div>
                     <table class="gui-table item-table">
                         <tr>
                             <th>Item</th><th>G</th><th>W</th><th>x</th>
                         </tr>
                         <tbody btf-dragon="item in othCont._2m.items()" btf-dragon-drop-function="item_drop">
                             <tr class="cursor-pointer">
-                                <td class="item-name-cell" ng-click="item_detail(item)">{{item.name|trunc:18}}</td>
+                                <td class="item-name-cell" ng-click="compendium('item', 'mundane', item)">{{item.name|trunc:18}}</td>
                                 <td>{{item.cost}}</td>
                                 <td>{{item.weight}}</td>
                                 <td ng-click="split_item(item)">{{item.amount}}</td>

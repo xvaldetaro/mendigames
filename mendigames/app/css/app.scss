@@ -309,6 +309,10 @@ select {
   &.icon {
     width: 1.8em;
   }
+  &.mod {
+    display: inline-block;
+    width: 2em;
+  }
 }
 
 table.gui-table {

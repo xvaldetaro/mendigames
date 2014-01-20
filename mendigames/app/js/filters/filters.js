@@ -41,13 +41,24 @@ filter('total_hs', function(){
 filter('trunc', function(){
   return function(str, value){
     if(!str)
-      return;
+      return "";
     if(str.length <= value)
       return str;
 
     var tStr = str.slice(0,value-3)+'...';
     tStr += str.slice(str.length-3);
     return tStr;
+  };
+}).
+filter('weight', function(){
+  return function(pl){
+    if(!pl)
+      return 0;
+    var items = pl._2m.items();
+    var total = 0;
+    for(var i = items.length-1; i >= 0; i--)
+      total += items[i].weight;
+    return total;
   };
 })
 .filter('category_short', function(){

@@ -83,7 +83,7 @@ function(EM, Restangular) {
     // Options are: level(decorator with level+), cost, weight, name
     function get_item_dict(opts) {
         var weight = 0, cost = 0, level, mundane, magic;
-        var item = { cost: 0, weight: 0, level: 0 };
+        var item = { cost: 0, weight: 0, level: 0, amount: 1 };
         if(opts) {
             weight = opts.weight || 0;
             cost = opts.cost || 0;

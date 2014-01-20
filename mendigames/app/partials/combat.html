@@ -152,6 +152,9 @@
                                 <li>
                                   <a ng-click="clear_conditions(c)">Clear Conditions</a>
                                 </li>
+                                <li ng-show="c.type == 'Player'">
+                                  <a ng-click="give_xp(c)">Give XP</a>
+                                </li>
                             </ul>
                         </div></div>
                 </div>

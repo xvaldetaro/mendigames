@@ -68,7 +68,7 @@ function(EM, Och, Ocont, $q, U) {
     function normalize_turn(cam, characterList) {
         if(cam.turn >= characterList.length) {
             cam.turn = characterList.length-1;
-            EM.update(cam);
+            EM.update('campaign', cam);
         }
     }
     function init_sort(c1, c2){

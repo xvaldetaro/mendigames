@@ -73,17 +73,8 @@ function($scope, Log, $timeout, $routeParams, EM, Wizards, Ocam, $dialog) {
 }])
 
 .controller('CharacterController', ['$scope', '$rootScope', '$dialog', 'Och', 'Log','Ocam',
-'InputDialog',
 function($scope, $rootScope, $dialog, Och, Log, Ocam, InputDialog) {
     $scope.Och = Och;
-    $scope.change_xp = function () {
-        InputDialog('input',{title: 'Give Experience Points', label: 'how many?', size: 'mini'})
-        .then(function(result){
-            if(!result)
-                return;
-            Och.change_xp($scope.c, result);
-        });
-    };
     $scope.has_turn = function() {
         if(!$scope.campaign)
             return '';
@@ -167,7 +158,8 @@ function($scope, $rootScope, $dialog, Och, Log, Ocam, InputDialog) {
 }])
 
 .controller('CharacterDetailCtrl', ['$scope', 'EM', 'Ohpo','Och', 'Log','$location',
-function($scope, EM, Ohpo, Och, Log, $location) {
+'InputDialog',
+function($scope, EM, Ohpo, Och, Log, $location, InputDialog) {
     $scope.c = $scope.detailCharacter;
 
     $scope.edit_character = function() {
@@ -197,6 +189,14 @@ function($scope, EM, Ohpo, Och, Log, $location) {
     $scope.clear_conditions = function(c) {
         Och.clear_conditions(c);
         Log(c.name+' is clean');
+    };
+    $scope.give_xp = function () {
+        InputDialog('input',{title: 'Give Experience Points', label: 'how many?', size: 'mini'})
+        .then(function(result){
+            if(!result)
+                return;
+            Och.change_xp($scope.c, result);
+        });
     };
 }])
 

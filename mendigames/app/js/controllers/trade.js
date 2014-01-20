@@ -8,7 +8,9 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
     var campaign = $routeParams.campaignId;
     var entitiesMetadata = {
         'campaign': { _2o: [], _2m: [], query: { id: campaign } },
-        'container': { _2o: ['campaign'], _2m: ['item'], query: { campaign: campaign} },
+        'character': { _2o: [], _2m: [],
+            query: {campaign: campaign}},
+        'container': { _2o: ['campaign', 'character'], _2m: ['item'], query: { campaign: campaign} },
         'item': { _2o: ['magic','mundane', 'container'], _2m: [],
             query: {container__campaign: campaign}},
         'magic': { _2o: ['category'], _2m: ['subtype'], query: {
@@ -19,6 +21,7 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
     };
     var syncEntities = [
         'container',
+        'character',
         'campaign',
         'item'
     ];
@@ -78,7 +81,6 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
         });
     };
     function create_magic_item(magic) {
-        var deferred = $q.defer();
         var subtypes = magic._2m.subtypes();
         if(subtypes.length == 0)
             subtypes = magic._2o.category()._2m.subtypes();
@@ -87,6 +89,15 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
             if(!result)
                 return;
             result.magic = magic;
+            return Oit.get_item_dict(result);
+        });
+    }
+    function create_mundane_item(mundane) {
+        return InputDialog('create_mundane_item', { mundane: mundane })
+        .then(function(result){
+            if(!result)
+                return;
+            result.mundane = mundane;
             return Oit.get_item_dict(result);
         });
     }
@@ -100,7 +111,9 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
                     deferred.resolve(item);
             });
         } else if(something.core !== undefined) {
-            deferred.resolve(Oit.item_from_mundane(something));
+            create_mundane_item(something).then(function(item) {
+                deferred.resolve(item);
+            })
         }
         return deferred.promise;
     };
@@ -119,7 +132,12 @@ function($scope, $routeParams, EM, Wizards, InputDialog, Ocam, Ocont, Oit, $q) {
         });
     };
     $scope.compendium = function(model, entity, instance) {
-        Wizards(model, entity, instance);
+        if(instance.wizards_id)
+            Wizards(model, entity, instance);
+        else if(instance.magic)
+            Wizards(model, entity, instance._2o.magic());
+        else if(instance.mundane)
+            Wizards(model, entity, instance._2o.mundane());
     };
     $scope.prices = [
         {text:'Free',value:0},
